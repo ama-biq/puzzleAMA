@@ -1,0 +1,59 @@
+# Eclipse IDE
+#------------------------------------------------------------
+**/.classpath
+**/.project
+**/.tern-project
+**/.settings/**
+**/bin/
+
+
+# IntelliJ IDE
+#------------------------------------------------------------
+**/.idea/
+/out/
+*.iml
+
+# Logs
+*.log
+*/logs/*
+*/*/logs/*
+/utils/DmaapPublisher/logs/*
+
+#Excluded Script Folder
+xFolder
+
+# Maven
+#------------------------------------------------------------
+target/
+**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+version.properties
+*dependency-reduced-pom.xml
+
+
+# Package Files
+#------------------------------------------------------------
+*.jar
+*.war
+*.ear
+
+#Gradle
+.gradle/*
+*/*.gradle
+*/settings.gradle
+*/gradlew.bat
+*/gradlew
+gradlew.bat
+gradlew
+settings.gradle
+
+# Other
+/log
+*.kpf
+*.class
+*.orig
+
+
+
