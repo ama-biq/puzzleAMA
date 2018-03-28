@@ -1,10 +1,7 @@
 package impl;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Solver {
 
@@ -28,16 +25,20 @@ public class Solver {
     public boolean isEnoughCornerElements(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isLeftCornerExists = false;
         boolean isRightCornerExists = false;
+        boolean isSquareExists = false;
 
         if(listOfPuzzleElementDefinitions.size()==1) {
             return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
         }
         if(listOfPuzzleElementDefinitions.size() > 1 && isOneRow){
             for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions){
-                if(element.isLeftCorner()){
+                isSquareExists = isAllElementDefinitionEqualsToZero(element);
+                if( !isLeftCornerExists && element.isLeftCornerOneLinePazzle()){
                     isLeftCornerExists=true;
-                }else if(element.isRightCorner()){
+                    //if(isSquareExists){return true;}
+                }else if(!isRightCornerExists && element.isRightCornerOneLinePazzle()){
                     isRightCornerExists=true;
+                   // if(isSquareExists){return true;}
                 }
             }
             return isLeftCornerExists && isRightCornerExists;

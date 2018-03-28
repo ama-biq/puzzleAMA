@@ -51,7 +51,7 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
     }
 
-    public boolean isLeftCorner() {
+    public boolean isLeftCornerOneLinePazzle() {
         if(getBottom()==0 &&
                 getLeft()==0 &&
                 getUp()==0){
@@ -61,7 +61,7 @@ public class PuzzleElementDefinition {
         {return false;}
     }
 
-    public boolean isRightCorner() {
+    public boolean isRightCornerOneLinePazzle() {
         if(getBottom()==0 &&
                 getRight()==0 &&
                 getUp()==0){

@@ -1,6 +1,8 @@
 package impl;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,19 +60,49 @@ public class SolverTest {
         assertTrue(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
     }
 
-    //@Test
-//    public void testIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(){
-//
-//        setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
-//        puzzleElementDefinition1.setLeft(0);
-//        puzzleElementDefinition1.setUp(0);
-//        puzzleElementDefinition1.setRight(0);
-//        puzzleElementDefinition1.setBottom(0);
-//        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
-//        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
-//        assertTrue(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
-//    }
+    @ParameterizedTest
+    @CsvSource({"0,0,0,0,0,0,0,0",
+                "1,0,0,0,0,0,1,0",
+                "0,0,1,0,1,0,0,0",
+                "0,0,0,0,1,0,0,0",
+                "1,0,0,0,0,0,0,0",
+            })
+    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
 
+        //setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
+        puzzleElementDefinition.setLeft(val1);
+        puzzleElementDefinition.setUp(val2);
+        puzzleElementDefinition.setRight(val3);
+        puzzleElementDefinition.setBottom(val4);
+        puzzleElementDefinition1.setLeft(val5);
+        puzzleElementDefinition1.setUp(val6);
+        puzzleElementDefinition1.setRight(val7);
+        puzzleElementDefinition1.setBottom(val8);
+        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
+        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
+        assertTrue(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"0,0,0,0,0,0,0,1",
+            "0,0,1,0,0,0,0,1",
+            "0,1,0,0,0,0,0,0"
+            })
+    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
+
+        //setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
+        puzzleElementDefinition.setLeft(val1);
+        puzzleElementDefinition.setUp(val2);
+        puzzleElementDefinition.setRight(val3);
+        puzzleElementDefinition.setBottom(val4);
+        puzzleElementDefinition1.setLeft(val5);
+        puzzleElementDefinition1.setUp(val6);
+        puzzleElementDefinition1.setRight(val7);
+        puzzleElementDefinition1.setBottom(val8);
+        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
+        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
+        assertFalse(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
+    }
     private void setAllPuzzleElementDefinitionToZero(PuzzleElementDefinition puzzleElementDefinition) {
         puzzleElementDefinition.setLeft(0);
         puzzleElementDefinition.setUp(0);
