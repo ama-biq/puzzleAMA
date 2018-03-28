@@ -3,6 +3,7 @@ package impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Solver {
@@ -24,7 +25,7 @@ public class Solver {
     }
 
 
-    public boolean isEnoughCornerElements(ArrayList<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    public boolean isEnoughCornerElements(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isLeftCornerExists = false;
         boolean isRightCornerExists = false;
 

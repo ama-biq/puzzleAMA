@@ -1,6 +1,7 @@
 package impl;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PuzzleElementDefinition {
     private int id;
@@ -9,8 +10,6 @@ public class PuzzleElementDefinition {
     private int up;
     private int right;
     private int bottom;
-
-    ArrayList<Integer> list = new ArrayList<>();
 
     public int getId() {
         return id;

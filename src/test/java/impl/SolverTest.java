@@ -1,15 +1,12 @@
 package impl;
 
-
-
-
-
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class SolverTest {
@@ -17,7 +14,7 @@ public class SolverTest {
     Solver puzzleSolver = new Solver();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     PuzzleElementDefinition puzzleElementDefinition1 = new PuzzleElementDefinition();
-    ArrayList<PuzzleElementDefinition> listOfPuzzleElementDefinitions = new ArrayList<>();
+    List<PuzzleElementDefinition> listOfPuzzleElementDefinitions = new ArrayList<>();
 
     @Test
     public void positiveOneElementIsSumOfAllEdgesIsZero() {
@@ -56,23 +53,23 @@ public class SolverTest {
     @Test
     public void testIsEnoughCornerElementsForPazzelOfOneElement(){
 
-        setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
+        setAllPuzzleElementDefinitionToZero(puzzleElementDefinition );
         listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
         assertTrue(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
     }
 
-    @Test
-    public void testIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(){
-
-        setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
-        puzzleElementDefinition1.setLeft(0);
-        puzzleElementDefinition1.setUp(0);
-        puzzleElementDefinition1.setRight(0);
-        puzzleElementDefinition1.setBottom(0);
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
-        assertTrue(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
-    }
+    //@Test
+//    public void testIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(){
+//
+//        setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
+//        puzzleElementDefinition1.setLeft(0);
+//        puzzleElementDefinition1.setUp(0);
+//        puzzleElementDefinition1.setRight(0);
+//        puzzleElementDefinition1.setBottom(0);
+//        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
+//        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
+//        assertTrue(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
+//    }
 
     private void setAllPuzzleElementDefinitionToZero(PuzzleElementDefinition puzzleElementDefinition) {
         puzzleElementDefinition.setLeft(0);
