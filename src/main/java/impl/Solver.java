@@ -51,5 +51,21 @@ public class Solver {
                 puzzleElementDefinition.getRight() == 0 && puzzleElementDefinition.getBottom() == 0;
     }
 
+    public boolean isSumOfUpAndDownEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+        int leftSum = 0;
+        int upSum = 0;
+        int rightSum = 0;
+        int bottomSum = 0;
+
+        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions){
+            leftSum += element.getLeft();
+            upSum += element.getUp();
+            rightSum += element.getRight();
+            bottomSum += element.getBottom();
+        }
+        return(leftSum==0 && rightSum==0 && upSum==0 && bottomSum==0);
+
+        }
+
 }
 
