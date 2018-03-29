@@ -19,6 +19,13 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
     }
 
+    public PuzzleElementDefinition(int left, int up, int right, int bottom) {
+        this.left = left;
+        this.up = up;
+        this.right = right;
+        this.bottom = bottom;
+    }
+
     public int getId() {
         return id;
     }
@@ -59,20 +66,24 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
     }
 
-    public boolean isLeftCornerOneLinePazzle() {
+    public boolean isLeftCornerExistsOnOneRowPazzle() {
         if(getBottom()==0 &&
                 getLeft()==0 &&
-                getUp()==0){
+                getUp()==0
+                //getRight() !=0
+                ){
             return true;
         }
         else
         {return false;}
     }
 
-    public boolean isRightCornerOneLinePazzle() {
+    public boolean isRightCornerExistsOnOneRowPazzle() {
         if(getBottom()==0 &&
                 getRight()==0 &&
-                getUp()==0){
+                getUp()==0
+                //getLeft() !=0
+                ){
             return true;
         }
         else {
@@ -89,5 +100,57 @@ public class PuzzleElementDefinition {
                 ", right=" + right +
                 ", bottom=" + bottom +
                 '}';
+    }
+
+    public boolean isTLExistsOnSeveralRowsPazzle() {
+        if( getRight()==0 && getUp()==0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isTRExistsOnSeveralRowsPazzle() {
+        if( getLeft()==0 && getUp()==0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean isBLExistsOnSeveralRowsPazzle() {
+        if( getLeft()==0 && getBottom()==0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean isBRExistsOnSeveralRowsPazzle() {
+        if( getRight()==0 && getBottom()==0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isBottomCornerExistsOnOneColumnPazzle() {
+        if(getBottom()==0 &&
+                getRight()==0 &&
+                getLeft()==0){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public boolean isTopCornerExistsOnOneColumnPazzle() {
+        if(getLeft()==0 &&
+                getRight()==0 &&
+                getUp()==0){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
