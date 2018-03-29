@@ -26,7 +26,7 @@ public class Solver {
         return   (isAllElementDefinitionEqualsToZero( puzzleElementDefinition));
     }
 
-    public boolean isEnoughCornerElementsForSeveralRow(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions){
+    public boolean isEnoughCornerElementsForSeveralRows(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions){
         boolean isTLExists = false;
         boolean isTRExists = false;
         boolean isBLExists = false;
@@ -69,27 +69,25 @@ public class Solver {
         boolean isRightCornerExists = false;
         boolean isOneOfElementsSquare = false;
 
-            if(ifTwoElementsAreSquare(listOfPuzzleElementDefinitions)){
+        if(listOfPuzzleElementDefinitions.size()==1) {
+            return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
+        }
+        if (ifTwoElementsAreSquare(listOfPuzzleElementDefinitions)){
                 return true;
             }
-
 
             for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
                 if(!isOneOfElementsSquare) {
                     isOneOfElementsSquare = isSquare(element);
                 }
-
                     if (!isLeftCornerExists && element.isLeftCornerExistsOnOneRowPazzle()) {
                         isLeftCornerExists = true;
-                        if (isOneOfElementsSquare) {
-                            return true;
-                        }
                     } else if (!isRightCornerExists && element.isRightCornerExistsOnOneRowPazzle()) {
                         isRightCornerExists = true;
-                        if (isOneOfElementsSquare) {
-                            return true;
-                        }
                     }
+                    if((isOneOfElementsSquare && isLeftCornerExists) || (isOneOfElementsSquare && isRightCornerExists)){
+                    return true;
+                }
             }
 
             if(!isLeftCornerExists){

@@ -69,8 +69,8 @@ public class PuzzleElementDefinition {
     public boolean isLeftCornerExistsOnOneRowPazzle() {
         if(getBottom()==0 &&
                 getLeft()==0 &&
-                getUp()==0
-                //getRight() !=0
+                getUp()==0 &&
+                getRight() !=0
                 ){
             return true;
         }
@@ -81,8 +81,8 @@ public class PuzzleElementDefinition {
     public boolean isRightCornerExistsOnOneRowPazzle() {
         if(getBottom()==0 &&
                 getRight()==0 &&
-                getUp()==0
-                //getLeft() !=0
+                getUp()==0 &&
+                getLeft() !=0
                 ){
             return true;
         }

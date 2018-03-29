@@ -71,7 +71,7 @@ public class SolverTest {
         listOfPuzzleElementDefinitions.add(elementDefinitionTR);
         listOfPuzzleElementDefinitions.add(elementDefinitionBL);
         listOfPuzzleElementDefinitions.add(elementDefinitionBR);
-        assertTrue(puzzleSolver.isEnoughCornerElementsForSeveralRow(listOfPuzzleElementDefinitions));
+        assertTrue(puzzleSolver.isEnoughCornerElementsForSeveralRows(listOfPuzzleElementDefinitions));
     }
 
 
