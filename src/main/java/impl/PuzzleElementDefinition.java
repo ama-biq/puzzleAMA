@@ -8,6 +8,17 @@ public class PuzzleElementDefinition {
     private int right;
     private int bottom;
 
+    public PuzzleElementDefinition() {
+    }
+
+    public PuzzleElementDefinition(int id, int left, int up, int right, int bottom) {
+        this.id = id;
+        this.left = left;
+        this.up = up;
+        this.right = right;
+        this.bottom = bottom;
+    }
+
     public int getId() {
         return id;
     }
@@ -67,5 +78,16 @@ public class PuzzleElementDefinition {
         else {
             return false;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "PuzzleElementDefinition{" +
+                "id=" + id +
+                ", left=" + left +
+                ", up=" + up +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
     }
 }

@@ -10,10 +10,6 @@ import java.nio.file.Paths;
 
 public class FileUtils {
 
-    public static StringBuilder readFileToStringBuilder(File file) {
-        StringBuilder stringBuilder = new StringBuilder();
-        return stringBuilder;
-    }
 
     public static StringBuilder readFile(File file, Charset encoding) throws Exception {
         try {
