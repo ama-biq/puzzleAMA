@@ -62,15 +62,15 @@ public class SolverTest {
 
     @ParameterizedTest
     @CsvSource({"0,0,0,0,0,0,0,0",
-                "1,0,0,0,0,0,1,0",
-                "0,0,1,0,1,0,0,0",
-                "0,0,0,0,1,0,0,0",
-                "1,0,0,0,0,0,0,0",
-               "-1,0,0,0,0,0,-1,0",
-                "0,0,-1,0,-1,0,0,0",
-               "0,0,0,0,-1,0,0,0",
-               "-1,0,0,0,0,0,0,0"
-            })
+            "1,0,0,0,0,0,1,0",
+            "0,0,1,0,1,0,0,0",
+            "0,0,0,0,1,0,0,0",
+            "1,0,0,0,0,0,0,0",
+            "-1,0,0,0,0,0,-1,0",
+            "0,0,-1,0,-1,0,0,0",
+            "0,0,0,0,-1,0,0,0",
+            "-1,0,0,0,0,0,0,0"
+    })
     public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
 
         setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
@@ -78,7 +78,7 @@ public class SolverTest {
     }
 
     @ParameterizedTest
-    @CsvSource({new PuzzleElementDefinition(0,0,0,0), new PuzzleElementDefinition(0,0,0,1),
+    @CsvSource({"0,0,0,0,0,0,0,1",
             "0,0,1,0,0,0,0,1",
             "0,1,0,0,0,0,0,0",
             "0,0,0,1,0,0,0,0",
@@ -86,13 +86,8 @@ public class SolverTest {
             "0,0,-1,0,0,0,0,-1",
             "0,-1,0,0,0,0,0,0",
             "0,0,0,-1,0,0,0,0"
-            })
-    /*public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
-
-        setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
-        assertFalse(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
-    }*/
-    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2){
+    })
+    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
 
         setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
         assertFalse(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
@@ -131,7 +126,7 @@ public class SolverTest {
 
 
 
-    /*private void setEdgesForTwoElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) {
+    private void setEdgesForTwoElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) {
         puzzleElementDefinition.setLeft(val1);
         puzzleElementDefinition.setUp(val2);
         puzzleElementDefinition.setRight(val3);
@@ -143,11 +138,6 @@ public class SolverTest {
         listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
         listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
 
-    }*/
-
-    private void setEdgesForTwoElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2) {
-        listOfPuzzleElementDefinitions.add(ped1);
-        listOfPuzzleElementDefinitions.add(ped2);
     }
 
 
