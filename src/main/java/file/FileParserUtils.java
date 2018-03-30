@@ -2,9 +2,44 @@ package file;
 
 import impl.PuzzleElementDefinition;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileParserUtils {
+
+    public static List<PuzzleElementDefinition> fileToPEDArray (File file) throws Exception {
+
+        List<PuzzleElementDefinition> pedArray = new ArrayList<>();
+        StringBuilder sb = FileUtils.readFile(file);
+        String[] lines = sb.toString().split("\\n");
+        for (String line : lines) {
+
+
+
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+        return pedArray;
+    }
+
+//    public static void main(String[] args) {
+//        String test = ",";
+//        System.out.println(!test.trim().startsWith("#"));
+//    }
+
 
 
     public static boolean isLineReadyForParse(String line) {
