@@ -1,6 +1,7 @@
 package file;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -8,6 +9,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class FileParserTest {
 
@@ -33,6 +35,30 @@ public class FileParserTest {
     }
 
     @Test
+    public void readFile() throws Exception {
+        StringBuilder expectedSb = new StringBuilder("NumOfElements=2\r\n" +
+                "1 0 0 0 0\r\n" +
+                "2 0 0 0 0");
+        File file = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
+        StringBuilder sb = FileUtils.readFile(file);
+        Assertions.assertTrue(expectedSb.toString().equals(sb.toString()), "expected input file payload is - " + "{" + expectedSb + "}" + " actual is " + "{"+sb+"}");
+    }
+
+    @Test
+    public void fileNotFound() throws Exception {
+        File file = new File("src\\test\\resources\\fileNotExist.txt");
+        Assertions.assertThrows(FileNotFoundException.class, ()-> {FileUtils.readFile(file);}, "expected exception is FileNotFoundException");
+
+    }
+
+    @Test
+    public void badFolder() throws Exception {
+        File file = new File("src\\test\\resources2\\validPuzzle2Peaces.txt");
+        Assertions.assertThrows(FileNotFoundException.class, () -> {
+            FileUtils.readFile(file);
+        }, "expected exception is FileNotFoundException");
+    }
+
     public void failIsLineReadyForParse()  {
         String line = "#                    ";
         assertFalse(FileParserUtils.isLineReadyForParse(line));

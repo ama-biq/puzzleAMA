@@ -1,8 +1,8 @@
 package file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,24 +12,33 @@ public class FileUtils {
 
 
     public static StringBuilder readFile(File file, Charset encoding) throws Exception {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException();
+        }
         try {
             byte[] encoded = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
             String payload = new String(encoded, encoding);
             return new StringBuilder(payload);
-        } catch (FileNotFoundException e) {
-            try {
-                throw new NoSuchFieldException(e.getMessage());
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        } catch (IOException e) {
-            try {
-                throw new IOException();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+        } catch (Exception e) {
+            throw new Exception();
+        } finally {
+            if (fis != null) {
+                fis.close();
             }
         }
-        throw new Exception();
+
+
+            /*byte[] encoded = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+            String payload = new String(encoded, encoding);
+            return new StringBuilder(payload);*/
+        /*} catch (FileNotFoundException e) {
+            throw new FileNotFoundException();
+        } catch (IOException e) {
+                throw new IOException();
+        }*/
     }
 
 

@@ -11,15 +11,15 @@ public class PuzzleElementDefinition {
     public PuzzleElementDefinition() {
     }
 
-    public PuzzleElementDefinition(int id, int left, int up, int right, int bottom) {
-        this.id = id;
+    public PuzzleElementDefinition(int left, int up, int right, int bottom) {
         this.left = left;
         this.up = up;
         this.right = right;
         this.bottom = bottom;
     }
 
-    public PuzzleElementDefinition(int left, int up, int right, int bottom) {
+    public PuzzleElementDefinition(int id, int left, int up, int right, int bottom) {
+        this.id = id;
         this.left = left;
         this.up = up;
         this.right = right;
@@ -67,26 +67,25 @@ public class PuzzleElementDefinition {
     }
 
     public boolean isLeftCornerExistsOnOneRowPazzle() {
-        if(getBottom()==0 &&
-                getLeft()==0 &&
-                getUp()==0 &&
-                getRight() !=0
-                ){
+        if (getBottom() == 0 &&
+                getLeft() == 0 &&
+                getUp() == 0 &&
+                getRight() != 0
+                ) {
             return true;
+        } else {
+            return false;
         }
-        else
-        {return false;}
     }
 
     public boolean isRightCornerExistsOnOneRowPazzle() {
-        if(getBottom()==0 &&
-                getRight()==0 &&
-                getUp()==0 &&
-                getLeft() !=0
-                ){
+        if (getBottom() == 0 &&
+                getRight() == 0 &&
+                getUp() == 0 &&
+                getLeft() != 0
+                ) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -103,7 +102,7 @@ public class PuzzleElementDefinition {
     }
 
     public boolean isTLExistsOnSeveralRowsPazzle() {
-        if( getRight()==0 && getUp()==0){
+        if (getRight() == 0 && getUp() == 0) {
             return true;
         } else {
             return false;
@@ -111,21 +110,23 @@ public class PuzzleElementDefinition {
     }
 
     public boolean isTRExistsOnSeveralRowsPazzle() {
-        if( getLeft()==0 && getUp()==0){
+        if (getLeft() == 0 && getUp() == 0) {
             return true;
         } else {
             return false;
         }
     }
+
     public boolean isBLExistsOnSeveralRowsPazzle() {
-        if( getLeft()==0 && getBottom()==0){
+        if (getLeft() == 0 && getBottom() == 0) {
             return true;
         } else {
             return false;
         }
     }
+
     public boolean isBRExistsOnSeveralRowsPazzle() {
-        if( getRight()==0 && getBottom()==0){
+        if (getRight() == 0 && getBottom() == 0) {
             return true;
         } else {
             return false;
@@ -133,23 +134,21 @@ public class PuzzleElementDefinition {
     }
 
     public boolean isBottomCornerExistsOnOneColumnPazzle() {
-        if(getBottom()==0 &&
-                getRight()==0 &&
-                getLeft()==0){
+        if (getBottom() == 0 &&
+                getRight() == 0 &&
+                getLeft() == 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public boolean isTopCornerExistsOnOneColumnPazzle() {
-        if(getLeft()==0 &&
-                getRight()==0 &&
-                getUp()==0){
+        if (getLeft() == 0 &&
+                getRight() == 0 &&
+                getUp() == 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

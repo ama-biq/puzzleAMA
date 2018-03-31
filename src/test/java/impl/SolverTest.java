@@ -187,5 +187,30 @@ public class SolverTest {
         listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
 
     }
+//Example
+    /*@ParameterizedTest
+    @MethodSource("getParamProbider")
+    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
+        setEdgesForTwoElements(p1, p2);
+        assertFalse(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
+    }
+
+    private static Stream<Arguments> sumProvider() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 1, 0), new PuzzleElementDefinition(1, 0, 0, 0, 1)),
+                Arguments.of(new PuzzleElementDefinition(0, 0, 1, 0, 0), new PuzzleElementDefinition(1, 0, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 1, 0), new PuzzleElementDefinition(1, 0, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0, 0), new PuzzleElementDefinition(1, 0, 0, 0, -1)),
+                Arguments.of(new PuzzleElementDefinition(0, 0, 0, -1, 0), new PuzzleElementDefinition(1, 0, 0, 0, -1)),
+                Arguments.of(new PuzzleElementDefinition(0, 0, -1, 0, 0), new PuzzleElementDefinition(1, 0, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0, -1), new PuzzleElementDefinition(1, 0, 0, 0, 1))
+
+        );
+    }
+
+    private void setEdgesForTwoElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2) {
+        listOfPuzzleElementDefinitions.add(ped1);
+        listOfPuzzleElementDefinitions.add(ped2);
+    }*/
 
 }
