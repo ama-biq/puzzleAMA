@@ -3,15 +3,14 @@ package impl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class SolverTest {
@@ -195,19 +194,6 @@ public class SolverTest {
 
     }
 
-    private void setEdgesForTwoElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) {
-        puzzleElementDefinition.setLeft(val1);
-        puzzleElementDefinition.setUp(val2);
-        puzzleElementDefinition.setRight(val3);
-        puzzleElementDefinition.setBottom(val4);
-        puzzleElementDefinition1.setLeft(val5);
-        puzzleElementDefinition1.setUp(val6);
-        puzzleElementDefinition1.setRight(val7);
-        puzzleElementDefinition1.setBottom(val8);
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
-
-    }
 
     private static Stream<Arguments> negativeTestisSumOfAllEdgesEqualForTwoElements() {
         return Stream.of(

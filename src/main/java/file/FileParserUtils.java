@@ -43,7 +43,7 @@ public class FileParserUtils {
 
 
     public static boolean isLineReadyForParse(String line) {
-        return (!(line.trim().startsWith("#")));
+        return (!(line.trim().startsWith("#")) && !line.trim().isEmpty());
     }
 
     // TODO in case of error should return error

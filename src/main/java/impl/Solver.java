@@ -19,7 +19,22 @@ public class Solver {
                 puzzleElementDefinition.getRight() +
                 puzzleElementDefinition.getBottom();
 
-        return sum == 0 ? true : false;
+        return sum == 0;
+    }
+
+    public boolean isSumOfAllEdgesIsZero(List<PuzzleElementDefinition> puzzleElements) {
+        int sum = 0;
+        for(PuzzleElementDefinition puzzleElement : puzzleElements){
+            sum = puzzleElement.getLeft() +
+                    puzzleElement.getUp() +
+                    puzzleElement.getRight() +
+                    puzzleElement.getBottom();
+        }
+        if(sum != 0){
+            addErrorMessageToErrorList("Cannot solve puzzle: sum of all edges is not zero");
+            return false;
+        }
+        return true;
     }
 
     public boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
@@ -116,6 +131,7 @@ public class Solver {
         return false;
     }
 
+    //TODO duplicate method with isAllElementDefinitionEqualsToZero
     private boolean isSquare(PuzzleElementDefinition element) {
         return (element.getLeft() == 0 && element.getUp() == 0 && element.getRight() == 0 && element.getBottom() == 0);
     }
@@ -146,6 +162,8 @@ public class Solver {
                     return true;
                 }
             }
+        //TODO the method should write all possible error messages and then return value, you can add flag that at least ones you added error to errorList
+        //and according to this flag return value
             if (!isTopCornerExists) {
                 addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Top Corner");
                 return false;
@@ -156,6 +174,7 @@ public class Solver {
                 return true;
     }
 
+    //TODO duplicate method with isSquare
     private boolean isAllElementDefinitionEqualsToZero(PuzzleElementDefinition puzzleElementDefinition) {
         return puzzleElementDefinition.getLeft() == 0 && puzzleElementDefinition.getUp() == 0 &&
                 puzzleElementDefinition.getRight() == 0 && puzzleElementDefinition.getBottom() == 0;

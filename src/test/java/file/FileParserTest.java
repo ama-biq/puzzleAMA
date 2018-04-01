@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +23,7 @@ public class FileParserTest {
     }
 
     @ParameterizedTest
-    @CsvSource({"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    @ValueSource(strings = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 "              AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
                 ",",
                 "''",
@@ -36,8 +37,8 @@ public class FileParserTest {
 
     @Test
     public void readFile() throws Exception {
-        StringBuilder expectedSb = new StringBuilder("NumOfElements=2\r\n" +
-                "1 0 0 0 0\r\n" +
+        StringBuilder expectedSb = new StringBuilder("NumOfElements=2\n" +
+                "1 0 0 0 0\n" +
                 "2 0 0 0 0");
         File file = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
         StringBuilder sb = FileUtils.readFile(file);
@@ -65,23 +66,23 @@ public class FileParserTest {
     }
 
 
-//    @ParameterizedTest
-//    @CsvSource({
-//            "                   ",
-//            "#                  ",
-//            "          #        ",
-//            "#      AAAAAAA     ",
-//            "#      AAAAAAA#####",
-//            "           #AAAAAAA"})
-//    public void failIsLineReadyForParse(String line)  {
-//        assertFalse(FileParserUtils.isLineReadyForParse(line));
-//    }
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "                   ",
+            "#                  ",
+            "          #        ",
+            "#      AAAAAAA     ",
+            "#      AAAAAAA#####",
+            "           #AAAAAAA"})
+    public void failIsLineReadyForParse(String line)  {
+        assertFalse(FileParserUtils.isLineReadyForParse(line));
+    }
 
-//    @Test
-//    public void passGetNumOfElements() throws Exception {
-//        String firstLine = "NumOfElements=3";
-//        assertEquals(FileParserUtils.getNumOfElements(firstLine), 3);
-//    }
+    @Test
+    public void passGetNumOfElements() throws Exception {
+        String firstLine = "NumOfElements=3";
+        assertEquals(FileParserUtils.getNumOfElements(firstLine), 3);
+    }
 
     @ParameterizedTest
     @CsvSource({
