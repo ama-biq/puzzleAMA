@@ -123,16 +123,27 @@ public class Solver {
     public boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTopCornerExists = false;
         boolean isBottomCornerExists = false;
+        boolean isOneOfElementsSquare = false;
 
         if (listOfPuzzleElementDefinitions.size() == 1) {
             return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
         }
-        if (listOfPuzzleElementDefinitions.size() > 1) {
+
+        if (ifTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
+            return true;
+        }
+
             for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
+                if (!isOneOfElementsSquare) {
+                    isOneOfElementsSquare = isSquare(element);
+                }
                 if (!isTopCornerExists && element.isTopCornerExistsOnOneColumnPazzle()) {
                     isTopCornerExists = true;
                 } else if (!isBottomCornerExists && element.isBottomCornerExistsOnOneColumnPazzle()) {
                     isBottomCornerExists = true;
+                }
+                if ((isOneOfElementsSquare && isTopCornerExists) || (isOneOfElementsSquare && isBottomCornerExists)) {
+                    return true;
                 }
             }
             if (!isTopCornerExists) {
@@ -143,8 +154,6 @@ public class Solver {
                 return false;
             } else
                 return true;
-        }
-        return true;
     }
 
     private boolean isAllElementDefinitionEqualsToZero(PuzzleElementDefinition puzzleElementDefinition) {

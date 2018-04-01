@@ -2,10 +2,13 @@ package impl;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,53 +79,96 @@ public class SolverTest {
 
 
 
-//    @ParameterizedTest
-//    @CsvSource({
-////            "0,0,0,0,0,0,0,0",
-//            "0,0,0,0,0,0,0,1",
-//
-//
-//    })
-//    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
-//
-//        setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
-//        assertTrue(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions));
-//    }
+    @ParameterizedTest
+    @MethodSource("testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn")
+
+    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
+
+        setEdgesForTwoElements(p1, p2);
+        assertTrue(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions));
+    }
+
+    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 1,0,0,0), new PuzzleElementDefinition( 0,0,0,0))
+//                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,0,1)),
+//                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,0)),
+//                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,0,0,1)),
+//                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,1,0,0))
+        );
+    }
 
     @ParameterizedTest
-    @CsvSource({
-            "0,0,0,0,0,0,0,0",
-            "1,0,0,0,0,0,1,0",
-            "0,0,1,0,1,0,0,0",
-            "0,0,0,0,1,0,0,0",
-            "0,0,0,0,0,0,1,0",
-            "1,0,0,0,0,0,0,0",
-            "-1,0,0,0,0,0,-1,0",
-            "0,0,-1,0,-1,0,0,0",
-            "0,0,0,0,-1,0,0,0",
-            "-1,0,0,0,0,0,0,0"
-    })
-    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
+    @MethodSource("testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn")
 
-        setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
+    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
+
+        setEdgesForTwoElements(p1, p2);
+        assertFalse(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions));
+    }
+
+    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 1,1,1,1), new PuzzleElementDefinition( -1,-1,-1,-1)),
+                Arguments.of(new PuzzleElementDefinition( 1,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,0,0,1)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,1,0,0))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows")
+
+    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
+
+        setEdgesForTwoElements(p1, p2);
         assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitions));
     }
-    @ParameterizedTest
-    @CsvSource({"0,0,0,0,0,0,0,1",
-            "0,0,1,0,0,0,0,1",
-            "0,1,0,0,0,0,0,0",
-            "0,0,0,1,0,0,0,0",
-            "0,0,0,0,0,0,0,-1",
-            "0,0,-1,0,0,0,0,-1",
-            "0,-1,0,0,0,0,0,0",
-            "0,0,0,-1,0,0,0,0"
-    })
-    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
 
-        setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
+    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 1,0,0,0), new PuzzleElementDefinition( 0,0,1,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,1,0), new PuzzleElementDefinition( 1,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 1,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,1,0)),
+                Arguments.of(new PuzzleElementDefinition( 1,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition(-1,0,0,0), new PuzzleElementDefinition( 0,0,-1,0)),
+                Arguments.of(new PuzzleElementDefinition(0,0,-1,0), new PuzzleElementDefinition( -1,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition(-1,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition(-1,0,0,0), new PuzzleElementDefinition( 0,0,0,0))
+
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource("testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow")
+
+    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
+
+        setEdgesForTwoElements(p1, p2);
         assertFalse(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitions));
 
     }
+
+    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,0,1)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,1,0), new PuzzleElementDefinition( 0,0,0,1)),
+                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,-1,0), new PuzzleElementDefinition( 0,0,0,-1)),
+                Arguments.of(new PuzzleElementDefinition( 0, -1, -1, 1), new PuzzleElementDefinition( 0,0,0,-1)),
+                Arguments.of(new PuzzleElementDefinition(0,-1,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition(0,0,0,-1), new PuzzleElementDefinition( 0,0,0,0))
+
+        );
+    }
+
+
+
     private void setAllPuzzleElementDefinitionToZero(PuzzleElementDefinition puzzleElementDefinition) {
         puzzleElementDefinition.setLeft(0);
         puzzleElementDefinition.setUp(0);
@@ -133,32 +179,21 @@ public class SolverTest {
 
 
     @ParameterizedTest
-    @CsvSource({"0,0,0,0,0,0,0,0",
-            "0,0,0,-1,0,0,0,1",
-            "1,0,0,0,-1,0,0,0",
-            "0,-1,0,0,0,1,0,0",
-            "0,0,1,0,0,0,-1,0",
-            "0,-1,-1,1,0,1,1,-1",
-            "0,-1,1,0,0,1,-1,0"})
-    public void positiveTestisSumOfAllEdgesEqualForTwoElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
-        setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
+    @MethodSource("positiveTestisSumOfAllEdgesEqualForTwoElements")
+    public void positiveTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
+        setEdgesForTwoElements(p1,  p2);
         assertTrue(puzzleSolver.isSumOfUpAndDownEdgesEqual(listOfPuzzleElementDefinitions));
     }
 
+
     @ParameterizedTest
-    @CsvSource({"1,0,0,0,0,0,0,0",
-//            "0,0,0,1,0,0,0,1",
-//            "1,0,0,0,1,0,0,0",
-//            "0,-1,0,0,0,0,1,0",
-//            "0,-1,1,0,0,-1,-1,0"
- })
-    public void negativeTestisSumOfAllEdgesEqualForTwoElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8){
-        setEdgesForTwoElements(val1, val2, val3, val4, val5, val6, val7, val8);
+    @MethodSource("negativeTestisSumOfAllEdgesEqualForTwoElements")
+
+    public void negativeTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
+        setEdgesForTwoElements(p1, p2);
         assertFalse(puzzleSolver.isSumOfUpAndDownEdgesEqual(listOfPuzzleElementDefinitions));
 
     }
-
-
 
     private void setEdgesForTwoElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) {
         puzzleElementDefinition.setLeft(val1);
@@ -174,43 +209,28 @@ public class SolverTest {
 
     }
 
-    private void setEdgesForSeveralElements(int val1, int val2, int val3, int val4, int val5, int val6, int val7, int val8) {
-        puzzleElementDefinition.setLeft(val1);
-        puzzleElementDefinition.setUp(val2);
-        puzzleElementDefinition.setRight(val3);
-        puzzleElementDefinition.setBottom(val4);
-        puzzleElementDefinition1.setLeft(val5);
-        puzzleElementDefinition1.setUp(val6);
-        puzzleElementDefinition1.setRight(val7);
-        puzzleElementDefinition1.setBottom(val8);
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition1);
-
-    }
-//Example
-    /*@ParameterizedTest
-    @MethodSource("getParamProbider")
-    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
-        setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isEnoughCornerElements(listOfPuzzleElementDefinitions));
-    }
-
-    private static Stream<Arguments> sumProvider() {
+    private static Stream<Arguments> negativeTestisSumOfAllEdgesEqualForTwoElements() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 1, 0), new PuzzleElementDefinition(1, 0, 0, 0, 1)),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 1, 0, 0), new PuzzleElementDefinition(1, 0, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 1, 0), new PuzzleElementDefinition(1, 0, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0, 0), new PuzzleElementDefinition(1, 0, 0, 0, -1)),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, -1, 0), new PuzzleElementDefinition(1, 0, 0, 0, -1)),
-                Arguments.of(new PuzzleElementDefinition(0, 0, -1, 0, 0), new PuzzleElementDefinition(1, 0, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0, -1), new PuzzleElementDefinition(1, 0, 0, 0, 1))
+                Arguments.of(new PuzzleElementDefinition( 1, 0, 0, 0), new PuzzleElementDefinition( 0, 0, 0, 0))
 
         );
     }
 
+    private static Stream<Arguments> positiveTestisSumOfAllEdgesEqualForTwoElements() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 0, 0, 0, 0), new PuzzleElementDefinition( 0, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 0, 0, 0, -1), new PuzzleElementDefinition( 0, 0, 0, 1)),
+                Arguments.of(new PuzzleElementDefinition( 1, 0, 0, 0), new PuzzleElementDefinition( -1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 0, -1, 0, 0), new PuzzleElementDefinition( 0, 1, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 0, 0, 1, 0), new PuzzleElementDefinition( 0, 0, -1, 0)),
+                Arguments.of(new PuzzleElementDefinition( 0, -1, -1, 1), new PuzzleElementDefinition( 0, 1, 1, -1)),
+                Arguments.of(new PuzzleElementDefinition(0, -1, 1, 0), new PuzzleElementDefinition( 0, 1, -1, 0))
+
+        );
+    }
     private void setEdgesForTwoElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2) {
         listOfPuzzleElementDefinitions.add(ped1);
         listOfPuzzleElementDefinitions.add(ped2);
-    }*/
+    }
 
 }
