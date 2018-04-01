@@ -48,9 +48,10 @@ public class FileParserUtils {
 
     // TODO in case of error should return error
     public static int getNumOfElements(String firstLine) throws Exception {
-
+        int amountOfEqualSigns = firstLine.length() - firstLine.replace("=", "").length();
         String split[] = firstLine.trim().split("=");
-        if (split.length == 2) {
+
+        if (split.length == 2 && amountOfEqualSigns == 1) {
             if (split[0].trim().equals("NumOfElements")) {
                 try {
                     return Integer.parseInt(split[1].trim());
