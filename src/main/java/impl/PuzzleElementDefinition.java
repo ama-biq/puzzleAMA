@@ -136,7 +136,8 @@ public class PuzzleElementDefinition {
     public boolean isBottomCornerExistsOnOneColumnPazzle() {
         if (getBottom() == 0 &&
                 getRight() == 0 &&
-                getLeft() == 0) {
+                getLeft() == 0 &&
+                getUp() != 0) {
             return true;
         } else {
             return false;
@@ -146,7 +147,8 @@ public class PuzzleElementDefinition {
     public boolean isTopCornerExistsOnOneColumnPazzle() {
         if (getLeft() == 0 &&
                 getRight() == 0 &&
-                getUp() == 0) {
+                getUp() == 0 &&
+                getBottom() !=0) {
             return true;
         } else {
             return false;

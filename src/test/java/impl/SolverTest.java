@@ -1,14 +1,17 @@
 package impl;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.lang.ref.PhantomReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -19,6 +22,7 @@ public class SolverTest extends ErrorHandler{
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     PuzzleElementDefinition puzzleElementDefinition1 = new PuzzleElementDefinition();
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitions = new ArrayList<>();
+    static List<String>actualErrorList = new ArrayList<>();
 
     @Test
     public void positiveOneElementIsSumOfAllEdgesIsZero() {
@@ -89,11 +93,11 @@ public class SolverTest extends ErrorHandler{
 
     private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,0,0,0), new PuzzleElementDefinition( 0,0,0,0))
-//                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,0,1)),
-//                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,0)),
-//                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,0,0,1)),
-//                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,1,0,0))
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,0), new PuzzleElementDefinition( 0,0,0,1)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,0,0,1)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,1,0,0))
         );
     }
 
@@ -106,13 +110,15 @@ public class SolverTest extends ErrorHandler{
         assertFalse(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions));
     }
 
+
+
     private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition( 1,1,1,1), new PuzzleElementDefinition( -1,-1,-1,-1)),
                 Arguments.of(new PuzzleElementDefinition( 1,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
-                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,0)),
-                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,0,0,1)),
-                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,1,0,0))
+                Arguments.of(new PuzzleElementDefinition( 0,0,1,1), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,1,0,0), new PuzzleElementDefinition( 0,1,0,0)),
+                Arguments.of(new PuzzleElementDefinition( 0,0,0,1), new PuzzleElementDefinition( 0,0,0,1))
         );
     }
 
@@ -194,6 +200,24 @@ public class SolverTest extends ErrorHandler{
 
     }
 
+    @Test
+    public void testPositiveAllErrorMessagesForOneColumnPuzzleWrittenToList(){
+        PuzzleElementDefinition p1 = new PuzzleElementDefinition(1,1,1,1);
+        PuzzleElementDefinition p2 = new PuzzleElementDefinition(-1,-1,-1,-1);
+        setEdgesForTwoElements(p1, p2);
+        puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions);
+        expectedAllErrorWrittenToListOneColumnPuzzle();
+        assertEquals(puzzleSolver.getErrorsList(), expectedAllErrorWrittenToListOneColumnPuzzle());
+    }
+
+    public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle(){
+        return setErrorMessagesToExpextedErrorList("Cannot solve puzzle: missing corner element for one row solution: Top Corner",
+                "Cannot solve puzzle: missing corner element for one row solution: Bottom Corner"
+        );
+    }
+
+
+
 
     private static Stream<Arguments> negativeTestisSumOfAllEdgesEqualForTwoElements() {
         return Stream.of(
@@ -214,9 +238,17 @@ public class SolverTest extends ErrorHandler{
 
         );
     }
+
     private void setEdgesForTwoElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2) {
         listOfPuzzleElementDefinitions.add(ped1);
         listOfPuzzleElementDefinitions.add(ped2);
     }
 
+    private static ArrayList<String> setErrorMessagesToExpextedErrorList(String ... erors){
+        ArrayList<String>errorList = new ArrayList<>();
+        for(int i = 0;i < erors.length ; i++){
+            errorList.add(erors[i]);
+        }
+        return errorList;
+    }
 }
