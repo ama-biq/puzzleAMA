@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class SolverTest {
+public class SolverTest extends ErrorHandler{
 
     Solver puzzleSolver = new Solver();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
