@@ -63,21 +63,22 @@ public class Solver {
         //and according to this flag return value
         if (!isTLExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: TL");
-            return false;
+           //return false;
         }
         if (!isTRExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: TR");
-            return false;
+            //return false;
         }
         if (!isBLExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: BL");
-            return false;
+            //return false;
         }
         if (!isBRExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: BR");
-            return false;
+            //return false;
         }
-        return true;
+//        return true;
+        return (isTLExists && isTRExists && isBLExists && isBRExists);
     }
 
     public boolean isEnoughCornerElementsForOneRow(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
@@ -94,7 +95,7 @@ public class Solver {
 
         for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
             if (!isOneOfElementsSquare) {
-                isOneOfElementsSquare = isSquare(element);
+                isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
             }
             if (!isLeftCornerExists && element.isLeftCornerExistsOnOneRowPazzle()) {
                 isLeftCornerExists = true;
@@ -121,7 +122,7 @@ public class Solver {
     private boolean ifTwoElementsAreSquare(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         int counter = 0;
         for (PuzzleElementDefinition elementDefinition : listOfPuzzleElementDefinitions) {
-            if (isSquare(elementDefinition)) {
+            if (isAllElementDefinitionEqualsToZero(elementDefinition)) {
                 counter++;
             }
             if (counter == 2) {
@@ -132,9 +133,9 @@ public class Solver {
     }
 
     //TODO duplicate method with isAllElementDefinitionEqualsToZero
-    private boolean isSquare(PuzzleElementDefinition element) {
-        return (element.getLeft() == 0 && element.getUp() == 0 && element.getRight() == 0 && element.getBottom() == 0);
-    }
+//    private boolean isSquare(PuzzleElementDefinition element) {
+//        return (element.getLeft() == 0 && element.getUp() == 0 && element.getRight() == 0 && element.getBottom() == 0);
+//    }
 
     public boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTopCornerExists = false;
@@ -151,7 +152,7 @@ public class Solver {
 
             for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
                 if (!isOneOfElementsSquare) {
-                    isOneOfElementsSquare = isSquare(element);
+                    isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
                 }
                 if (!isTopCornerExists && element.isTopCornerExistsOnOneColumnPazzle()) {
                     isTopCornerExists = true;
@@ -166,12 +167,14 @@ public class Solver {
         //and according to this flag return value
             if (!isTopCornerExists) {
                 addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Top Corner");
-                return false;
-            } else if (!isBottomCornerExists) {
+                // return false;
+            }
+             if (!isBottomCornerExists) {
                 addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Bottom Corner");
-                return false;
-            } else
-                return true;
+               // return false;
+            }
+              //  return true;
+                return (isTopCornerExists && isBottomCornerExists);
     }
 
     //TODO duplicate method with isSquare
