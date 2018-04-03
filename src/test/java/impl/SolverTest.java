@@ -1,12 +1,10 @@
 package impl;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.lang.ref.PhantomReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class SolverTest extends ErrorHandler{
+public class SolverTest extends EventHandler {
 
     Solver puzzleSolver = new Solver();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
@@ -142,6 +140,7 @@ public class SolverTest extends ErrorHandler{
                 Arguments.of(new PuzzleElementDefinition(-1,0,0,0), new PuzzleElementDefinition( 0,0,-1,0)),
                 Arguments.of(new PuzzleElementDefinition(0,0,-1,0), new PuzzleElementDefinition( -1,0,0,0)),
                 Arguments.of(new PuzzleElementDefinition(-1,0,0,0), new PuzzleElementDefinition( 0,0,0,0)),
+                Arguments.of(new PuzzleElementDefinition(0,0,-1,0), new PuzzleElementDefinition( 1,0,0,0)),
                 Arguments.of(new PuzzleElementDefinition(-1,0,0,0), new PuzzleElementDefinition( 0,0,0,0))
 
         );
