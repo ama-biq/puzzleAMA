@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class SolverTest extends ErrorHandler{
+public class SolverTest extends EventHandler {
 
     Solver puzzleSolver = new Solver();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
@@ -37,7 +37,7 @@ public class SolverTest extends ErrorHandler{
 
 
     @Test
-    public void negativeTestOneElementIsSumOfAllEdgesIsZero() {
+    public void neGativeOneElementIsSumOfAllEdgesIsZero() {
 
         puzzleElementDefinition.setLeft(0);
         puzzleElementDefinition.setUp(1);

@@ -3,7 +3,7 @@ package impl;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ErrorHandler {
+public class EventHandler {
 
     public static final String SUM_ZERO = "Cannot solve puzzle: sum of edges is not zero";
     public static final String WRONG_STRAIGHT_EDGES = "Cannot solve puzzle: wrong number of straight edges";
@@ -11,11 +11,13 @@ public class ErrorHandler {
     public static final String NO_SOLUTION = "Cannot solve puzzle: it seems that there is no proper solution";
 
 
-    public static List<String> errorList = new ArrayList<>();
+    private static List<String> eventList = new ArrayList<>();
 
-    public static void addErrorToList(String error){
-        errorList.add(error);
+    public static void addEventToList(String error) {
+        eventList.add(error);
     }
 
-
+    public static List<String> getEventList() {
+        return eventList;
+    }
 }
