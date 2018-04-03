@@ -1,12 +1,13 @@
 package impl;
 
-import org.junit.jupiter.api.BeforeEach;
+import file.FileParserUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.lang.ref.PhantomReference;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,7 +34,7 @@ public class SolverTest extends ErrorHandler{
 
 
     @Test
-    public void neGativeOneElementIsSumOfAllEdgesIsZero() {
+    public void negativeTestOneElementIsSumOfAllEdgesIsZero() {
 
         puzzleElementDefinition.setLeft(0);
         puzzleElementDefinition.setUp(1);
@@ -187,7 +188,7 @@ public class SolverTest extends ErrorHandler{
     @MethodSource("positiveTestisSumOfAllEdgesEqualForTwoElements")
     public void positiveTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
         setEdgesForTwoElements(p1,  p2);
-        assertTrue(puzzleSolver.isSumOfUpAndDownEdgesEqual(listOfPuzzleElementDefinitions));
+        assertTrue(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitions));
     }
 
 
@@ -196,7 +197,7 @@ public class SolverTest extends ErrorHandler{
 
     public void negativeTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
         setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isSumOfUpAndDownEdgesEqual(listOfPuzzleElementDefinitions));
+        assertFalse(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitions));
 
     }
 
@@ -208,6 +209,14 @@ public class SolverTest extends ErrorHandler{
         puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions);
         expectedAllErrorWrittenToListOneColumnPuzzle();
         assertEquals(puzzleSolver.getErrorsList(), expectedAllErrorWrittenToListOneColumnPuzzle());
+    }
+
+    @Test
+    public void positiveTestFileToPEDList() throws Exception {
+        File file = new File("src\\test\\resources\\validPuzzle2PeacesOneRow.txt");
+        setEdgesForTwoElements(new PuzzleElementDefinition(1,1,0,0,0), new PuzzleElementDefinition(2,0,0,0,0));
+        List<PuzzleElementDefinition>actualList = FileParserUtils.fileToPEDArray(file);
+        assertEquals(actualList, listOfPuzzleElementDefinitions);
     }
 
     public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle(){

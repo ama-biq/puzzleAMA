@@ -1,6 +1,9 @@
 package impl;
 
 
+import file.FileParserUtils;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +16,18 @@ public class Solver {
     }
 
 
+    public File solveThePuzzle(File inputFile) throws Exception {
+        File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
+        List<PuzzleElementDefinition>listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        //TODO to handle throwed exception
+        isEnoughCornerElementsForOneRow(listAfterParser);
+        isSumOfAllEdgesEqual(listAfterParser);
+
+        return outputFile;
+
+    }
     public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
+        //TODO check when to use
         int sum = puzzleElementDefinition.getLeft() +
                 puzzleElementDefinition.getUp() +
                 puzzleElementDefinition.getRight() +
@@ -59,25 +73,18 @@ public class Solver {
                 isBRExists = true;
             }
         }
-        //TODO the method should write all possible error messages and then return value, you can add flag that at least ones you added error to errorList
-        //and according to this flag return value
         if (!isTLExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: TL");
-           //return false;
         }
         if (!isTRExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: TR");
-            //return false;
         }
         if (!isBLExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: BL");
-            //return false;
         }
         if (!isBRExists) {
             addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: BR");
-            //return false;
         }
-//        return true;
         return (isTLExists && isTRExists && isBLExists && isBRExists);
     }
 
@@ -89,7 +96,7 @@ public class Solver {
         if (listOfPuzzleElementDefinitions.size() == 1) {
             return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
         }
-        if (ifTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
+        if (isTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
             return true;
         }
 
@@ -119,7 +126,7 @@ public class Solver {
     }
 
 
-    private boolean ifTwoElementsAreSquare(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    private boolean isTwoElementsAreSquare(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         int counter = 0;
         for (PuzzleElementDefinition elementDefinition : listOfPuzzleElementDefinitions) {
             if (isAllElementDefinitionEqualsToZero(elementDefinition)) {
@@ -132,10 +139,6 @@ public class Solver {
         return false;
     }
 
-    //TODO duplicate method with isAllElementDefinitionEqualsToZero
-//    private boolean isSquare(PuzzleElementDefinition element) {
-//        return (element.getLeft() == 0 && element.getUp() == 0 && element.getRight() == 0 && element.getBottom() == 0);
-//    }
 
     public boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTopCornerExists = false;
@@ -146,7 +149,7 @@ public class Solver {
             return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
         }
 
-        if (ifTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
+        if (isTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
             return true;
         }
 
@@ -163,27 +166,21 @@ public class Solver {
                     return true;
                 }
             }
-        //TODO the method should write all possible error messages and then return value, you can add flag that at least ones you added error to errorList
-        //and according to this flag return value
             if (!isTopCornerExists) {
                 addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Top Corner");
-                // return false;
             }
              if (!isBottomCornerExists) {
                 addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Bottom Corner");
-               // return false;
             }
-              //  return true;
                 return (isTopCornerExists && isBottomCornerExists);
     }
 
-    //TODO duplicate method with isSquare
     private boolean isAllElementDefinitionEqualsToZero(PuzzleElementDefinition puzzleElementDefinition) {
         return puzzleElementDefinition.getLeft() == 0 && puzzleElementDefinition.getUp() == 0 &&
                 puzzleElementDefinition.getRight() == 0 && puzzleElementDefinition.getBottom() == 0;
     }
 
-    public boolean isSumOfUpAndDownEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    public boolean isSumOfAllEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         int leftSum = 0;
         int upSum = 0;
         int rightSum = 0;
