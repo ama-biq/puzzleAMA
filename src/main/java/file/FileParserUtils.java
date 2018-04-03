@@ -29,7 +29,8 @@ public class FileParserUtils {
 
 
 
-
+        pedArray.add(new PuzzleElementDefinition(1,1,0,0,0));
+        pedArray.add(new PuzzleElementDefinition(2,0,0,0,0));
 
 
         return pedArray;

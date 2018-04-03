@@ -154,4 +154,28 @@ public class PuzzleElementDefinition {
             return false;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PuzzleElementDefinition)) return false;
+
+        PuzzleElementDefinition that = (PuzzleElementDefinition) o;
+
+        if (getId() != that.getId()) return false;
+        if (getLeft() != that.getLeft()) return false;
+        if (getUp() != that.getUp()) return false;
+        if (getRight() != that.getRight()) return false;
+        return getBottom() == that.getBottom();
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId();
+        result = 31 * result + getLeft();
+        result = 31 * result + getUp();
+        result = 31 * result + getRight();
+        result = 31 * result + getBottom();
+        return result;
+    }
 }
