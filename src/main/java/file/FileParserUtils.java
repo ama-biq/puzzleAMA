@@ -1,5 +1,7 @@
 package file;
 
+
+import impl.EventHandler;
 import impl.PuzzleElementDefinition;
 
 import java.io.File;
@@ -8,39 +10,32 @@ import java.util.List;
 
 public class FileParserUtils {
 
-    public static List<PuzzleElementDefinition> fileToPEDArray (File file) throws Exception {
+    private static List<PuzzleElementDefinition> pedArray = new ArrayList<>();
+    private static int numOfElements;
+    private static boolean isParsedDataIntact;
 
-        List<PuzzleElementDefinition> pedArray = new ArrayList<>();
+    public static List<PuzzleElementDefinition> fileToPEDArray(File file) throws Exception {
+
         StringBuilder sb = FileUtils.readFile(file);
         String[] lines = sb.toString().split("\\n");
         for (String line : lines) {
 
-
-
-
-
-
+            if (isLineReadyForParse(line)) {
+                if (numOfElements == 0) {
+                    numOfElements = getNumOfElements(line);
+                } else {
+                    pedArray.add(getPuzzleElementDefinition(line));
+                }
+            }
         }
 
+        if (verifyPuzzleIDs(pedArray, numOfElements)) {
 
+            return pedArray;
+        }
 
-
-
-
-
-
-        pedArray.add(new PuzzleElementDefinition(1,1,0,0,0));
-        pedArray.add(new PuzzleElementDefinition(2,0,0,0,0));
-
-
-        return pedArray;
+        return pedArray;// Todo findout what to return in such case...
     }
-
-//    public static void main(String[] args) {
-//        String test = ",";
-//        System.out.println(!test.trim().startsWith("#"));
-//    }
-
 
 
     public static boolean isLineReadyForParse(String line) {
@@ -57,9 +52,9 @@ public class FileParserUtils {
                 try {
                     return Integer.parseInt(split[1].trim());
                 } catch (Exception e) {
-                    throw  new Exception();
+                    throw new Exception();
                 }
-            }else{
+            } else {
                 throw new Exception();
             }
         }
@@ -67,25 +62,26 @@ public class FileParserUtils {
     }
 
     public static PuzzleElementDefinition getPuzzleElementDefinition(String line) throws Exception {
-        int arr[] = new int[5];
+        int[] arr = new int[5];
         int j = 0;
         String split[] = line.trim().split("\\s+");
-        if(split.length == 5) {
+        if (split.length == 5) {
             for (String str : split) {
                 try {
                     arr[j] = Integer.parseInt(str);
                     j++;
-                }catch (Exception e){
+                } catch (Exception e) {
                     throw new Exception();
                 }
             }
-        }else{
+        } else {
             throw new Exception();
         }
         PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
         boolean isValid = verifyPuzzleElementDefinition(puzzleElementDefinition);
 
-        if(isValid) {
+        if (isValid) {
+
             return puzzleElementDefinition;
         }
         throw new Exception();
@@ -94,7 +90,18 @@ public class FileParserUtils {
 
     public static boolean verifyPuzzleElementDefinition(PuzzleElementDefinition puzzleElementDefinition) throws Exception {
 
-        throw new Exception();
+        if (puzzleElementDefinition.getLeft() >= -1 && puzzleElementDefinition.getLeft() <= 1 &&
+                puzzleElementDefinition.getUp() >= -1 && puzzleElementDefinition.getUp() <= 1 &&
+                puzzleElementDefinition.getRight() >= -1 && puzzleElementDefinition.getRight() <= 1 &&
+                puzzleElementDefinition.getBottom() >= -1 && puzzleElementDefinition.getBottom() <= 1) {
+
+            return true;
+
+        }
+
+        EventHandler.addEventToList("Puzzle ID " + puzzleElementDefinition.getId() + " has wrong data: <complete line from file including ID>");
+
+        return false;
     }
 
     public static boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
