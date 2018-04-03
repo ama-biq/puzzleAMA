@@ -174,16 +174,41 @@ public class FileParserTest extends EventHandler{
 
     }
 
-    //////////////////////////////////////// getPuzzleElementDefinition() Tests ////////////////////////////////////////
+    //////////////////////////////////////// createPuzzleElementDefinition() Tests ////////////////////////////////////////
 
 
+
+//    @ParameterizedTest
+//    @CsvSource({
+//            "0 0 0 0 0",
+//            "1 1 1 1 1",
+//            "0  1   0   1   1",
+//            "   0101         "
+//    })
+//    public void passCreatePEDFrom5Sides(String line) throws Exception {
+//        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(0, 0, 0, 0);
+//        PuzzleElementDefinition testPED = FileParserUtils.createPuzzleElementDefinition(line);
+//        assertEquals(testPED,referencePed);       //To do Parametrized
+//    }
     @Test
-    public void failGetNumOfElementsParseInt() throws Exception {
-        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(0, 0, 0, 0);
-        String line = "0 0 0 0 0";
-        PuzzleElementDefinition testPed = FileParserUtils.getPuzzleElementDefinition(line);
+    public void passCreatePEDFrom5Sides() throws Exception {
+        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(1, 0, 1, 0);
+        String line = "0 1 0 1 0";
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
         assertEquals(testPed,referencePed);
     }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 0 0 0",
+            "1 1 1 1 1 1"
+    })
+    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
+    }
+
+
 
 
 

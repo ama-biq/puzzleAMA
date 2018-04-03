@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static impl.EventHandler.addEventToList;
+
 public class FileParserUtils {
 
     private static List<PuzzleElementDefinition> pedArray = new ArrayList<>();
@@ -24,7 +26,7 @@ public class FileParserUtils {
                 if (numOfElements == 0) {
                     numOfElements = getNumOfElements(line);
                 } else {
-                    pedArray.add(getPuzzleElementDefinition(line));
+                    pedArray.add(createPuzzleElementDefinition(line));
                 }
             }
         }
@@ -61,7 +63,7 @@ public class FileParserUtils {
         throw new Exception();
     }
 
-    public static PuzzleElementDefinition getPuzzleElementDefinition(String line) throws Exception {
+    public static PuzzleElementDefinition createPuzzleElementDefinition(String line) throws Exception {
         int[] arr = new int[5];
         int j = 0;
         String split[] = line.trim().split("\\s+");
@@ -71,11 +73,13 @@ public class FileParserUtils {
                     arr[j] = Integer.parseInt(str);
                     j++;
                 } catch (Exception e) {
-                    throw new Exception();
+                    addEventToList("Puzzle ID " + arr[0] + " has wrong data.");//TODO  <complete line from file including ID>
+//                    throw new Exception();
                 }
             }
         } else {
-            throw new Exception();
+            addEventToList("Puzzle ID " + arr[0] + " has wrong data.");//TODO  <complete line from file including ID>
+//            throw new Exception();
         }
         PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
         boolean isValid = verifyPuzzleElementDefinition(puzzleElementDefinition);
@@ -99,7 +103,7 @@ public class FileParserUtils {
 
         }
 
-        EventHandler.addEventToList("Puzzle ID " + puzzleElementDefinition.getId() + " has wrong data: <complete line from file including ID>");
+        addEventToList("Puzzle ID " + puzzleElementDefinition.getId() + " has wrong data");//TODO  <complete line from file including ID>
 
         return false;
     }
