@@ -6,7 +6,7 @@ import file.FileParserUtils;
 import java.io.File;
 import java.util.*;
 
-import static impl.ErrorHandler.errorList;
+import static impl.EventHandler.eventList;
 
 public class Solver {
 
@@ -23,7 +23,7 @@ public class Solver {
 //        isEnoughCornerElementsForOneRow(listAfterParser);
 //        isSumOfAllEdgesEqual(listAfterParser);
         if(isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
-        errorList.add("The pre-checks passed successfully.");
+            eventList.add("The pre-checks passed successfully.");
 
     }
     public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
