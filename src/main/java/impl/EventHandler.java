@@ -11,7 +11,7 @@ public class EventHandler {
     public static final String NO_SOLUTION = "Cannot solve puzzle: it seems that there is no proper solution";
 
 
-    public static List<String> eventList = new ArrayList<>();
+    private static List<String> eventList = new ArrayList<>();
 
     public static void addEventToList(String error) {
         eventList.add(error);
