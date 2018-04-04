@@ -216,55 +216,7 @@ public class SolverTest{
         assertTrue(EventHandler.getEventList().containsAll(expectedAllErrorWrittenToListOneColumnPuzzle()));
     }
 
-    @ParameterizedTest
-    @MethodSource("positiveTestCheckIdValidity")
-    public void positiveTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
-                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4){
-        setEdgesForFourElements(p1, p2, p3, p4);
-        assertTrue(puzzleSolver.checkIdValidity(listOfPuzzleElementDefinitionsContainsId));
-    }
 
-    private static Stream<Arguments> positiveTestCheckIdValidity() {
-        return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("negativeTestCheckIdValidity")
-    public void negativeTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
-                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4){
-        setEdgesForFourElements(p1, p2, p3, p4);
-        assertFalse(puzzleSolver.checkIdValidity(listOfPuzzleElementDefinitionsContainsId));
-    }
-
-    private static Stream<Arguments> negativeTestCheckIdValidity() {
-        return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
-        );
-    }
 
     public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle(){
         return setErrorMessagesToExpectedErrorList(EventHandler.MISSING_CORNER + "BL", EventHandler.MISSING_CORNER + "BR",
@@ -297,13 +249,7 @@ public class SolverTest{
         listOfPuzzleElementDefinitionsWithoutId.add(ped2);
     }
 
-    private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
-                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
-        listOfPuzzleElementDefinitionsContainsId.add(ped1);
-        listOfPuzzleElementDefinitionsContainsId.add(ped2);
-        listOfPuzzleElementDefinitionsContainsId.add(ped3);
-        listOfPuzzleElementDefinitionsContainsId.add(ped4);
-    }
+
 
     private static ArrayList<String> setErrorMessagesToExpectedErrorList(String... errors){
         ArrayList<String>errorList = new ArrayList<>();

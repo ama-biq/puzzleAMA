@@ -5,8 +5,7 @@ import impl.EventHandler;
 import impl.PuzzleElementDefinition;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static impl.EventHandler.addEventToList;
 
@@ -109,7 +108,18 @@ public class FileParserUtils {
     }
 
     public static boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
-
-        throw new Exception();
+        Set<Integer> validSet = new HashSet<>();
+        try{
+            for (PuzzleElementDefinition element : puzzleElementDefinition){
+                validSet.add(element.getId());
+            }
+        }catch (InputMismatchException e){
+            //todo write error message to the file
+        }
+        TreeSet<Integer>sortedSet = new TreeSet<>(validSet);
+        return (puzzleElementDefinition.size()==sortedSet.size()&&
+                sortedSet.first()==Integer.valueOf(1)&&
+                sortedSet.last()==sortedSet.size());
+       // throw new Exception();
     }
 }

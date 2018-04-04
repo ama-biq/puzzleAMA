@@ -6,19 +6,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class FileParserTest{
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
+    List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
 
     @BeforeEach
     public void beforeEach(){
@@ -194,18 +200,76 @@ public class FileParserTest{
         assertEquals(testPed,referencePed);
     }
 
+//    @ParameterizedTest
+//    @CsvSource({
+//            "0 0 0 0",
+//            "1 1 1 1 1 1"
+//    })
+//    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
+//        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+//        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
+//    }
+
     @ParameterizedTest
-    @CsvSource({
-            "0 0 0 0",
-            "1 1 1 1 1 1"
-    })
-    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
-        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
-        assertFalse(EventHandler.getEventList().isEmpty());//TODO: Find a better validation
+    @MethodSource("positiveTestCheckIdValidity")
+    public void positiveTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
+                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) throws Exception {
+        setEdgesForFourElements(p1, p2, p3, p4);
+        assertTrue(FileParserUtils.verifyPuzzleIDs(listOfPuzzleElementDefinitionsContainsId, 4));
     }
 
+    private static Stream<Arguments> positiveTestCheckIdValidity() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
+        );
+    }
 
+    @ParameterizedTest
+    @MethodSource("negativeTestCheckIdValidity")
+    public void negativeTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
+                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) throws Exception {
+        setEdgesForFourElements(p1, p2, p3, p4);
+        assertFalse(FileParserUtils.verifyPuzzleIDs(listOfPuzzleElementDefinitionsContainsId, 4));
+    }
 
+    private static Stream<Arguments> negativeTestCheckIdValidity() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( -6,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
+                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
+        );
+    }
 
+    private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
+                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
+        listOfPuzzleElementDefinitionsContainsId.add(ped1);
+        listOfPuzzleElementDefinitionsContainsId.add(ped2);
+        listOfPuzzleElementDefinitionsContainsId.add(ped3);
+        listOfPuzzleElementDefinitionsContainsId.add(ped4);
+    }
 
 }
