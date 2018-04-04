@@ -200,15 +200,15 @@ public class FileParserTest{
         assertEquals(testPed,referencePed);
     }
 
-    @ParameterizedTest
-    @CsvSource({
-            "0 0 0 0",
-            "1 1 1 1 1 1"
-    })
-    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
-        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
-        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
-    }
+//    @ParameterizedTest
+//    @CsvSource({
+//            "0 0 0 0",
+//            "1 1 1 1 1 1"
+//    })
+//    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
+//        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+//        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
+//    }
 
     @ParameterizedTest
     @MethodSource("positiveTestCheckIdValidity")
