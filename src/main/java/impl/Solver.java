@@ -10,22 +10,16 @@ import static impl.EventHandler.addEventToList;
 
 public class Solver {
 
-    public List<String> errorsList = new ArrayList<>();
-
-    public List<String> getErrorsList() {
-        return errorsList;
-    }
-
-
     public void solveThePuzzle(File inputFile) throws Exception {
-        List<PuzzleElementDefinition>listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
         //TODO to handle throwed exception
 //        isEnoughCornerElementsForOneRow(listAfterParser);
 //        isSumOfAllEdgesEqual(listAfterParser);
-        if(isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
+        if (isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
             addEventToList("The pre-checks passed successfully.");
 
     }
+
     public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
         //TODO check when to use
         int sum = puzzleElementDefinition.getLeft() +
@@ -38,14 +32,14 @@ public class Solver {
 
     public boolean isSumOfAllEdgesIsZero(List<PuzzleElementDefinition> puzzleElements) {
         int sum = 0;
-        for(PuzzleElementDefinition puzzleElement : puzzleElements){
+        for (PuzzleElementDefinition puzzleElement : puzzleElements) {
             sum = puzzleElement.getLeft() +
                     puzzleElement.getUp() +
                     puzzleElement.getRight() +
                     puzzleElement.getBottom();
         }
-        if(sum != 0){
-            addErrorMessageToErrorList("Cannot solve puzzle: sum of all edges is not zero");
+        if (sum != 0) {
+            addEventToList(EventHandler.SUM_ZERO);
             return false;
         }
         return true;
@@ -63,27 +57,27 @@ public class Solver {
 
 
         for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
-            if (!isTLExists && element.isTLExistsOnSeveralRowsPazzle()) {
+            if (!isTLExists && element.isTLExistsOnSeveralRowsPuzzle()) {
                 isTLExists = true;
-            } else if (!isTRExists && element.isTRExistsOnSeveralRowsPazzle()) {
+            } else if (!isTRExists && element.isTRExistsOnSeveralRowsPuzzle()) {
                 isTRExists = true;
-            } else if (!isBLExists && element.isBLExistsOnSeveralRowsPazzle()) {
+            } else if (!isBLExists && element.isBLExistsOnSeveralRowsPuzzle()) {
                 isBLExists = true;
             } else if (!isBRExists && element.isBRExistsOnSeveralRowsPazzle()) {
                 isBRExists = true;
             }
         }
         if (!isTLExists) {
-            addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: TL");
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TL.getValue());
         }
         if (!isTRExists) {
-            addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: TR");
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TR.getValue());
         }
         if (!isBLExists) {
-            addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: BL");
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BL.getValue());
         }
         if (!isBRExists) {
-            addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: BR");
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BR.getValue());
         }
         return (isTLExists && isTRExists && isBLExists && isBRExists);
     }
@@ -104,9 +98,9 @@ public class Solver {
             if (!isOneOfElementsSquare) {
                 isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
             }
-            if (!isLeftCornerExists && element.isLeftCornerExistsOnOneRowPazzle()) {
+            if (!isLeftCornerExists && element.isLeftCornerExistsOnOneRowPuzzle()) {
                 isLeftCornerExists = true;
-            } else if (!isRightCornerExists && element.isRightCornerExistsOnOneRowPazzle()) {
+            } else if (!isRightCornerExists && element.isRightCornerExistsOnOneRowPuzzle()) {
                 isRightCornerExists = true;
             }
             if ((isOneOfElementsSquare && isLeftCornerExists) || (isOneOfElementsSquare && isRightCornerExists)) {
@@ -115,10 +109,12 @@ public class Solver {
         }
 
         if (!isLeftCornerExists) {
-            addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Left Corner");
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TL.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BL.getValue());
             return false;
         } else if (!isRightCornerExists) {
-            addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Right Corner");
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BR.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TR.getValue());
             return false;
         } else {
             return true;
@@ -153,26 +149,28 @@ public class Solver {
             return true;
         }
 
-            for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
-                if (!isOneOfElementsSquare) {
-                    isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
-                }
-                if (!isTopCornerExists && element.isTopCornerExistsOnOneColumnPazzle()) {
-                    isTopCornerExists = true;
-                } else if (!isBottomCornerExists && element.isBottomCornerExistsOnOneColumnPazzle()) {
-                    isBottomCornerExists = true;
-                }
-                if ((isOneOfElementsSquare && isTopCornerExists) || (isOneOfElementsSquare && isBottomCornerExists)) {
-                    return true;
-                }
+        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
+            if (!isOneOfElementsSquare) {
+                isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
             }
-            if (!isTopCornerExists) {
-                addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Top Corner");
+            if (!isTopCornerExists && element.isTopCornerExistsOnOneColumnPuzzle()) {
+                isTopCornerExists = true;
+            } else if (!isBottomCornerExists && element.isBottomCornerExistsOnOneColumnPuzzle()) {
+                isBottomCornerExists = true;
             }
-             if (!isBottomCornerExists) {
-                addErrorMessageToErrorList("Cannot solve puzzle: missing corner element for one row solution: Bottom Corner");
+            if ((isOneOfElementsSquare && isTopCornerExists) || (isOneOfElementsSquare && isBottomCornerExists)) {
+                return true;
             }
-                return (isTopCornerExists && isBottomCornerExists);
+        }
+        if (!isTopCornerExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TL.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TR.getValue());
+        }
+        if (!isBottomCornerExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BL.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BR.getValue());
+        }
+        return (isTopCornerExists && isBottomCornerExists);
     }
 
     private boolean isAllElementDefinitionEqualsToZero(PuzzleElementDefinition puzzleElementDefinition) {
@@ -196,22 +194,18 @@ public class Solver {
 
     }
 
-    public void addErrorMessageToErrorList(String errorMessage) {
-        errorsList.add(errorMessage);
-    }
-
-    public boolean checkIdValidity(List<PuzzleElementDefinition> listToValid){
-        Set<Integer>validSet = new HashSet<>();
-        try{
-            for (PuzzleElementDefinition element : listToValid){
+    public boolean checkIdValidity(List<PuzzleElementDefinition> listToValid) {
+        Set<Integer> validSet = new HashSet<>();
+        try {
+            for (PuzzleElementDefinition element : listToValid) {
                 validSet.add(element.getId());
             }
-        }catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             //todo write error message to the file
         }
-        TreeSet<Integer>sortedSet = new TreeSet<>(validSet);
-        return (listToValid.size()==sortedSet.size()&&
-                sortedSet.last()==sortedSet.size());
+        TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
+        return (listToValid.size() == sortedSet.size() &&
+                sortedSet.last() == sortedSet.size());
     }
 
 }

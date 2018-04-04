@@ -66,7 +66,7 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
     }
 
-    public boolean isLeftCornerExistsOnOneRowPazzle() {
+    public boolean isLeftCornerExistsOnOneRowPuzzle() {
         if (getBottom() == 0 &&
                 getLeft() == 0 &&
                 getUp() == 0 &&
@@ -78,7 +78,7 @@ public class PuzzleElementDefinition {
         }
     }
 
-    public boolean isRightCornerExistsOnOneRowPazzle() {
+    public boolean isRightCornerExistsOnOneRowPuzzle() {
         if (getBottom() == 0 &&
                 getRight() == 0 &&
                 getUp() == 0 &&
@@ -101,58 +101,34 @@ public class PuzzleElementDefinition {
                 '}';
     }
 
-    public boolean isTLExistsOnSeveralRowsPazzle() {
-        if (getRight() == 0 && getUp() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isTLExistsOnSeveralRowsPuzzle() {
+        return (getRight() == 0 && getUp() == 0);
     }
 
-    public boolean isTRExistsOnSeveralRowsPazzle() {
-        if (getLeft() == 0 && getUp() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isTRExistsOnSeveralRowsPuzzle() {
+        return (getLeft() == 0 && getUp() == 0);
     }
 
-    public boolean isBLExistsOnSeveralRowsPazzle() {
-        if (getLeft() == 0 && getBottom() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isBLExistsOnSeveralRowsPuzzle() {
+        return (getLeft() == 0 && getBottom() == 0);
     }
 
     public boolean isBRExistsOnSeveralRowsPazzle() {
-        if (getRight() == 0 && getBottom() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return (getRight() == 0 && getBottom() == 0);
     }
 
-    public boolean isBottomCornerExistsOnOneColumnPazzle() {
-        if (getBottom() == 0 &&
+    public boolean isBottomCornerExistsOnOneColumnPuzzle() {
+        return (getBottom() == 0 &&
                 getRight() == 0 &&
                 getLeft() == 0 &&
-                getUp() != 0) {
-            return true;
-        } else {
-            return false;
-        }
+                getUp() != 0);
     }
 
-    public boolean isTopCornerExistsOnOneColumnPazzle() {
-        if (getLeft() == 0 &&
+    public boolean isTopCornerExistsOnOneColumnPuzzle() {
+        return (getLeft() == 0 &&
                 getRight() == 0 &&
                 getUp() == 0 &&
-                getBottom() !=0) {
-            return true;
-        } else {
-            return false;
-        }
+                getBottom() !=0);
     }
 
     @Override

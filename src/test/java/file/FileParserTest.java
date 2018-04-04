@@ -201,7 +201,7 @@ public class FileParserTest{
     })
     public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
         PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
-        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
+        assertFalse(EventHandler.getEventList().isEmpty());//TODO: Find a better validation
     }
 
 

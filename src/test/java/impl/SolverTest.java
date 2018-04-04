@@ -1,6 +1,5 @@
 package impl;
 
-import file.FileParserUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,7 +7,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class SolverTest extends EventHandler {
+public class SolverTest{
 
     @BeforeEach
     public void beforeEach(){
@@ -215,7 +213,7 @@ public class SolverTest extends EventHandler {
         PuzzleElementDefinition p2 = new PuzzleElementDefinition(-1,-1,-1,-1);
         setEdgesForTwoElements(p1, p2);
         puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId);
-        assertEquals(puzzleSolver.getErrorsList(), expectedAllErrorWrittenToListOneColumnPuzzle());
+        assertTrue(EventHandler.getEventList().containsAll(expectedAllErrorWrittenToListOneColumnPuzzle()));
     }
 
     @ParameterizedTest
@@ -269,8 +267,8 @@ public class SolverTest extends EventHandler {
     }
 
     public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle(){
-        return setErrorMessagesToExpextedErrorList("Cannot solve puzzle: missing corner element for one row solution: Top Corner",
-                "Cannot solve puzzle: missing corner element for one row solution: Bottom Corner"
+        return setErrorMessagesToExpectedErrorList(EventHandler.MISSING_CORNER + "BL", EventHandler.MISSING_CORNER + "BR",
+                EventHandler.MISSING_CORNER + "TL", EventHandler.MISSING_CORNER + "TR"
         );
     }
 
@@ -307,10 +305,10 @@ public class SolverTest extends EventHandler {
         listOfPuzzleElementDefinitionsContainsId.add(ped4);
     }
 
-    private static ArrayList<String> setErrorMessagesToExpextedErrorList(String ... erors){
+    private static ArrayList<String> setErrorMessagesToExpectedErrorList(String... errors){
         ArrayList<String>errorList = new ArrayList<>();
-        for(int i = 0;i < erors.length ; i++){
-            errorList.add(erors[i]);
+        for(String error : errors){
+            errorList.add(error);
         }
         return errorList;
     }
