@@ -200,19 +200,20 @@ public class Solver {
         errorsList.add(errorMessage);
     }
 
-    public boolean checkIdValidity(List<PuzzleElementDefinition> listToValid){
-        Set<Integer>validSet = new HashSet<>();
-        try{
-            for (PuzzleElementDefinition element : listToValid){
-                validSet.add(element.getId());
-            }
-        }catch (InputMismatchException e){
-            //todo write error message to the file
-        }
-        TreeSet<Integer>sortedSet = new TreeSet<>(validSet);
-        return (listToValid.size()==sortedSet.size()&&
-                sortedSet.last()==sortedSet.size());
-    }
+//    public boolean checkIdValidity(List<PuzzleElementDefinition> listToValid){
+//        Set<Integer>validSet = new HashSet<>();
+//        try{
+//            for (PuzzleElementDefinition element : listToValid){
+//                validSet.add(element.getId());
+//            }
+//        }catch (InputMismatchException e){
+//            //todo write error message to the file
+//        }
+//        TreeSet<Integer>sortedSet = new TreeSet<>(validSet);
+//        return (listToValid.size()==sortedSet.size()&&
+//                sortedSet.first()==Integer.valueOf(1)&&
+//                sortedSet.last()==sortedSet.size());
+//    }
 
 }
 
