@@ -1,7 +1,7 @@
 package impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EventHandler {
 
@@ -11,13 +11,17 @@ public class EventHandler {
     public static final String NO_SOLUTION = "Cannot solve puzzle: it seems that there is no proper solution";
 
 
-    private static List<String> eventList = new ArrayList<>();
+    private static Set<String> eventList = new HashSet<>();
 
     public static void addEventToList(String error) {
         eventList.add(error);
     }
 
-    public static List<String> getEventList() {
+    public static Set<String> getEventList() {
         return eventList;
+    }
+
+    public static void emptyEventList(){
+        eventList.clear();
     }
 }

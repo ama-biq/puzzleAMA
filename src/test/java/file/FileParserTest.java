@@ -13,14 +13,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class FileParserTest extends EventHandler {
+public class FileParserTest{
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
 
     @BeforeEach
-    public void beforeEach() {
-
+    public void beforeEach(){
+        EventHandler.emptyEventList();
     }
 
     @ParameterizedTest
