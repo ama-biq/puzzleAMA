@@ -4,8 +4,9 @@ package impl;
 import file.FileParserUtils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import static impl.EventHandler.addEventToList;
 
 public class Solver {
 
@@ -16,14 +17,13 @@ public class Solver {
     }
 
 
-    public File solveThePuzzle(File inputFile) throws Exception {
-        File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
+    public void solveThePuzzle(File inputFile) throws Exception {
         List<PuzzleElementDefinition>listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
         //TODO to handle throwed exception
-        isEnoughCornerElementsForOneRow(listAfterParser);
-        isSumOfAllEdgesEqual(listAfterParser);
-
-        return outputFile;
+//        isEnoughCornerElementsForOneRow(listAfterParser);
+//        isSumOfAllEdgesEqual(listAfterParser);
+        if(isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
+            addEventToList("The pre-checks passed successfully.");
 
     }
     public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
@@ -198,6 +198,20 @@ public class Solver {
 
     public void addErrorMessageToErrorList(String errorMessage) {
         errorsList.add(errorMessage);
+    }
+
+    public boolean checkIdValidity(List<PuzzleElementDefinition> listToValid){
+        Set<Integer>validSet = new HashSet<>();
+        try{
+            for (PuzzleElementDefinition element : listToValid){
+                validSet.add(element.getId());
+            }
+        }catch (InputMismatchException e){
+            //todo write error message to the file
+        }
+        TreeSet<Integer>sortedSet = new TreeSet<>(validSet);
+        return (listToValid.size()==sortedSet.size()&&
+                sortedSet.last()==sortedSet.size());
     }
 
 }

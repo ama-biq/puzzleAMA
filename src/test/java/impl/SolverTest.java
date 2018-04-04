@@ -28,7 +28,9 @@ public class SolverTest extends EventHandler {
     Solver puzzleSolver = new Solver();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     PuzzleElementDefinition puzzleElementDefinition1 = new PuzzleElementDefinition();
-    List<PuzzleElementDefinition> listOfPuzzleElementDefinitions = new ArrayList<>();
+    List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
+    List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
+
     static List<String>actualErrorList = new ArrayList<>();
 
     @Test
@@ -37,6 +39,7 @@ public class SolverTest extends EventHandler {
         setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
         assertTrue(puzzleSolver.isSumOfAllEdgesIsZero(puzzleElementDefinition));
     }
+
 
 
     @Test
@@ -69,8 +72,8 @@ public class SolverTest extends EventHandler {
     public void testIsEnoughCornerElementsForPazzelOfOneElement(){
 
         setAllPuzzleElementDefinitionToZero(puzzleElementDefinition );
-        listOfPuzzleElementDefinitions.add(puzzleElementDefinition);
-        assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitions));
+        listOfPuzzleElementDefinitionsWithoutId.add(puzzleElementDefinition);
+        assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitionsWithoutId));
     }
 
     @Test
@@ -80,11 +83,11 @@ public class SolverTest extends EventHandler {
         PuzzleElementDefinition elementDefinitionTR = new PuzzleElementDefinition(1,0,0,1);
         PuzzleElementDefinition elementDefinitionBL = new PuzzleElementDefinition(0,-1,-1,0);
         PuzzleElementDefinition elementDefinitionBR = new PuzzleElementDefinition(1,1,0,0);
-        listOfPuzzleElementDefinitions.add(elementDefinitionTL);
-        listOfPuzzleElementDefinitions.add(elementDefinitionTR);
-        listOfPuzzleElementDefinitions.add(elementDefinitionBL);
-        listOfPuzzleElementDefinitions.add(elementDefinitionBR);
-        assertTrue(puzzleSolver.isEnoughCornerElementsForSeveralRows(listOfPuzzleElementDefinitions));
+        listOfPuzzleElementDefinitionsWithoutId.add(elementDefinitionTL);
+        listOfPuzzleElementDefinitionsWithoutId.add(elementDefinitionTR);
+        listOfPuzzleElementDefinitionsWithoutId.add(elementDefinitionBL);
+        listOfPuzzleElementDefinitionsWithoutId.add(elementDefinitionBR);
+        assertTrue(puzzleSolver.isEnoughCornerElementsForSeveralRows(listOfPuzzleElementDefinitionsWithoutId));
     }
 
 
@@ -95,7 +98,7 @@ public class SolverTest extends EventHandler {
     public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
 
         setEdgesForTwoElements(p1, p2);
-        assertTrue(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions));
+        assertTrue(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId));
     }
 
     private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
@@ -114,7 +117,7 @@ public class SolverTest extends EventHandler {
     public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
 
         setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions));
+        assertFalse(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId));
     }
 
 
@@ -135,7 +138,7 @@ public class SolverTest extends EventHandler {
     public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
 
         setEdgesForTwoElements(p1, p2);
-        assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitions));
+        assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitionsWithoutId));
     }
 
     private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows() {
@@ -161,7 +164,7 @@ public class SolverTest extends EventHandler {
     public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
 
         setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitions));
+        assertFalse(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitionsWithoutId));
 
     }
 
@@ -194,16 +197,15 @@ public class SolverTest extends EventHandler {
     @MethodSource("positiveTestisSumOfAllEdgesEqualForTwoElements")
     public void positiveTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
         setEdgesForTwoElements(p1,  p2);
-        assertTrue(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitions));
+        assertTrue(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitionsWithoutId));
     }
 
 
     @ParameterizedTest
     @MethodSource("negativeTestisSumOfAllEdgesEqualForTwoElements")
-
     public void negativeTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2){
         setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitions));
+        assertFalse(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitionsWithoutId));
 
     }
 
@@ -212,17 +214,58 @@ public class SolverTest extends EventHandler {
         PuzzleElementDefinition p1 = new PuzzleElementDefinition(1,1,1,1);
         PuzzleElementDefinition p2 = new PuzzleElementDefinition(-1,-1,-1,-1);
         setEdgesForTwoElements(p1, p2);
-        puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitions);
-        expectedAllErrorWrittenToListOneColumnPuzzle();
+        puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId);
         assertEquals(puzzleSolver.getErrorsList(), expectedAllErrorWrittenToListOneColumnPuzzle());
     }
 
-    @Test
-    public void positiveTestFileToPEDList() throws Exception {
-        File file = new File("src\\test\\resources\\validPuzzle2PeacesOneRow.txt");
-        setEdgesForTwoElements(new PuzzleElementDefinition(1,1,0,0,0), new PuzzleElementDefinition(2,0,0,0,0));
-        List<PuzzleElementDefinition>actualList = FileParserUtils.fileToPEDArray(file);
-        assertEquals(actualList, listOfPuzzleElementDefinitions);
+    @ParameterizedTest
+    @MethodSource("positiveTestCheckIdValidity")
+    public void positiveTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
+                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4){
+        setEdgesForFourElements(p1, p2, p3, p4);
+        assertTrue(puzzleSolver.checkIdValidity(listOfPuzzleElementDefinitionsContainsId));
+    }
+
+    private static Stream<Arguments> positiveTestCheckIdValidity() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("negativeTestCheckIdValidity")
+    public void negativeTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
+                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4){
+        setEdgesForFourElements(p1, p2, p3, p4);
+        assertFalse(puzzleSolver.checkIdValidity(listOfPuzzleElementDefinitionsContainsId));
+    }
+
+    private static Stream<Arguments> negativeTestCheckIdValidity() {
+        return Stream.of(
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
+                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
+                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
+                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
+        );
     }
 
     public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle(){
@@ -230,9 +273,6 @@ public class SolverTest extends EventHandler {
                 "Cannot solve puzzle: missing corner element for one row solution: Bottom Corner"
         );
     }
-
-
-
 
     private static Stream<Arguments> negativeTestisSumOfAllEdgesEqualForTwoElements() {
         return Stream.of(
@@ -255,8 +295,16 @@ public class SolverTest extends EventHandler {
     }
 
     private void setEdgesForTwoElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2) {
-        listOfPuzzleElementDefinitions.add(ped1);
-        listOfPuzzleElementDefinitions.add(ped2);
+        listOfPuzzleElementDefinitionsWithoutId.add(ped1);
+        listOfPuzzleElementDefinitionsWithoutId.add(ped2);
+    }
+
+    private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
+                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
+        listOfPuzzleElementDefinitionsContainsId.add(ped1);
+        listOfPuzzleElementDefinitionsContainsId.add(ped2);
+        listOfPuzzleElementDefinitionsContainsId.add(ped3);
+        listOfPuzzleElementDefinitionsContainsId.add(ped4);
     }
 
     private static ArrayList<String> setErrorMessagesToExpextedErrorList(String ... erors){

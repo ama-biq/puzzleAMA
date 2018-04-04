@@ -1,6 +1,7 @@
 package file;
 
 import impl.EventHandler;
+import impl.PuzzleElementDefinition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 
 public class FileParserTest{
 
@@ -23,18 +25,8 @@ public class FileParserTest{
         EventHandler.emptyEventList();
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "              AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            ",",
-            "''",
-            "AAAAAAAAAAA#                                      ",
-            "AAAAAAAAAA#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            "!@#$%^&*()__+QWERTYUIONJSNKJNKJkjsdnckasdnndajkdjn",
-    })
-    public void passIsLineReadyForParse(String line) {
-        assertTrue(FileParserUtils.isLineReadyForParse(line));
-    }
+//////////////////////////////////////// FileUtils Tests ////////////////////////////////////////
+
 
     @Test
     public void readFile() throws Exception {
@@ -63,6 +55,23 @@ public class FileParserTest{
         }, "expected exception is FileNotFoundException");
     }
 
+    //////////////////////////////////////// isLineReadyForParse() Tests ////////////////////////////////////////
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "              AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            ",",
+            "''",
+            "AAAAAAAAAAA#                                      ",
+            "AAAAAAAAAA#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "!@#$%^&*()__+QWERTYUIONJSNKJNKJkjsdnckasdnndajkdjn",
+    })
+    public void passIsLineReadyForParse(String line) {
+        assertTrue(FileParserUtils.isLineReadyForParse(line));
+    }
+
+
     public void failIsLineReadyForParse() {
         String line = "#                    ";
         assertFalse(FileParserUtils.isLineReadyForParse(line));
@@ -89,6 +98,10 @@ public class FileParserTest{
             "   NumOfElements=3         ",
             "  NumOfElements   =   3    "
     })
+
+    //////////////////////////////////////// getNumOfElements() Tests ////////////////////////////////////////
+
+
     public void passGetNumOfElementsNumValue(String firstLine) throws Exception {
         assertEquals(FileParserUtils.getNumOfElements(firstLine), 3);
     }
@@ -173,6 +186,25 @@ public class FileParserTest{
 //
 //
 //    }
+    @Test
+    public void passCreatePEDFrom5Sides() throws Exception {
+        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(1, 0, 1, 0);
+        String line = "0 1 0 1 0";
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertEquals(testPed,referencePed);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 0 0 0",
+            "1 1 1 1 1 1"
+    })
+    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
+    }
+
+
 
 
 
