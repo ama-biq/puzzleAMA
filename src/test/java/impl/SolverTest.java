@@ -1,6 +1,7 @@
 package impl;
 
 import file.FileParserUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,6 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class SolverTest extends EventHandler {
+
+    @BeforeEach
+    public void beforeEach(){
+        EventHandler.emptyEventList();
+    }
 
     Solver puzzleSolver = new Solver();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();

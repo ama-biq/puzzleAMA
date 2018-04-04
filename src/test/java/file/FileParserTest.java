@@ -20,13 +20,16 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class FileParserTest extends EventHandler{
+public class FileParserTest{
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
 
-
+    @BeforeEach
+    public void beforeEach(){
+        EventHandler.emptyEventList();
+    }
 
 //////////////////////////////////////// FileUtils Tests ////////////////////////////////////////
 
@@ -179,22 +182,15 @@ public class FileParserTest extends EventHandler{
 
 
     }
-
-    //////////////////////////////////////// createPuzzleElementDefinition() Tests ////////////////////////////////////////
-
-
-
-//    @ParameterizedTest
-//    @CsvSource({
-//            "0 0 0 0 0",
-//            "1 1 1 1 1",
-//            "0  1   0   1   1",
-//            "   0101         "
-//    })
-//    public void passCreatePEDFrom5Sides(String line) throws Exception {
-//        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(0, 0, 0, 0);
-//        PuzzleElementDefinition testPED = FileParserUtils.createPuzzleElementDefinition(line);
-//        assertEquals(testPED,referencePed);       //To do Parametrized
+//    @Test
+//    public void failGetNumOfElementsParseInt() {
+//        String firstLine = "NumOfElements=A";
+//        assertThrows(Exception.class,
+//                () -> {
+//                    FileParserUtils.getNumOfElements(firstLine);
+//                });
+//
+//
 //    }
     @Test
     public void passCreatePEDFrom5Sides() throws Exception {
