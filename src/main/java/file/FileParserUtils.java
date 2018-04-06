@@ -1,7 +1,6 @@
 package file;
 
 
-import impl.EventHandler;
 import impl.PuzzleElementDefinition;
 
 import java.io.File;
@@ -53,16 +52,20 @@ public class FileParserUtils {
                 try {
                     return Integer.parseInt(split[1].trim());
                 } catch (Exception e) {
-                    throw new Exception();
+                    addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
                 }
             } else {
-                throw new Exception();
+                addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
             }
         }
-        throw new Exception();
+        addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+
+        return 0;
     }
 
     public static PuzzleElementDefinition createPuzzleElementDefinition(String line) throws Exception {
+        int elementID = 0;
+        boolean shouldCreatePED = true;
         int[] arr = new int[5];
         int j = 0;
         String split[] = line.trim().split("\\s+");
@@ -72,22 +75,33 @@ public class FileParserUtils {
                     arr[j] = Integer.parseInt(str);
                     j++;
                 } catch (Exception e) {
-                    addEventToList("Puzzle ID " + arr[0] + " has wrong data.");//TODO  <complete line from file including ID>
-//                    throw new Exception();
+                    addEventToList("Bad format for puzzle piece line: " + line);
+                    shouldCreatePED = false;
                 }
             }
         } else {
-            addEventToList("Puzzle ID " + arr[0] + " has wrong data.");//TODO  <complete line from file including ID>
-//            throw new Exception();
+            shouldCreatePED = false;
+            boolean idCannotParseInt = false;
+            try {
+                elementID = Integer.parseInt(split[0]);
+            } catch (Exception e) {
+                addEventToList("Bad format for puzzle piece line: " + line);
+                idCannotParseInt = true;
+            }
+            if (idCannotParseInt == false) {
+                addEventToList("Puzzle ID " + elementID + " has wrong data: " + line);
+            }
         }
-        PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
-        boolean isValid = verifyPuzzleElementDefinition(puzzleElementDefinition);
+        if (shouldCreatePED == true) {
+            PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
+            boolean isValid = verifyPuzzleElementDefinition(puzzleElementDefinition);
 
-        if (isValid) {
+            if (isValid) {
 
-            return puzzleElementDefinition;
+                return puzzleElementDefinition;
+            }
         }
-        throw new Exception();
+        return null;
     }
 
 
@@ -109,17 +123,17 @@ public class FileParserUtils {
 
     public static boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
         Set<Integer> validSet = new HashSet<>();
-        try{
-            for (PuzzleElementDefinition element : puzzleElementDefinition){
+        try {
+            for (PuzzleElementDefinition element : puzzleElementDefinition) {
                 validSet.add(element.getId());
             }
-        }catch (InputMismatchException e){
+        } catch (InputMismatchException e) {
             //todo write error message to the file
         }
-        TreeSet<Integer>sortedSet = new TreeSet<>(validSet);
-        return (puzzleElementDefinition.size()==sortedSet.size()&&
-                sortedSet.first()==Integer.valueOf(1)&&
-                sortedSet.last()==sortedSet.size());
-       // throw new Exception();
+        TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
+        return (puzzleElementDefinition.size() == sortedSet.size() &&
+                sortedSet.first() == Integer.valueOf(1) &&
+                sortedSet.last() == sortedSet.size());
+        // throw new Exception();
     }
 }
