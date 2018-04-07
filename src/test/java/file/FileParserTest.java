@@ -2,18 +2,14 @@ package file;
 
 import impl.EventHandler;
 import impl.PuzzleElementDefinition;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static impl.EventHandler.addEventToList;
-import static impl.EventHandler.getEventList;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,14 +18,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class FileParserTest{
+import static impl.EventHandler.getEventList;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FileParserTest {
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
+    File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
+
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         EventHandler.emptyEventList();
     }
 
@@ -145,7 +146,6 @@ public class FileParserTest{
     }
 
 
-
     @ParameterizedTest
     @CsvSource({
             "numofelements=2",
@@ -206,7 +206,7 @@ public class FileParserTest{
 
         PuzzleElementDefinition referencePed = new PuzzleElementDefinition(id, left, up, right, bottom);
         PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
-        assertEquals(testPed,referencePed);
+        assertEquals(testPed, referencePed);
     }
 
     @ParameterizedTest
@@ -239,7 +239,6 @@ public class FileParserTest{
     }
 
 
-
     @ParameterizedTest
     @CsvSource({
             "0 0 0 0 ",
@@ -264,10 +263,7 @@ public class FileParserTest{
     }
 
 
-
     //////////////////////////////////////// verifyPuzzleIDs() Tests ////////////////////////////////////////
-
-
 
 
     @ParameterizedTest
@@ -280,14 +276,14 @@ public class FileParserTest{
 
     private static Stream<Arguments> positiveTestCheckIdValidity() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0))
         );
     }
 
@@ -301,35 +297,101 @@ public class FileParserTest{
 
     private static Stream<Arguments> negativeTestCheckIdValidity() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(1, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(5, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(0, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(-6, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(-6, 1, 0, 0, 0))
         );
     }
 
     private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
-                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
+                                         PuzzleElementDefinition ped3, PuzzleElementDefinition ped4) {
         listOfPuzzleElementDefinitionsContainsId.add(ped1);
         listOfPuzzleElementDefinitionsContainsId.add(ped2);
         listOfPuzzleElementDefinitionsContainsId.add(ped3);
         listOfPuzzleElementDefinitionsContainsId.add(ped4);
     }
 
+
+    //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
+
+
+//    @ParameterizedTest
+//    @CsvSource({
+//            "src\\test\\resources\\validPuzzle2Peaces.txt",
+//            "src\\test\\resources\\validPuzzle3Peaces.txt",
+//            "src\\test\\resources\\validPuzzle4Peaces.txt",
+//            "src\\test\\resources\\validPuzzle5Peaces.txt",
+//            "src\\test\\resources\\validPuzzle6Peaces.txt",
+//            1,
+//            2,
+//            3,
+//            4,
+//
+//    })
+//    public void passCreateListOfPEDsValidFile(String path, int id, int left, int top, int right, int bottom) throws Exception {
+//        File testFile = new File(path);
+////        File file3Peaces = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
+////        File file4Peaces = new File("src\\test\\resources\\validPuzzle4Peaces.txt");
+////        File file5Peaces = new File("src\\test\\resources\\validPuzzle5Peaces.txt");
+////        File file6Peaces = new File("src\\test\\resources\\validPuzzle6Peaces.txt");
+//
+//        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(testFile);
+//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+//
+//
+//
+//
+//        listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
+//        listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
+//
+//        assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
+//                && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
+//
+//    }
+
+
+
+    @Test
+    public void passCreateListOfPEDsValidFile() throws Exception {
+        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid2);
+        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+        listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
+        listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
+
+        assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
+                && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
+
+    }
+
+
+
+
+
+
+
 }
+
+
+
+
+
+
