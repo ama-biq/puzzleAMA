@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static impl.EventHandler.addEventToList;
 import static impl.EventHandler.getEventList;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -182,12 +183,48 @@ public class FileParserTest{
 
     //////////////////////////////////////// createPuzzleElementDefinition() Tests ////////////////////////////////////////
 
-    @Test
-    public void passCreatePEDFrom5Sides() throws Exception {
-        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(1, 0, 1, 0);
-        String line = "0 1 0 1 0";
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 0 0 0 0",
+            "1 1 1 1 1",
+            "-1 -1 -1 -1 1",
+            "2 -1 -1 -1 -1",
+            "5 0 1 0 1",
+            "20 1 1 0 0",
+            "7 1 1 1 0",
+            "9 1 0 0 0",
+    })
+    public void passCreatePED(String line) throws Exception {
+        String[] testLine = line.split("\\s+");
+        System.out.println(Arrays.toString(testLine));
+        int id = Integer.parseInt(testLine[0]);
+        int left = Integer.parseInt(testLine[1]);
+        int up = Integer.parseInt(testLine[2]);
+        int right = Integer.parseInt(testLine[3]);
+        int bottom = Integer.parseInt(testLine[4]);
+
+        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(id, left, up, right, bottom);
         PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
         assertEquals(testPed,referencePed);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 4 0 0 0",
+            "1 7 1 1 1",
+            "-2 4 0 0 0",
+            "0 4 -8 0 0",
+            "1 2 3 4 5",
+            "-9 -9 -9 -9 -9",
+            "5 0 0 5 5",
+            "7 -3 0 0 1",
+    })
+    public void passCreatePEDFrom5SidesPEDNotValid(String line) throws Exception {
+        String[] testLine = line.split("\\s+");
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertTrue(getEventList().contains("Puzzle ID " + testLine[0] + " has wrong data: " + line));
+        assertEquals(testPed, null);
     }
 
     @ParameterizedTest
@@ -228,23 +265,7 @@ public class FileParserTest{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //////////////////////////////////////// verifyPuzzleIDs() Tests ////////////////////////////////////////
 
 
 

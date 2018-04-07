@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.*;
 
 import static impl.EventHandler.addEventToList;
+import static impl.EventHandler.getEventList;
 
 public class FileParserUtils {
 
@@ -33,8 +34,9 @@ public class FileParserUtils {
 
             return pedArray;
         }
+        pedArray.clear();
 
-        return pedArray;// Todo findout what to return in such case...
+        return pedArray;
     }
 
 
@@ -73,6 +75,9 @@ public class FileParserUtils {
             for (String str : split) {
                 try {
                     arr[j] = Integer.parseInt(str);
+                    if (j == 0) {
+                        elementID = arr[j];
+                    }
                     j++;
                 } catch (Exception e) {
                     addEventToList("Bad format for puzzle piece line: " + line);
@@ -101,6 +106,11 @@ public class FileParserUtils {
                 return puzzleElementDefinition;
             }
         }
+
+        addEventToList("Puzzle ID " + elementID + " has wrong data: " + line);
+        System.out.println(getEventList());
+
+
         return null;
     }
 
@@ -116,8 +126,6 @@ public class FileParserUtils {
 
         }
 
-        addEventToList("Puzzle ID " + puzzleElementDefinition.getId() + " has wrong data");//TODO  <complete line from file including ID>
-
         return false;
     }
 
@@ -128,7 +136,7 @@ public class FileParserUtils {
                 validSet.add(element.getId());
             }
         } catch (InputMismatchException e) {
-            //todo write error message to the file
+            //todo write error message to the file - <moshe: The parseInt of the id is being checked at createPuzzleElementDefinition method>
         }
         TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
         return (puzzleElementDefinition.size() == sortedSet.size() &&
