@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -214,6 +215,13 @@ public class SolverTest{
         setEdgesForTwoElements(p1, p2);
         puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId);
         assertTrue(EventHandler.getEventList().containsAll(expectedAllErrorWrittenToListOneColumnPuzzle()));
+    }
+
+    @Test
+    public void positiveTestSolveThePuzzle() throws Exception {
+        File inputFile = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
+        File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
+        puzzleSolver.solveThePuzzle(inputFile);
     }
 
 

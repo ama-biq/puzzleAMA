@@ -35,8 +35,9 @@ public class FileUtils {
         return readFile(file, StandardCharsets.UTF_8);
     }
 
-
-    public static void writeFile(File file, List<String> output) throws IOException {
+    //todo . Previous version of this finction was
+    //public static void writeFile(File file, List<String> output) throws IOException
+    public static void writeFile(List<String> output) throws IOException {
         FileOutputStream fos = new FileOutputStream((new File("")));
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             for(String str : output) {
