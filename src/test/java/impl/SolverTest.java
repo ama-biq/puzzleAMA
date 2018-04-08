@@ -266,4 +266,13 @@ public class SolverTest{
         }
         return errorList;
     }
+    @Test
+    public void positiveTestResolveThePuzzle(){
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1,1,0,0,0));
+        idsList.add(new PuzzleElementDefinition(2,1,0,0,0));
+        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,-1,0);
+        puzzleSolver.resolveThePuzzle(idsList,firstElement);
+
+    }
 }

@@ -7,8 +7,9 @@ import java.io.File;
 import java.util.*;
 
 import static impl.EventHandler.addEventToList;
-
 public class Solver {
+
+    private List<PuzzleElementDefinition> testedList;
 
     public void solveThePuzzle(File inputFile) throws Exception {
         List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
@@ -206,6 +207,25 @@ public class Solver {
         TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
         return (listToValid.size() == sortedSet.size() &&
                 sortedSet.last() == sortedSet.size());
+    }
+
+    public List<PuzzleElementDefinition> resolveThePuzzle(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition element){
+        testedList=validIdList;
+        for(PuzzleElementDefinition currentElement : testedList){
+            if(!currentElement.isLeftCornerExistsOnOneRowPuzzle()){
+                testedList = shiftElementToEndOfList(testedList, currentElement);
+               // resolveThePuzzle(testedList, element);
+                System.out.println(testedList);
+                System.out.println(validIdList);
+            }
+        }
+        return testedList;
+    }
+
+    private List<PuzzleElementDefinition> shiftElementToEndOfList(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition currentElement) {
+        validIdList.remove(currentElement);
+        validIdList.add(currentElement);
+        return validIdList;
     }
 
 }
