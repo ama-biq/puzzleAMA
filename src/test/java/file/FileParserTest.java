@@ -24,8 +24,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FileParserTest {
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
-    File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
     File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
+    File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
+    File valid4 = new File("src\\test\\resources\\validPuzzle4Peaces.txt");
+    File valid5 = new File("src\\test\\resources\\validPuzzle5Peaces.txt");
+    File valid6 = new File("src\\test\\resources\\validPuzzle6Peaces.txt");
+
 
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
 
@@ -330,44 +334,6 @@ public class FileParserTest {
 
 
     //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
-
-
-//    @ParameterizedTest
-//    @CsvSource({
-//            "src\\test\\resources\\validPuzzle2Peaces.txt",
-//            "src\\test\\resources\\validPuzzle3Peaces.txt",
-//            "src\\test\\resources\\validPuzzle4Peaces.txt",
-//            "src\\test\\resources\\validPuzzle5Peaces.txt",
-//            "src\\test\\resources\\validPuzzle6Peaces.txt",
-//            1,
-//            2,
-//            3,
-//            4,
-//
-//    })
-//    public void passCreateListOfPEDsValidFile(String path, int id, int left, int top, int right, int bottom) throws Exception {
-//        File testFile = new File(path);
-////        File file3Peaces = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
-////        File file4Peaces = new File("src\\test\\resources\\validPuzzle4Peaces.txt");
-////        File file5Peaces = new File("src\\test\\resources\\validPuzzle5Peaces.txt");
-////        File file6Peaces = new File("src\\test\\resources\\validPuzzle6Peaces.txt");
-//
-//        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(testFile);
-//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-//
-//
-//
-//
-//        listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
-//        listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
-//
-//        assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
-//                && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
-//
-//    }
-
-
 
     @Test
     public void passCreateListOfPEDsValidFile() throws Exception {
