@@ -7,13 +7,13 @@ import java.io.File;
 import java.util.*;
 
 import static impl.EventHandler.addEventToList;
-import static impl.EventHandler.getEventList;
 
 public class FileParserUtils {
 
     private static List<PuzzleElementDefinition> pedArray = new ArrayList<>();
     private static int numOfElements;
     private static boolean isParsedDataIntact;
+
 
     public static List<PuzzleElementDefinition> fileToPEDArray(File file) throws Exception {
 
@@ -34,9 +34,8 @@ public class FileParserUtils {
 
             return pedArray;
         }
-        pedArray.clear();
 
-        return pedArray;
+        return pedArray;// Todo findout what to return in such case...
     }
 
 
@@ -54,20 +53,16 @@ public class FileParserUtils {
                 try {
                     return Integer.parseInt(split[1].trim());
                 } catch (Exception e) {
-                    addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+                    throw new Exception();
                 }
             } else {
-                addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+                throw new Exception();
             }
         }
-        addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
-
-        return 0;
+        throw new Exception();
     }
 
     public static PuzzleElementDefinition createPuzzleElementDefinition(String line) throws Exception {
-        int elementID = 0;
-        boolean shouldCreatePED = true;
         int[] arr = new int[5];
         int j = 0;
         String split[] = line.trim().split("\\s+");
@@ -75,43 +70,24 @@ public class FileParserUtils {
             for (String str : split) {
                 try {
                     arr[j] = Integer.parseInt(str);
-                    if (j == 0) {
-                        elementID = arr[j];
-                    }
                     j++;
                 } catch (Exception e) {
-                    addEventToList("Bad format for puzzle piece line: " + line);
-                    shouldCreatePED = false;
+                    addEventToList("Puzzle ID " + arr[0] + " has wrong data.");//TODO  <complete line from file including ID>
+//                    throw new Exception();
                 }
             }
         } else {
-            shouldCreatePED = false;
-            boolean idCannotParseInt = false;
-            try {
-                elementID = Integer.parseInt(split[0]);
-            } catch (Exception e) {
-                addEventToList("Bad format for puzzle piece line: " + line);
-                idCannotParseInt = true;
-            }
-            if (idCannotParseInt == false) {
-                addEventToList("Puzzle ID " + elementID + " has wrong data: " + line);
-            }
+            addEventToList("Puzzle ID " + arr[0] + " has wrong data.");//TODO  <complete line from file including ID>
+//            throw new Exception();
         }
-        if (shouldCreatePED == true) {
-            PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
-            boolean isValid = verifyPuzzleElementDefinition(puzzleElementDefinition);
+        PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
+        boolean isValid = verifyPuzzleElementDefinition(puzzleElementDefinition);
 
-            if (isValid) {
+        if (isValid) {
 
-                return puzzleElementDefinition;
-            }
+            return puzzleElementDefinition;
         }
-
-        addEventToList("Puzzle ID " + elementID + " has wrong data: " + line);
-        System.out.println(getEventList());
-
-
-        return null;
+        throw new Exception();
     }
 
 
@@ -126,22 +102,64 @@ public class FileParserUtils {
 
         }
 
+        addEventToList("Puzzle ID " + puzzleElementDefinition.getId() + " has wrong data");//TODO  <complete line from file including ID>
+
         return false;
     }
 
     public static boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
-        Set<Integer> validSet = new HashSet<>();
-        try {
-            for (PuzzleElementDefinition element : puzzleElementDefinition) {
-                validSet.add(element.getId());
+        boolean isIdsAreValid = true;
+        Set<Integer> setToValid = new HashSet<>();
+        try{
+            for (PuzzleElementDefinition element : puzzleElementDefinition){
+                setToValid.add(element.getId());
             }
-        } catch (InputMismatchException e) {
-            //todo write error message to the file - <moshe: The parseInt of the id is being checked at createPuzzleElementDefinition method>
+        }catch (InputMismatchException e){
+            //todo write error message to the file
         }
-        TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
-        return (puzzleElementDefinition.size() == sortedSet.size() &&
-                sortedSet.first() == Integer.valueOf(1) &&
-                sortedSet.last() == sortedSet.size());
-        // throw new Exception();
+        List<String> missingElementIDlist = whichElementIdMissing(setToValid,numOfElements);
+        if(missingElementIDlist.size() > 0){
+            isIdsAreValid = false;
+            addEventToList("Missing puzzle element(s) with the following IDs: " + missingElementIDlist.toString());
+            System.out.println("Missing puzzle element(s) with the following IDs: " + missingElementIDlist.toString());
+            //todo write error message to the file
+         //  FileUtils.writeFile(missingElementIDlist);
+            //"Missing puzzle element(s) with the following IDs:..."
+        }
+        ArrayList<String> wrongElementIdList = whichElementIdIsWrong(setToValid,numOfElements);
+        if(wrongElementIdList.size() > 0){
+            isIdsAreValid = false;
+            //todo write error message to the file
+            //"Missing puzzle element(s) with the following IDs:..."
+            addEventToList("Puzzle of size "+puzzleElementDefinition.size()+ " cannot have the following IDs: " + wrongElementIdList.toString());
+            System.out.println("Puzzle of size "+puzzleElementDefinition.size()+ " cannot have the following IDs:  " + wrongElementIdList.toString());
+        }
+        return isIdsAreValid;
+
+    }
+
+    static ArrayList<String> whichElementIdIsWrong(Set<Integer> sortedSet, int numOfElements) {
+        ArrayList<String> wrongElementsIdList = new ArrayList<>();
+        Iterator<Integer> iterator = sortedSet.iterator();
+        while (iterator.hasNext()){
+            Integer value = iterator.next();
+            if( value > numOfElements || value <1){
+                wrongElementsIdList.add(Integer.toString(value));
+            }
+        }
+        return  wrongElementsIdList;
+    }
+
+
+    static ArrayList<String> whichElementIdMissing(Set<Integer> sortedSet, int numOfElements) {
+        Integer counter = 1;
+        ArrayList<String>missingiDElementsList = new ArrayList<>();
+        while (counter <= numOfElements){
+            if(! sortedSet.contains(counter)){
+                missingiDElementsList.add(Integer.toString(counter));
+            }
+            counter++;
+        }
+        return missingiDElementsList;
     }
 }

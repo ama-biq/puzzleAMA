@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -216,6 +217,13 @@ public class SolverTest{
         assertTrue(EventHandler.getEventList().containsAll(expectedAllErrorWrittenToListOneColumnPuzzle()));
     }
 
+    @Test
+    public void positiveTestSolveThePuzzle() throws Exception {
+        File inputFile = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
+        File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
+        puzzleSolver.solveThePuzzle(inputFile);
+    }
+
 
 
     public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle(){
@@ -257,5 +265,14 @@ public class SolverTest{
             errorList.add(error);
         }
         return errorList;
+    }
+    @Test
+    public void positiveTestResolveThePuzzle(){
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1,1,0,0,0));
+        idsList.add(new PuzzleElementDefinition(2,1,0,0,0));
+        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,-1,0);
+        puzzleSolver.resolveThePuzzle(idsList,firstElement);
+
     }
 }
