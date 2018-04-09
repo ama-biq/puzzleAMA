@@ -10,6 +10,13 @@ import static impl.EventHandler.addEventToList;
 public class Solver {
 
     private List<PuzzleElementDefinition> testedList;
+    private Map<Integer, ArrayList<PuzzleElementDefinition>> solutionMap = new HashMap<>();
+
+    public List<Integer> getSolutionList() {
+        return solutionList;
+    }
+
+    private List<Integer> solutionList = new ArrayList<>();
 
     public void solveThePuzzle(File inputFile) throws Exception {
         List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
@@ -209,23 +216,115 @@ public class Solver {
                 sortedSet.last() == sortedSet.size());
     }
 
-    public List<PuzzleElementDefinition> resolveThePuzzle(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition element){
-        testedList=validIdList;
-        for(PuzzleElementDefinition currentElement : testedList){
-            if(!currentElement.isLeftCornerExistsOnOneRowPuzzle()){
-                testedList = shiftElementToEndOfList(testedList, currentElement);
-               // resolveThePuzzle(testedList, element);
-                System.out.println(testedList);
-                System.out.println(validIdList);
+    public void resolveTheOneRowPuzzle(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement){
+        testedList=copyList(validIdList);
+        solveRow(testedList,  templateElement, calcFactorial(6));
+        int finalMapSize = solutionMap.get(1).size();
+        if(finalMapSize == validIdList.size()){
+            solutionMapToSolutionList();
+        }else{
+            System.out.println(EventHandler.NO_SOLUTION);
+        }
+
+    }
+
+
+    // public List<Integer>solveRow(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement){
+    public void solveRow(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement, int colNum){
+        while (!validIdList.isEmpty() && colNum != 0) {
+            for (int i = 0; i < validIdList.size() && colNum != 0; i++) {
+                if (!isMatch(validIdList.get(i), templateElement)) {
+                    validIdList = shiftElementToEndOfList(validIdList, validIdList.get(i));
+                    solveRow(validIdList, templateElement, --colNum);
+                } else {
+                    addPEDToMap(validIdList.get(i));
+                    PuzzleElementDefinition template = nextElementBuilder(validIdList.get(i));
+                    validIdList.remove(validIdList.get(i));
+                    if (!validIdList.isEmpty()) {
+                        solveRow(validIdList, template, --colNum);
+                    }
+                }
             }
         }
-        return testedList;
+    }
+
+    private void addPEDToMap(PuzzleElementDefinition elementDefinition) {
+
+        ArrayList<PuzzleElementDefinition>elementList = solutionMap.get(1);
+        if(elementList == null) {
+            elementList = new ArrayList<>();
+        }
+            elementList.add(elementDefinition);
+            solutionMap.put(1, elementList);
+
+    }
+
+    public void solutionMapToSolutionList(){
+        ArrayList<PuzzleElementDefinition> listToPrint = solutionMap.get(1);
+        for (PuzzleElementDefinition element : listToPrint){
+            solutionList.add(element.getId());
+        }
+    }
+
+    private boolean isMatch(PuzzleElementDefinition currentElement, PuzzleElementDefinition templateElement) {
+        int left = templateElement.getLeft();
+        if((left <= 1 || left >=-1) && left != Integer.MAX_VALUE){
+            if(!checkEdgeMatch(left, currentElement.getLeft())) {
+                return false;
+            }
+        }
+        int right = templateElement.getRight();
+        if((right <= 1 || right >=-1)&& right != Integer.MAX_VALUE){
+            if(!checkEdgeMatch(right, currentElement.getRight())){
+                return false;
+            }
+        }
+        int up = templateElement.getUp();
+        if((up <= 1 || up >=-1)&& up != Integer.MAX_VALUE){
+            if(!checkEdgeMatch(up, currentElement.getUp())){
+                return false;
+            }
+        }
+        int bottom = templateElement.getBottom();
+        if((bottom <= 1 || bottom >=-1)&& bottom != Integer.MAX_VALUE){
+            if(!checkEdgeMatch(bottom, currentElement.getBottom())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkEdgeMatch(int currentElementEdge, int temlateEdge) {
+        return currentElementEdge == temlateEdge;
+    }
+
+    private PuzzleElementDefinition nextElementBuilder(PuzzleElementDefinition element) {
+        Integer leftEdge = element.getRight() * (-1);
+        return new PuzzleElementDefinition(leftEdge,0,Integer.MAX_VALUE,0);
+    }
+
+    private List<PuzzleElementDefinition> copyList(List<PuzzleElementDefinition> validIdList) {
+        List<PuzzleElementDefinition> retList=new ArrayList<>();
+        for(PuzzleElementDefinition element: validIdList){
+            retList.add(element);
+        }
+        return retList;
     }
 
     private List<PuzzleElementDefinition> shiftElementToEndOfList(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition currentElement) {
         validIdList.remove(currentElement);
         validIdList.add(currentElement);
         return validIdList;
+    }
+
+    private static int calcFactorial(int i) {
+        if (i == 1) {
+            return 1;
+        } else {
+            return i * calcFactorial(i - 1);
+        }
+
+
     }
 
 }

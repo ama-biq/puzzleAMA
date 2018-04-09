@@ -267,12 +267,62 @@ public class SolverTest{
         return errorList;
     }
     @Test
-    public void positiveTestResolveThePuzzle(){
+    public void positive2ElementsTestResolveThePuzzle(){
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(1,1,0,0,0));
-        idsList.add(new PuzzleElementDefinition(2,1,0,0,0));
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,-1,0);
-        puzzleSolver.resolveThePuzzle(idsList,firstElement);
+        idsList.add(new PuzzleElementDefinition(1,0,0,0,0));
+        idsList.add(new PuzzleElementDefinition(2,0,0,0,0));
+        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,0,0);
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(2);
+        puzzleSolver.resolveTheOneRowPuzzle(idsList,firstElement);
+        assertEquals(puzzleSolver.getSolutionList(), expectedList);
 
     }
+
+    @Test
+    public void positive3ElementsTestResolveThePuzzle(){
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1,0,0,0,0));
+        idsList.add(new PuzzleElementDefinition(2,-1,0,0,0));
+        idsList.add(new PuzzleElementDefinition(3,0,0,1,0));
+
+        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,Integer.MAX_VALUE,0);
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(3);
+        expectedList.add(2);
+        puzzleSolver.resolveTheOneRowPuzzle(idsList,firstElement);
+        assertEquals(puzzleSolver.getSolutionList(), expectedList);
+    }
+
+//    @Test
+//    public void negative3ElementsTestResolveThePuzzle(){
+//        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+//        idsList.add(new PuzzleElementDefinition(1,1,0,0,0));
+//        idsList.add(new PuzzleElementDefinition(2,-1,0,0,0));
+//        idsList.add(new PuzzleElementDefinition(3,0,0,1,0));
+//
+//        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,Integer.MAX_VALUE,0);
+//        List<Integer> expectedList = new ArrayList<>();
+//        expectedList.add(1);
+//        expectedList.add(3);
+//        expectedList.add(2);
+//        puzzleSolver.resolveTheOneRowPuzzle(idsList,firstElement);
+//        assertEquals(puzzleSolver.getSolutionList(), expectedList);
+//    }
+
+    @Test
+    public void positive1ElementTestResolveThePuzzle(){
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1,0,0,0,0));
+
+        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0,0,Integer.MAX_VALUE,0);
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        puzzleSolver.resolveTheOneRowPuzzle(idsList,firstElement);
+        assertEquals(puzzleSolver.getSolutionList(), expectedList);
+    }
+
+
 }
