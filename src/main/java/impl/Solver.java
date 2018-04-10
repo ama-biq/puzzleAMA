@@ -12,8 +12,8 @@ public class Solver {
     private List<PuzzleElementDefinition> testedList;
     private Map<Integer, ArrayList<PuzzleElementDefinition>> solverMap = new HashMap<>();
 
-    int maxRow;
-    int maxColumn;
+    private int maxRow;
+    private int maxColumn;
 
     public List<Integer> getSolutionList() {
         return solutionList;
