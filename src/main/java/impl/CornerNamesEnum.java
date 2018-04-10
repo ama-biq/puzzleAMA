@@ -5,7 +5,12 @@ public enum CornerNamesEnum {
     BL("BL"),
     BR("BR"),
     TL("TL"),
-    TR("TR");
+    TR("TR"),
+    SQ("SQ"),
+    TLTR("TLTR"),
+    BLBR("BLBR"),
+    TLBL("TLBL"),
+    TRBR("TRBR");
 
     String value;
 

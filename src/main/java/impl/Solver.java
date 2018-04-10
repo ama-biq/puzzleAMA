@@ -7,13 +7,14 @@ import java.io.File;
 import java.util.*;
 
 import static impl.EventHandler.addEventToList;
+
 public class Solver {
 
     private List<PuzzleElementDefinition> testedList;
     private Map<Integer, ArrayList<PuzzleElementDefinition>> solverMap = new HashMap<>();
-
-    int maxRow;
-    int maxColumn;
+    private int fakeNumber = Integer.MAX_VALUE;
+    private int maxRow;
+    private int maxColumn;
 
     public List<Integer> getSolutionList() {
         return solutionList;
@@ -219,17 +220,17 @@ public class Solver {
                 sortedSet.last() == sortedSet.size());
     }
 
-    public void resolveTheOneRowPuzzle(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement){
-        testedList=copyList(validIdList);
+    public void resolveTheOneRowPuzzle(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement) {
+        testedList = copyList(validIdList);
         maxRow = 1;
-        maxColumn = 4;
-        solveRow(testedList,  templateElement, calcFactorial(maxColumn));
-        if(!solverMap.isEmpty()) {
+        maxColumn = 3;
+        solveRow(testedList, templateElement, calcFactorial(maxColumn));
+        if (!solverMap.isEmpty()) {
             int finalMapSize = solverMap.get(1).size();
             if (finalMapSize == validIdList.size()) {
                 solutionMapToSolutionList();
             }
-        }else {
+        } else {
             System.out.println(EventHandler.NO_SOLUTION);
         }
 
@@ -237,7 +238,7 @@ public class Solver {
 
 
     // public List<Integer>solveRow(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement){
-    public void solveRow(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement, int colNum){
+    public void solveRow(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement, int colNum) {
         while (!validIdList.isEmpty() && colNum != 0) {
             for (int i = 0; i < validIdList.size() && colNum != 0; i++) {
                 if (!isMatch(validIdList.get(i), templateElement)) {
@@ -257,44 +258,44 @@ public class Solver {
 
     private void addPEDToMap(PuzzleElementDefinition elementDefinition) {
 
-        ArrayList<PuzzleElementDefinition>elementList = solverMap.get(1);
-        if(elementList == null) {
+        ArrayList<PuzzleElementDefinition> elementList = solverMap.get(1);
+        if (elementList == null) {
             elementList = new ArrayList<>();
         }
-            elementList.add(elementDefinition);
-            solverMap.put(1, elementList);
+        elementList.add(elementDefinition);
+        solverMap.put(1, elementList);
 
     }
 
-    public void solutionMapToSolutionList(){
+    public void solutionMapToSolutionList() {
         ArrayList<PuzzleElementDefinition> listToPrint = solverMap.get(1);
-        for (PuzzleElementDefinition element : listToPrint){
+        for (PuzzleElementDefinition element : listToPrint) {
             solutionList.add(element.getId());
         }
     }
 
     private boolean isMatch(PuzzleElementDefinition currentElement, PuzzleElementDefinition templateElement) {
         int left = templateElement.getLeft();
-        if((left <= 1 || left >=-1) && left != Integer.MAX_VALUE){
-            if(!checkEdgeMatch(left, currentElement.getLeft())) {
+        if ((left <= 1 || left >= -1) && left != fakeNumber) {
+            if (!checkEdgeMatch(left, currentElement.getLeft())) {
                 return false;
             }
         }
         int right = templateElement.getRight();
-        if((right <= 1 || right >=-1)&& right != Integer.MAX_VALUE){
-            if(!checkEdgeMatch(right, currentElement.getRight())){
+        if ((right <= 1 || right >= -1) && right != fakeNumber) {
+            if (!checkEdgeMatch(right, currentElement.getRight())) {
                 return false;
             }
         }
         int up = templateElement.getUp();
-        if((up <= 1 || up >=-1)&& up != Integer.MAX_VALUE){
-            if(!checkEdgeMatch(up, currentElement.getUp())){
+        if ((up <= 1 || up >= -1) && up != fakeNumber) {
+            if (!checkEdgeMatch(up, currentElement.getUp())) {
                 return false;
             }
         }
         int bottom = templateElement.getBottom();
-        if((bottom <= 1 || bottom >=-1)&& bottom != Integer.MAX_VALUE){
-            if(!checkEdgeMatch(bottom, currentElement.getBottom())){
+        if ((bottom <= 1 || bottom >= -1) && bottom != fakeNumber) {
+            if (!checkEdgeMatch(bottom, currentElement.getBottom())) {
                 return false;
             }
         }
@@ -307,12 +308,12 @@ public class Solver {
 
     private PuzzleElementDefinition nextElementBuilder(PuzzleElementDefinition element) {
         Integer leftEdge = element.getRight() * (-1);
-        return new PuzzleElementDefinition(leftEdge,0,Integer.MAX_VALUE,0);
+        return new PuzzleElementDefinition(leftEdge, 0, fakeNumber, 0);
     }
 
     private List<PuzzleElementDefinition> copyList(List<PuzzleElementDefinition> validIdList) {
-        List<PuzzleElementDefinition> retList=new ArrayList<>();
-        for(PuzzleElementDefinition element: validIdList){
+        List<PuzzleElementDefinition> retList = new ArrayList<>();
+        for (PuzzleElementDefinition element : validIdList) {
             retList.add(element);
         }
         return retList;
@@ -334,59 +335,290 @@ public class Solver {
 
     }
 
-    private PuzzleElementDefinition templateBuilder(PuzzleElementDefinition curElement){
+    private PuzzleElementDefinition templateBuilder(PuzzleElementDefinition curElement) {
         int curRow = solverMap.size();
-        if((maxColumn - solverMap.size() == 1)){ //last column
-            if( maxRow - curRow > 0 && curRow == 1){ //first row
-                return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, Integer.MAX_VALUE);
-            }
-            else if( maxRow - curRow > 0 ){ //middle row
-                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), 0, Integer.MAX_VALUE);
-            }
-            else if( maxRow - curRow == 0 && curRow == maxRow && maxRow == 1){ //puzzle one row
+        if ((maxColumn - solverMap.size() == 1)) { //last column
+            if (maxRow - curRow > 0 && curRow == 1) { //first row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, fakeNumber);
+            } else if (maxRow - curRow > 0) { //middle row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), 0, fakeNumber);
+            } else if (maxRow - curRow == 0 && curRow == maxRow && maxRow == 1) { //puzzle one row
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, 0);
-            }
-            else if( maxRow - curRow == 0){ //last row
+            } else if (maxRow - curRow == 0) { //last row
                 return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), 0, 0);
             }
         }
 
-        if((maxColumn - solverMap.size() > 1)){ //middle column
-            if( maxRow - curRow > 0 && curRow == 1){ //first row
-                return new PuzzleElementDefinition(calcLeft(curElement), 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
-            }
-            else if( maxRow - curRow > 0 ){ //middle row
-                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), Integer.MAX_VALUE, Integer.MAX_VALUE);
-            }
-            else if( maxRow - curRow == 0 && curRow == maxRow && maxRow == 1){ //puzzle one row
-                return new PuzzleElementDefinition(calcLeft(curElement), 0, Integer.MAX_VALUE, 0);
-            }
-            else if( maxRow - curRow == 0){ //last row
-                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), Integer.MAX_VALUE, 0);
+        if ((maxColumn - solverMap.size() > 1)) { //middle column
+            if (maxRow - curRow > 0 && curRow == 1) { //first row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, fakeNumber);
+            } else if (maxRow - curRow > 0) { //middle row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), fakeNumber, fakeNumber);
+            } else if (maxRow - curRow == 0 && curRow == maxRow && maxRow == 1) { //puzzle one row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, 0);
+            } else if (maxRow - curRow == 0) { //last row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), fakeNumber, 0);
             }
         }
 
-        if((maxColumn - solverMap.size() == 0 && curRow > 1)){ //puzzle one column
+        if ((maxColumn - solverMap.size() == 0 && curRow > 1)) { //puzzle one column
             //should exit row
-            if( maxRow - curRow > 0 ){ //middle row
-                return new PuzzleElementDefinition(0, calcTop(curRow, maxColumn), 0, Integer.MAX_VALUE);
-            }
-            else if( maxRow - curRow == 0){ //last row
+            if (maxRow - curRow > 0) { //middle row
+                return new PuzzleElementDefinition(0, calcTop(curRow, maxColumn), 0, fakeNumber);
+            } else if (maxRow - curRow == 0) { //last row
                 return new PuzzleElementDefinition(0, calcTop(curRow, maxColumn), 0, 0);
             }
         }
         return new PuzzleElementDefinition(0, 0, 0, 0);// check return statement
     }
 
-    private int calcTop(int curRow, int curColumn){
+    private int calcTop(int curRow, int curColumn) {
         List<PuzzleElementDefinition> list = solverMap.get(curRow - 1);
         PuzzleElementDefinition element = list.get(curColumn);
-        return element.getBottom()*(-1);
+        return element.getBottom() * (-1);
     }
 
-    private int calcLeft(PuzzleElementDefinition element){
-        return element.getRight()*(-1);
+    private int calcLeft(PuzzleElementDefinition element) {
+        return element.getRight() * (-1);
     }
 
+
+    public static List<Integer> getSolverWides(List<PuzzleElementDefinition> puzzleElements) {
+        List<Integer> retVal = new ArrayList<>();
+        int numOfElements = puzzleElements.size();
+
+        if (isPrime(numOfElements)) {
+            retVal.add(1);
+            retVal.add(numOfElements);
+            return retVal;
+        } else {
+            return calculateWides(numOfElements);
+        }
+    }
+
+    private static List<Integer> calculateWides(int numOfElements) {
+        List<Integer> retVal = new ArrayList<>();
+        for (int i = 1; i <= numOfElements; i++) {
+            if (numOfElements % i == 0) {
+                retVal.add(i);
+            }
+        }
+        return retVal;
+    }
+
+    private static boolean isPrime(int number) {
+
+        if (number < 4) {
+            return true;
+        }
+        for (int i = 2; i < number / 2; i++) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isSumOfEdgesZero(List<PuzzleElementDefinition> puzzleElements) {
+        int sum = 0;
+        for (PuzzleElementDefinition puzzleElement : puzzleElements) {
+            sum += (puzzleElement.getLeft() + puzzleElement.getUp() + puzzleElement.getRight() + puzzleElement.getBottom());
+        }
+        if (sum != 0) {
+            EventHandler.addEventToList(EventHandler.SUM_ZERO);
+        }
+        return sum == 0;
+    }
+
+    //the method should solve/fill errors in case corners are missing
+    public static boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+
+        int numOfElements = puzzleElements.size();
+        int height = numOfElements / wide;
+        Map<CornerNamesEnum, Boolean> missingCorners = new HashMap<>();
+        Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements = getCornerElements(wide, puzzleElements);
+
+        if (numOfElements == 1) {
+            if (!cornerElements.get(CornerNamesEnum.SQ).isEmpty()) {
+                return false;
+            } else {
+                addMissingCornerErrorsIfExist(cornerElements);
+                return true;
+            }
+        }
+        if (wide == 1) {
+            return isMissingColumnPuzzleCorners(cornerElements);
+        } else if (height == 1) {
+            return isMissingRowPuzzleCorners(cornerElements);
+        } else {
+            //TODO 2x2 and more
+            return isMissingCornersInMap(cornerElements);
+        }
+    }
+
+    private static boolean isMissingColumnPuzzleCorners(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        int topCornersElement = cornerElements.get(CornerNamesEnum.TLTR).size();
+        int bottomCornersElement = cornerElements.get(CornerNamesEnum.BLBR).size();
+        int squareElements = cornerElements.get(CornerNamesEnum.SQ).size();
+        if (squareElements >= 2 ||
+                (topCornersElement != 0 && bottomCornersElement != 0) ||
+                (topCornersElement != 0 && squareElements > 0) ||
+                (bottomCornersElement != 0 && squareElements > 0)
+                ) {
+            return false;
+        }
+        if (squareElements == 1) {
+            PuzzleElementDefinition puzzleElement = cornerElements.get(CornerNamesEnum.SQ).get(0);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BL, puzzleElement);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
+        }
+        addMissingCornerErrorsIfExist(cornerElements);
+        return true;
+    }
+
+    private static boolean isMissingRowPuzzleCorners(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        int leftCornersElement = cornerElements.get(CornerNamesEnum.TLBL).size();
+        int rightCornersElement = cornerElements.get(CornerNamesEnum.TRBR).size();
+        int squareElements = cornerElements.get(CornerNamesEnum.SQ).size();
+        if (squareElements >= 2 ||
+                (leftCornersElement != 0 && rightCornersElement != 0) ||
+                (leftCornersElement != 0 && squareElements > 0) ||
+                (rightCornersElement != 0 && squareElements > 0)
+                ) {
+            return false;
+        }
+        if (squareElements == 1) {
+            PuzzleElementDefinition puzzleElement = cornerElements.get(CornerNamesEnum.SQ).get(0);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.TR, puzzleElement);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
+        }
+        addMissingCornerErrorsIfExist(cornerElements);
+        return true;
+    }
+
+    private static boolean isMissingCornersInMap(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        int topLeftCornersElement = cornerElements.get(CornerNamesEnum.TL).size();
+        int topRightCornersElement = cornerElements.get(CornerNamesEnum.TR).size();
+        int bottomLeftCornersElement = cornerElements.get(CornerNamesEnum.BL).size();
+        int bottomRightCornersElement = cornerElements.get(CornerNamesEnum.BR).size();
+        int squareElements = cornerElements.get(CornerNamesEnum.SQ).size();
+        if (squareElements >= 4 ||
+                (topLeftCornersElement != 0 && topRightCornersElement != 0 && bottomLeftCornersElement != 0 && bottomRightCornersElement != 0) ||
+                ((topLeftCornersElement != 0 || topRightCornersElement != 0 || bottomLeftCornersElement != 0 || bottomRightCornersElement != 0) && squareElements == 3)
+                ) {
+            return false;
+        }
+
+
+        if (squareElements == 2) {
+            if (topLeftCornersElement == 0) {
+
+            }
+        }
+        if (squareElements == 1) {
+            PuzzleElementDefinition puzzleElement = cornerElements.get(CornerNamesEnum.SQ).get(0);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.TR, puzzleElement);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
+        }
+        addMissingCornerErrorsIfExist(cornerElements);
+        return true;
+    }
+
+    private static void addMissingCornerErrorsIfExist(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        for (Map.Entry<CornerNamesEnum, List<PuzzleElementDefinition>> entry : cornerElements.entrySet()) {
+            if (entry.getValue().isEmpty() && (entry.getKey().getValue().equals("TL") ||
+                    entry.getKey().getValue().equals("TR") ||
+                    entry.getKey().getValue().equals("BL") ||
+                    entry.getKey().getValue().equals("BR"))
+                    ) {
+                EventHandler.addEventToList(EventHandler.MISSING_CORNER + entry.getKey().getValue());
+            }
+        }
+    }
+
+    private static Map<CornerNamesEnum, List<PuzzleElementDefinition>> getCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+
+        int height = puzzleElements.size() / wide;
+        Map<CornerNamesEnum, List<PuzzleElementDefinition>> availableCorners = new HashMap<>();
+        availableCorners.put(CornerNamesEnum.TL, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.BL, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.BR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.SQ, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TLTR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.BLBR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TLBL, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TRBR, new ArrayList<>());
+        for (PuzzleElementDefinition puzzleElement : puzzleElements) {
+            if (isSquare(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.SQ, puzzleElement);
+            } else if (isTopLeft(puzzleElement) && isTopRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TLTR, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TL, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TR, puzzleElement);
+                }
+            } else if (isBottomLeft(puzzleElement) && isBottomRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.BLBR, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BL, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BR, puzzleElement);
+                }
+            } else if (isTopLeft(puzzleElement) && isBottomLeft(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TLBL, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TL, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BL, puzzleElement);
+                }
+            } else if (isTopRight(puzzleElement) && isBottomRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TRBR, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TR, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BR, puzzleElement);
+                }
+            } else if (isTopLeft(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TL, puzzleElement);
+            } else if (isTopRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TR, puzzleElement);
+            } else if (isBottomLeft(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.BL, puzzleElement);
+            } else if (isBottomRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.BR, puzzleElement);
+            }
+        }
+        return availableCorners;
+    }
+
+    private static void fillAvailableCornersMap
+            (Map<CornerNamesEnum, List<PuzzleElementDefinition>> availableCorners, CornerNamesEnum
+                    corner, PuzzleElementDefinition puzzleElement) {
+        List<PuzzleElementDefinition> puzzleElements = availableCorners.get(corner);
+        puzzleElements.add(puzzleElement);
+        availableCorners.putIfAbsent(corner, puzzleElements);
+    }
+
+    private static boolean isBottomRight(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getRight() == 0 && puzzleElement.getBottom() == 0);
+    }
+
+    private static boolean isBottomLeft(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getLeft() == 0 && puzzleElement.getBottom() == 0);
+    }
+
+
+    private static boolean isTopRight(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getRight() == 0 && puzzleElement.getUp() == 0);
+    }
+
+    private static boolean isTopLeft(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getLeft() == 0 && puzzleElement.getUp() == 0);
+    }
+
+    private static boolean isSquare(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getLeft() == 0 &&
+                puzzleElement.getUp() == 0 &&
+                puzzleElement.getRight() == 0 &&
+                puzzleElement.getBottom() == 0);
+    }
 }
 

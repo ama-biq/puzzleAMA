@@ -2,8 +2,8 @@ package file;
 
 import impl.EventHandler;
 import impl.PuzzleElementDefinition;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -11,16 +11,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
-public class FileParserTest{
+import static impl.EventHandler.getEventList;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class FileParserTest {
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
@@ -269,6 +271,7 @@ public class FileParserTest{
     //////////////////////////////////////// verifyPuzzleIDs() Tests ////////////////////////////////////////
 
 
+
     @ParameterizedTest
     @MethodSource("positiveTestCheckIdValidity")
     public void positiveTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
@@ -336,51 +339,121 @@ public class FileParserTest{
             "2,3,1,5,4",
             "5,4,3,2,1"
     })
-    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e){
-        TreeSet<Integer>setToValid = new TreeSet<>();
+    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e) throws Exception {
+        TreeSet<Integer> setToValid = new TreeSet<>();
         setToValid.add(a);
         setToValid.add(b);
         setToValid.add(c);
         setToValid.add(d);
         setToValid.add(e);
-        ArrayList<String>actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
+        ArrayList<String> actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
         ArrayList<Integer> expectedList = new ArrayList<>();
         assertEquals(expectedList, actualList);
+
+    }
 
 
     //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
 
+
+
+
     @Test
-    public void passCreateListOfPEDsValidFile() throws Exception {
+    public void passCreateListOfPEDsValidFile2Peaces() throws Exception {
         List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid2);
+        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
         PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
         PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-        listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
-        listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
+        referenceList.add(referencePED1);
+        referenceList.add(referencePED2);
 
-        assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
-                && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
+        assertTrue(referenceList.containsAll(testList)
+                && testList.containsAll(referenceList));
 
     }
 
-    @ParameterizedTest
-    @CsvSource({
-            "9,2,3,-1,5",
-            "2,3,8,5,0",
-            "5,7,3,2,6"
-    })
-    public void negativeTestWichElementMissing(int a, int b, int c, int d, int e){
-        TreeSet<Integer>setToValid = new TreeSet<>();
-        setToValid.add(a);
-        setToValid.add(b);
-        setToValid.add(c);
-        setToValid.add(d);
-        setToValid.add(e);
-        ArrayList<String>actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
-        ArrayList<String> expectedList = new ArrayList<>();
-        expectedList.add(Integer.toString(1));
-        expectedList.add(Integer.toString(4));
-        assertEquals(expectedList, actualList);
+
+//    @Test
+//    public void passCreateListOfPEDsValidFile3Peaces() throws Exception {
+//        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid3);
+//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
+//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 0, 1, 0, -1);
+//        referenceList.add(referencePED1);
+//        referenceList.add(referencePED2);
+//        referenceList.add(referencePED3);
+//
+//        assertTrue(referenceList.containsAll(testList)
+//                && testList.containsAll(referenceList));
+//
+//    }
+//
+//
+//    @Test
+//    public void passCreateListOfPEDsValidFile4Peaces() throws Exception {
+//        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid4);
+//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
+//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 1, 1, 1, 1);
+//        PuzzleElementDefinition referencePED4 = new PuzzleElementDefinition(4, -1, 1, -1, 0);
+//        referenceList.add(referencePED1);
+//        referenceList.add(referencePED2);
+//        referenceList.add(referencePED3);
+//        referenceList.add(referencePED4);
+//
+//        assertTrue(referenceList.containsAll(testList)
+//                && testList.containsAll(referenceList));
+//
+//    }
+//
+//
+//    @Test
+//    public void passCreateListOfPEDsValidFile5Peaces() throws Exception {
+//        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid5);
+//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
+//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 1, 1, 1, 1);
+//        PuzzleElementDefinition referencePED4 = new PuzzleElementDefinition(4, 0, 1, 0, 1);
+//        PuzzleElementDefinition referencePED5 = new PuzzleElementDefinition(5, -1, 1, -1, 0);
+//        referenceList.add(referencePED1);
+//        referenceList.add(referencePED2);
+//        referenceList.add(referencePED3);
+//        referenceList.add(referencePED4);
+//        referenceList.add(referencePED5);
+//
+//        assertTrue(referenceList.containsAll(testList)
+//                && testList.containsAll(referenceList));
+//
+//    }
+//
+//    @Test
+//    public void passCreateListOfPEDsValidFile6Peaces() throws Exception {
+//        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid6);
+//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
+//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 1, 0, 1, 0);
+//        PuzzleElementDefinition referencePED4 = new PuzzleElementDefinition(4, 1, 1, 1, 1);
+//        PuzzleElementDefinition referencePED5 = new PuzzleElementDefinition(5, 0, 1, 0, 1);
+//        PuzzleElementDefinition referencePED6 = new PuzzleElementDefinition(6, -1, 1, -1, 0);
+//        referenceList.add(referencePED1);
+//        referenceList.add(referencePED2);
+//        referenceList.add(referencePED3);
+//        referenceList.add(referencePED4);
+//        referenceList.add(referencePED5);
+//        referenceList.add(referencePED6);
+//
+//        assertTrue(referenceList.containsAll(testList)
+//                && testList.containsAll(referenceList));
+//
+//    }
+
+
+
+
 
 }
 
