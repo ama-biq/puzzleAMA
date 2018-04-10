@@ -23,11 +23,17 @@ import java.util.stream.Stream;
 public class FileParserTest{
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
+    File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
+    File valid4 = new File("src\\test\\resources\\validPuzzle4Peaces.txt");
+    File valid5 = new File("src\\test\\resources\\validPuzzle5Peaces.txt");
+    File valid6 = new File("src\\test\\resources\\validPuzzle6Peaces.txt");
+
+
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
 
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         EventHandler.emptyEventList();
     }
 
@@ -134,15 +140,13 @@ public class FileParserTest{
             "   =NumOfElements=3         ",
             "  ===NumOfElements   =   3    "
     })
-    public void failGetNumOfElementsMoreThanOneSplit(String firstLine) {
-        assertThrows(Exception.class,
-                () -> {
-                    FileParserUtils.getNumOfElements(firstLine);
-                });
+    public void failGetNumOfElementsMoreThanOneSplit(String firstLine) throws Exception {
+        FileParserUtils.getNumOfElements(firstLine);
 
+
+        assertTrue(getEventList().contains("Bad format for NumOfElements declaration line: " + firstLine));
 
     }
-
 
 
     @ParameterizedTest
@@ -154,12 +158,10 @@ public class FileParserTest{
             "NumOfElementss=3"
 
     })
-    public void failGetNumOfElementsExactPhrase(String firstLine) {
-        assertThrows(Exception.class,
-                () -> {
-                    FileParserUtils.getNumOfElements(firstLine);
-                });
+    public void failGetNumOfElementsNotEqualNumOfElementsWord(String firstLine) throws Exception {
 
+        FileParserUtils.getNumOfElements(firstLine);
+        assertTrue(getEventList().contains("Bad format for NumOfElements declaration line: " + firstLine));
 
     }
 
@@ -174,41 +176,98 @@ public class FileParserTest{
             "NumOfElements=        A",
             "NumOfElements=        $",
     })
-    public void failGetNumOfElementsParseInt(String firstLine) {
-        assertThrows(Exception.class,
-                () -> {
-                    FileParserUtils.getNumOfElements(firstLine);
-                });
+    public void failGetNumOfElementsParseInt(String firstLine) throws Exception {
+        FileParserUtils.getNumOfElements(firstLine);
+        assertTrue(getEventList().contains("Bad format for NumOfElements declaration line: " + firstLine));
 
 
     }
-//    @Test
-//    public void failGetNumOfElementsParseInt() {
-//        String firstLine = "NumOfElements=A";
-//        assertThrows(Exception.class,
-//                () -> {
-//                    FileParserUtils.getNumOfElements(firstLine);
-//                });
-//
-//
-//    }
-    @Test
-    public void passCreatePEDFrom5Sides() throws Exception {
-        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(1, 0, 1, 0);
-        String line = "0 1 0 1 0";
+
+
+    //////////////////////////////////////// createPuzzleElementDefinition() Tests ////////////////////////////////////////
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 0 0 0 0",
+            "1 1 1 1 1",
+            "-1 -1 -1 -1 1",
+            "2 -1 -1 -1 -1",
+            "5 0 1 0 1",
+            "20 1 1 0 0",
+            "7 1 1 1 0",
+            "9 1 0 0 0",
+    })
+    public void passCreatePED(String line) throws Exception {
+        String[] testLine = line.split("\\s+");
+        System.out.println(Arrays.toString(testLine));
+        int id = Integer.parseInt(testLine[0]);
+        int left = Integer.parseInt(testLine[1]);
+        int up = Integer.parseInt(testLine[2]);
+        int right = Integer.parseInt(testLine[3]);
+        int bottom = Integer.parseInt(testLine[4]);
+
+        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(id, left, up, right, bottom);
         PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
-        assertEquals(testPed,referencePed);
+        assertEquals(testPed, referencePed);
     }
 
-//    @ParameterizedTest
-//    @CsvSource({
-//            "0 0 0 0",
-//            "1 1 1 1 1 1"
-//    })
-//    public void failCreatePEDWrongAmountOfSides(String line) throws Exception {
-//        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
-//        assertFalse(getEventList().isEmpty());//TODO: Find a better validation
-//    }
+    @ParameterizedTest
+    @CsvSource({
+            "0 4 0 0 0",
+            "1 7 1 1 1",
+            "-2 4 0 0 0",
+            "0 4 -8 0 0",
+            "1 2 3 4 5",
+            "-9 -9 -9 -9 -9",
+            "5 0 0 5 5",
+            "7 -3 0 0 1",
+    })
+    public void passCreatePEDFrom5SidesPEDNotValid(String line) throws Exception {
+        String[] testLine = line.split("\\s+");
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertTrue(getEventList().contains("Puzzle ID " + testLine[0] + " has wrong data: " + line));
+        assertEquals(testPed, null);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 A 0 0 0",
+            "B 1 1 1 1 "
+    })
+    public void failCreatePEDRightAmountOfSidesCannotParseID(String line) throws Exception {
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
+        assertEquals(testPed, null);
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "0 0 0 0 ",
+            "1 1 1 1 1 1"
+    })
+    public void failCreatePEDWrongAmountOfSidesCanParseID(String line) throws Exception {
+        String[] testLine = line.split("\\s+");
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertTrue(getEventList().contains("Puzzle ID " + testLine[0] + " has wrong data: " + line));
+        assertEquals(testPed, null);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "A 0 0 0 ",
+            "B 1 1 1 1 1"
+    })
+    public void failCreatePEDWrongAmountOfSidesCannotParseID(String line) throws Exception {
+        PuzzleElementDefinition testPed = FileParserUtils.createPuzzleElementDefinition(line);
+        assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
+        assertEquals(testPed, null);
+    }
+
+
+    //////////////////////////////////////// verifyPuzzleIDs() Tests ////////////////////////////////////////
+
 
     @ParameterizedTest
     @MethodSource("positiveTestCheckIdValidity")
@@ -288,6 +347,20 @@ public class FileParserTest{
         ArrayList<Integer> expectedList = new ArrayList<>();
         assertEquals(expectedList, actualList);
 
+
+    //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
+
+    @Test
+    public void passCreateListOfPEDsValidFile() throws Exception {
+        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid2);
+        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+        listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
+        listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
+
+        assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
+                && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
+
     }
 
     @ParameterizedTest
@@ -309,46 +382,10 @@ public class FileParserTest{
         expectedList.add(Integer.toString(4));
         assertEquals(expectedList, actualList);
 
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "1,2,3,4,5",
-            "2,3,5,4,1",
-            "5,4,3,2,1"
-    })
-    public void positiveTestWhichElementIdIsWrong(int a, int b, int c, int d, int e){
-        TreeSet<Integer>setToValid = new TreeSet<>();
-        setToValid.add(a);
-        setToValid.add(b);
-        setToValid.add(c);
-        setToValid.add(d);
-        setToValid.add(e);
-        ArrayList<String>actualList = FileParserUtils.whichElementIdIsWrong(setToValid, setToValid.size());
-        ArrayList<String> expectedList = new ArrayList<>();
-        assertEquals(expectedList, actualList);
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "-1,0,3,4,6",
-            "1,6,-1,4,0",
-            "5,1,6,-1,0",
-            "0,5,6,-1,1"
-    })
-    public void negativeTestWhichElementIdIsWrong(int a, int b, int c, int d, int e){
-        TreeSet<Integer>setToValid = new TreeSet<>();
-        setToValid.add(a);
-        setToValid.add(b);
-        setToValid.add(c);
-        setToValid.add(d);
-        setToValid.add(e);
-        ArrayList<String>actualList = FileParserUtils.whichElementIdIsWrong(setToValid, setToValid.size());
-        ArrayList<String> expectedList = new ArrayList<>();
-        expectedList.add(Integer.toString(-1));
-        expectedList.add(Integer.toString(0));
-        expectedList.add(Integer.toString(6));
-        assertEquals(expectedList, actualList);
-    }
-
 }
+
+
+
+
+
+
