@@ -11,16 +11,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static impl.EventHandler.getEventList;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
-public class FileParserTest{
+public class FileParserTest {
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
@@ -279,14 +281,14 @@ public class FileParserTest{
 
     private static Stream<Arguments> positiveTestCheckIdValidity() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0))
         );
     }
 
@@ -300,92 +302,94 @@ public class FileParserTest{
 
     private static Stream<Arguments> negativeTestCheckIdValidity() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 6,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(1, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(6, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(5, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(0, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(-6, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(-6, 1, 0, 0, 0))
         );
     }
 
     private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
-                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
+                                         PuzzleElementDefinition ped3, PuzzleElementDefinition ped4) {
         listOfPuzzleElementDefinitionsContainsId.add(ped1);
         listOfPuzzleElementDefinitionsContainsId.add(ped2);
         listOfPuzzleElementDefinitionsContainsId.add(ped3);
         listOfPuzzleElementDefinitionsContainsId.add(ped4);
     }
+
     @ParameterizedTest
     @CsvSource({
             "1,2,3,4,5",
             "2,3,1,5,4",
             "5,4,3,2,1"
     })
-    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e){
-        TreeSet<Integer>setToValid = new TreeSet<>();
+    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e) throws Exception {
+        TreeSet<Integer> setToValid = new TreeSet<>();
         setToValid.add(a);
         setToValid.add(b);
         setToValid.add(c);
         setToValid.add(d);
         setToValid.add(e);
-        ArrayList<String>actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
+        ArrayList<String> actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
         ArrayList<Integer> expectedList = new ArrayList<>();
         assertEquals(expectedList, actualList);
-
-
-    //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
-
-    @Test
-    public void passCreateListOfPEDsValidFile() throws Exception {
-        List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid2);
-        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-        listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
-        listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
-
-        assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
-                && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
-
     }
 
-    @ParameterizedTest
-    @CsvSource({
-            "9,2,3,-1,5",
-            "2,3,8,5,0",
-            "5,7,3,2,6"
-    })
-    public void negativeTestWichElementMissing(int a, int b, int c, int d, int e){
-        TreeSet<Integer>setToValid = new TreeSet<>();
-        setToValid.add(a);
-        setToValid.add(b);
-        setToValid.add(c);
-        setToValid.add(d);
-        setToValid.add(e);
-        ArrayList<String>actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
-        ArrayList<String> expectedList = new ArrayList<>();
-        expectedList.add(Integer.toString(1));
-        expectedList.add(Integer.toString(4));
-        assertEquals(expectedList, actualList);
 
-}
+        //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
+
+        @Test
+        public void passCreateListOfPEDsValidFile () throws Exception {
+            List<PuzzleElementDefinition> testList = FileParserUtils.fileToPEDArray(valid2);
+            PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
+            PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
+            listOfPuzzleElementDefinitionsContainsId.add(referencePED1);
+            listOfPuzzleElementDefinitionsContainsId.add(referencePED2);
+
+            assertTrue(listOfPuzzleElementDefinitionsContainsId.containsAll(testList)
+                    && testList.containsAll(listOfPuzzleElementDefinitionsContainsId));
+
+        }
+
+        @ParameterizedTest
+        @CsvSource({
+                "9,2,3,-1,5",
+                "2,3,8,5,0",
+                "5,7,3,2,6"
+        })
+        public void negativeTestWichElementMissing ( int a, int b, int c, int d, int e){
+            TreeSet<Integer> setToValid = new TreeSet<>();
+            setToValid.add(a);
+            setToValid.add(b);
+            setToValid.add(c);
+            setToValid.add(d);
+            setToValid.add(e);
+            ArrayList<String> actualList = FileParserUtils.whichElementIdMissing(setToValid, setToValid.size());
+            ArrayList<String> expectedList = new ArrayList<>();
+            expectedList.add(Integer.toString(1));
+            expectedList.add(Integer.toString(4));
+            assertEquals(expectedList, actualList);
+
+        }
 
 
-
+    }
 
 
 
