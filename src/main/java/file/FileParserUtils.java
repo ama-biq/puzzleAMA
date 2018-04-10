@@ -13,7 +13,6 @@ public class FileParserUtils {
 
     private static List<PuzzleElementDefinition> pedArray = new ArrayList<>();
     private static int numOfElements;
-    private static boolean isParsedDataIntact;
 
     public static List<PuzzleElementDefinition> fileToPEDArray(File file) throws Exception {
 

@@ -10,8 +10,8 @@ import static impl.EventHandler.addEventToList;
 
 public class Solver {
 
-    private List<PuzzleElementDefinition> testedList;
-    private Map<Integer, ArrayList<PuzzleElementDefinition>> solverMap = new HashMap<>();
+    //    private List<PuzzleElementDefinition> testedList;
+    private Map<Integer, List<PuzzleElementDefinition>> solverMap = new HashMap<>();
     private int fakeNumber = Integer.MAX_VALUE;
     private int maxRow;
     private int maxColumn;
@@ -221,56 +221,65 @@ public class Solver {
     }
 
     public void resolveTheOneRowPuzzle(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement) {
-        testedList = copyList(validIdList);
-        maxRow = 1;
-        maxColumn = 3;
-        solveRow(testedList, templateElement, calcFactorial(maxColumn));
-        if (!solverMap.isEmpty()) {
-            int finalMapSize = solverMap.get(1).size();
-            if (finalMapSize == validIdList.size()) {
-                solutionMapToSolutionList();
-            }
-        } else {
-            System.out.println(EventHandler.NO_SOLUTION);
-        }
 
+        List<Integer> availableRows = getSolverRows(validIdList);
+        for (Integer row : availableRows) {
+            maxRow = row;
+            maxColumn = validIdList.size() / row;
+            int curRow = 1;
+            List<PuzzleElementDefinition> testedList = copyList(validIdList);
+            solveRow(testedList, templateElement, calcFactorial(maxColumn), curRow);
+            if (!solverMap.isEmpty()) {
+                int finalRowMapSize = solverMap.get(curRow).size();
+                if (finalRowMapSize == maxColumn && curRow != maxRow) {// correct filled not last line
+                    solveRow(testedList, templateElement, calcFactorial(maxColumn), ++curRow);
+                } else if (finalRowMapSize == maxColumn && curRow == maxRow) {// correct filled last line and then stop flow, got solve result
+                    solutionMapToSolutionList();
+                    break;
+                } else {
+                    EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+                }
+            } else {
+                EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+            }
+        }
     }
 
-
-    // public List<Integer>solveRow(List<PuzzleElementDefinition>validIdList, PuzzleElementDefinition templateElement){
-    public void solveRow(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement, int colNum) {
+    public void solveRow(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement, int colNum, int curRow) {
         while (!validIdList.isEmpty() && colNum != 0) {
             for (int i = 0; i < validIdList.size() && colNum != 0; i++) {
                 if (!isMatch(validIdList.get(i), templateElement)) {
                     validIdList = shiftElementToEndOfList(validIdList, validIdList.get(i));
-                    solveRow(validIdList, templateElement, --colNum);
+                    solveRow(validIdList, templateElement, --colNum, curRow);
                 } else {
-                    addPEDToMap(validIdList.get(i));
+                    addPEDToMap(validIdList.get(i), curRow);
                     PuzzleElementDefinition template = templateBuilder(validIdList.get(i));
                     validIdList.remove(validIdList.get(i));
                     if (!validIdList.isEmpty()) {
-                        solveRow(validIdList, template, --colNum);
+                        solveRow(validIdList, template, --colNum, curRow);
                     }
                 }
             }
         }
     }
 
-    private void addPEDToMap(PuzzleElementDefinition elementDefinition) {
+    private void addPEDToMap(PuzzleElementDefinition elementDefinition, int curRow) {
 
-        ArrayList<PuzzleElementDefinition> elementList = solverMap.get(1);
+        List<PuzzleElementDefinition> elementList = solverMap.get(curRow);
         if (elementList == null) {
             elementList = new ArrayList<>();
         }
         elementList.add(elementDefinition);
-        solverMap.put(1, elementList);
+        solverMap.put(curRow, elementList);
 
     }
 
     public void solutionMapToSolutionList() {
-        ArrayList<PuzzleElementDefinition> listToPrint = solverMap.get(1);
-        for (PuzzleElementDefinition element : listToPrint) {
-            solutionList.add(element.getId());
+        for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()){
+            List<PuzzleElementDefinition> listToPrint = entry.getValue();
+            for (PuzzleElementDefinition element : listToPrint) {
+                solutionList.add(element.getId());
+            }
         }
     }
 
@@ -331,8 +340,6 @@ public class Solver {
         } else {
             return i * calcFactorial(i - 1);
         }
-
-
     }
 
     private PuzzleElementDefinition templateBuilder(PuzzleElementDefinition curElement) {
@@ -383,7 +390,7 @@ public class Solver {
     }
 
 
-    public static List<Integer> getSolverWides(List<PuzzleElementDefinition> puzzleElements) {
+    public static List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
         List<Integer> retVal = new ArrayList<>();
         int numOfElements = puzzleElements.size();
 
@@ -392,11 +399,11 @@ public class Solver {
             retVal.add(numOfElements);
             return retVal;
         } else {
-            return calculateWides(numOfElements);
+            return calculateRows(numOfElements);
         }
     }
 
-    private static List<Integer> calculateWides(int numOfElements) {
+    private static List<Integer> calculateRows(int numOfElements) {
         List<Integer> retVal = new ArrayList<>();
         for (int i = 1; i <= numOfElements; i++) {
             if (numOfElements % i == 0) {
@@ -411,7 +418,7 @@ public class Solver {
         if (number < 4) {
             return true;
         }
-        for (int i = 2; i < number / 2; i++) {
+        for (int i = 2; i <= number / 2; i++) {
             if (number % i == 0) {
                 return false;
             }
