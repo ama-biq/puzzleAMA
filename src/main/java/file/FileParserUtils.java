@@ -118,16 +118,11 @@ public class FileParserUtils {
 
     public static boolean verifyPuzzleElementDefinition(PuzzleElementDefinition puzzleElementDefinition) throws Exception {
 
-        if (puzzleElementDefinition.getLeft() >= -1 && puzzleElementDefinition.getLeft() <= 1 &&
+        return (puzzleElementDefinition.getLeft() >= -1 && puzzleElementDefinition.getLeft() <= 1 &&
                 puzzleElementDefinition.getUp() >= -1 && puzzleElementDefinition.getUp() <= 1 &&
                 puzzleElementDefinition.getRight() >= -1 && puzzleElementDefinition.getRight() <= 1 &&
-                puzzleElementDefinition.getBottom() >= -1 && puzzleElementDefinition.getBottom() <= 1) {
+                puzzleElementDefinition.getBottom() >= -1 && puzzleElementDefinition.getBottom() <= 1);
 
-            return true;
-
-        }
-
-        return false;
     }
 
     public static boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
@@ -141,21 +136,40 @@ public class FileParserUtils {
             //todo write error message to the file - <moshe: The parseInt of the id is being checked at createPuzzleElementDefinition method>
         }
         TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
+
+        List<Integer> greatedThanNumOfElementIDList = cantHaveTheFollowingID(sortedSet,numOfElements);
+        if(!greatedThanNumOfElementIDList.isEmpty()){
+            EventHandler.addEventToList("Puzzle of size "+ numOfElements +" cannot have the following IDs: "+greatedThanNumOfElementIDList.toString());
+        }
+
         if (sortedSet.first() != Integer.valueOf(1)||
                 sortedSet.last() != sortedSet.size() ||
                     sortedSet.size()!= numOfElements){
             List<String>missingElement = whichElementIdMissing(sortedSet,numOfElements);
             EventHandler.addEventToList("Missing puzzle element(s) with the following IDs: "+missingElement.toString());
-            return false;
+            flag = false;
         }
 
 
 
-        return true;
+
+        return flag;
     }
 
+    private static List<Integer> cantHaveTheFollowingID(TreeSet<Integer> sortedSet, int numOfElements) {
+        Integer counter = 1;
+        ArrayList<Integer>retList = new ArrayList<>();
+        Iterator<Integer> iterator = sortedSet.iterator();
+        while (iterator.hasNext()){
+            Integer element = iterator.next();
+            if(element>numOfElements){
+                retList.add(element);
+            }
+            counter++;
+        }
+        return retList;
 
-
+    }
 
 
     static ArrayList<String> whichElementIdMissing(Set<Integer> sortedSet, int numOfElements) {
