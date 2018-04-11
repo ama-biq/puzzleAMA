@@ -1,6 +1,7 @@
 package file;
 
 
+import impl.EventHandler;
 import impl.PuzzleElementDefinition;
 
 import java.io.File;
@@ -32,9 +33,10 @@ public class FileParserUtils {
         if (verifyPuzzleIDs(pedArray, numOfElements)) {
 
             return pedArray;
-        }
-        pedArray.clear();
+        }else {
+            pedArray.clear();
 
+        }
         return pedArray;
     }
 
@@ -129,6 +131,7 @@ public class FileParserUtils {
     }
 
     public static boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
+       boolean flag = true;
         Set<Integer> validSet = new HashSet<>();
 //        try {
         for (PuzzleElementDefinition element : puzzleElementDefinition) {
@@ -138,11 +141,18 @@ public class FileParserUtils {
             //todo write error message to the file - <moshe: The parseInt of the id is being checked at createPuzzleElementDefinition method>
         }
         TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
-        return (puzzleElementDefinition.size() == sortedSet.size() &&
-                sortedSet.first() == Integer.valueOf(1) &&
-                sortedSet.last() == sortedSet.size());
-        // throw new Exception();
+        if (sortedSet.first() != Integer.valueOf(1)|| sortedSet.last() != sortedSet.size()){
+            List<String>missingElement = whichElementIdMissing(sortedSet,numOfElements);
+            EventHandler.addEventToList("Missing puzzle element(s) with the following IDs: "+missingElement.toString());
+            return false;
+        }
+
+
+
+        return true;
     }
+
+
 
 
 

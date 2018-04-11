@@ -2,8 +2,10 @@ package impl;
 
 
 import file.FileParserUtils;
+import file.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static impl.EventHandler.addEventToList;
@@ -282,6 +284,10 @@ public class Solver {
             }
         }
     }
+
+    public void addSolutionToFile(){
+       EventHandler.addEventToList(solutionList.toString());
+        }
 
     private boolean isMatch(PuzzleElementDefinition currentElement, PuzzleElementDefinition templateElement) {
         int left = templateElement.getLeft();
@@ -626,6 +632,16 @@ public class Solver {
                 puzzleElement.getUp() == 0 &&
                 puzzleElement.getRight() == 0 &&
                 puzzleElement.getBottom() == 0);
+    }
+
+    public List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {
+        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        return listAfterParser;
+
+    }
+
+    public void writeErrorsToTheOutPutFile() throws IOException {
+        FileUtils.writeFile();
     }
 }
 

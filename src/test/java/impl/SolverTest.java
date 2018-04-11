@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import sun.plugin2.main.client.PluginEmbeddedFrame;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -307,7 +309,6 @@ public class SolverTest {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, -1, 1));
         idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
-        idsList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
         idsList.add(new PuzzleElementDefinition(2, 0, -1, 0, 0));
 
         PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -488,6 +489,13 @@ public class SolverTest {
                 Arguments.of(2, Arrays.asList("BL"), ped4_2x2)
         );
     }*/
+    @Test
+    public void checkTheInputFile() throws Exception {
+        File inputFile = new File("src\\test\\resources\\NOTvalidPuzzle2PeacesOneRow.txt");
+        List<PuzzleElementDefinition>list = puzzleSolver.checkTheInputFile(inputFile);
+        if(list.isEmpty()){
+            puzzleSolver.writeErrorsToTheOutPutFile();
+        }
 
-
+    }
 }
