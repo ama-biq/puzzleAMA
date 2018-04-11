@@ -51,7 +51,7 @@ public class FileParserUtils {
         String split[] = firstLine.trim().split("=");
 
         if (split.length == 2 && amountOfEqualSigns == 1) {
-            if (split[0].trim().equals("NumOfElements")) {
+            if (split[0].trim().equals("NumElements")) {
                 try {
                     return Integer.parseInt(split[1].trim());
                 } catch (Exception e) {
@@ -141,7 +141,9 @@ public class FileParserUtils {
             //todo write error message to the file - <moshe: The parseInt of the id is being checked at createPuzzleElementDefinition method>
         }
         TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
-        if (sortedSet.first() != Integer.valueOf(1)|| sortedSet.last() != sortedSet.size()){
+        if (sortedSet.first() != Integer.valueOf(1)||
+                sortedSet.last() != sortedSet.size() ||
+                    sortedSet.size()!= numOfElements){
             List<String>missingElement = whichElementIdMissing(sortedSet,numOfElements);
             EventHandler.addEventToList("Missing puzzle element(s) with the following IDs: "+missingElement.toString());
             return false;

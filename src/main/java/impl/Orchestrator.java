@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Orchestrator {
     public static void main(String[] args) throws Exception {
-        File inputFile = new File("src\\test\\resources\\validPuzzle2PeacesOneRow.txt");
+        File inputFile = new File("src\\test\\resources\\FourthAmirFile.txt");
         Solver solver = new Solver();
         PuzzleElementDefinition templateElement = new PuzzleElementDefinition(0,0,Integer.MAX_VALUE,0) ;
         List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
