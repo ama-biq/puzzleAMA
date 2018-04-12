@@ -139,14 +139,14 @@ public class FileParserUtils {
 
         List<Integer> greatedThanNumOfElementIDList = cantHaveTheFollowingID(sortedSet,numOfElements);
         if(!greatedThanNumOfElementIDList.isEmpty()){
-            EventHandler.addEventToList("Puzzle of size "+ numOfElements +" cannot have the following IDs: "+greatedThanNumOfElementIDList.toString());
+            EventHandler.addEventToList("Puzzle of size "+ numOfElements +" cannot have the following IDs: "+greatedThanNumOfElementIDList.toString().replace("[", "").replace("]", ""));
         }
 
         if (sortedSet.first() != Integer.valueOf(1)||
                 sortedSet.last() != sortedSet.size() ||
                     sortedSet.size()!= numOfElements){
             List<String>missingElement = whichElementIdMissing(sortedSet,numOfElements);
-            EventHandler.addEventToList("Missing puzzle element(s) with the following IDs: "+missingElement.toString());
+            EventHandler.addEventToList("Missing puzzle element(s) with the following IDs: "+missingElement.toString().replace("[", "").replace("]", ""));
             flag = false;
         }
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Orchestrator {
     public static void main(String[] args) throws Exception {
-        File inputFile = new File("src\\test\\resources\\SecondAmirFile.txt");
+        File inputFile = new File("src\\test\\resources\\11AmirFileMatrix3on3.txt");
         Solver solver = new Solver();
         List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
         if(list.isEmpty()){

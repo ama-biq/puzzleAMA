@@ -468,19 +468,21 @@ public class SolverTest {
         assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + "TR"), "expected error message [" + EventHandler.MISSING_CORNER + " TR ] not found");
     }
 
-    @Test
-    public void firstAmirTest() throws Exception {
-        File inputFile = new File("src\\test\\resources\\FirstAmirFile.txt");
-        String expectedFileToString = readFile("src\\test\\resources\\FirstAmirFileExpected.txt");
-        String actualFileToString = readFile("src\\test\\resources\\OutPutFile.txt");
-        List<PuzzleElementDefinition> list;
-        list = puzzleSolver.checkTheInputFile(inputFile);
-
-            puzzleSolver.solve(list);
-
-            puzzleSolver.addSolutionToFile();
-            puzzleSolver.writeErrorsToTheOutPutFile();
-    }
+//    @Test
+//    public void firstAmirTest() throws Exception {
+//
+//        File inputFile = new File("src\\test\\resources\\FirstAmirFile.txt");
+//        String expectedFileToString = readFile("src\\test\\resources\\FirstAmirFileExpected.txt");
+//        String actualFileToString = readFile("src\\test\\resources\\OutPutFile.txt");
+//        List<PuzzleElementDefinition> list;
+//        list = puzzleSolver.checkTheInputFile(inputFile);
+//
+//            puzzleSolver.solve(list);
+//
+//            puzzleSolver.addSolutionToFile();
+//            puzzleSolver.writeErrorsToTheOutPutFile();
+//
+//    }
 
         @Test
         public void e2eNoCorner() throws Exception {
