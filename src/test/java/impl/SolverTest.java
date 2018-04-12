@@ -37,7 +37,7 @@ public class SolverTest {
 
 
     @Test
-    public void neGativeOneElementIsSumOfAllEdgesIsZero() {
+    public void negativeOneElementIsSumOfAllEdgesIsZero() {
 
         puzzleElementDefinition.setLeft(0);
         puzzleElementDefinition.setUp(1);
@@ -65,7 +65,7 @@ public class SolverTest {
     }
 
     @Test
-    public void testIsEnoughCornerElementsForPazzelOfOneElement() {
+    public void testIsEnoughCornerElementsForPuzzlOfOneElement() {
 
         setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
         listOfPuzzleElementDefinitionsWithoutId.add(puzzleElementDefinition);
@@ -88,15 +88,15 @@ public class SolverTest {
 
 
     @ParameterizedTest
-    @MethodSource("testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn")
+    @MethodSource("testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn")
 
-    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
+    public void testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
         setEdgesForTwoElements(p1, p2);
         assertTrue(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId));
     }
 
-    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
+    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 0)),
                 Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 1)),
@@ -107,16 +107,16 @@ public class SolverTest {
     }
 
     @ParameterizedTest
-    @MethodSource("testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn")
+    @MethodSource("testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn")
 
-    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
+    public void testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
         setEdgesForTwoElements(p1, p2);
         assertFalse(puzzleSolver.isEnoughCornerElementsForOneColumn(listOfPuzzleElementDefinitionsWithoutId));
     }
 
 
-    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneColumn() {
+    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(1, 1, 1, 1), new PuzzleElementDefinition(-1, -1, -1, -1)),
                 Arguments.of(new PuzzleElementDefinition(1, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 0)),
@@ -127,15 +127,15 @@ public class SolverTest {
     }
 
     @ParameterizedTest
-    @MethodSource("testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows")
+    @MethodSource("testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows")
 
-    public void testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
+    public void testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
         setEdgesForTwoElements(p1, p2);
         assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitionsWithoutId));
     }
 
-    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPazzelOfSeveralElementOneRows() {
+    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 0)),
                 Arguments.of(new PuzzleElementDefinition(1, 0, 0, 0), new PuzzleElementDefinition(0, 0, 1, 0)),
@@ -153,16 +153,16 @@ public class SolverTest {
 
 
     @ParameterizedTest
-    @MethodSource("testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow")
+    @MethodSource("testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow")
 
-    public void testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
+    public void testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
         setEdgesForTwoElements(p1, p2);
         assertFalse(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitionsWithoutId));
 
     }
 
-    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPazzelOfSeveralElementOneRow() {
+    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 1)),
                 Arguments.of(new PuzzleElementDefinition(0, 0, 1, 0), new PuzzleElementDefinition(0, 0, 0, 1)),
@@ -263,11 +263,10 @@ public class SolverTest {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(2, 0, 0, 0, 0));
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, 0, 0);
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(1);
         expectedList.add(2);
-        puzzleSolver.resolveTheOneRowPuzzle(idsList, firstElement);
+        puzzleSolver.solve(idsList);
         assertEquals(puzzleSolver.getSolutionList(), expectedList);
 
     }
@@ -279,30 +278,28 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(3, 0, 0, 1, 0));
 
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, Integer.MAX_VALUE, 0);
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(1);
         expectedList.add(3);
         expectedList.add(2);
-        puzzleSolver.resolveTheOneRowPuzzle(idsList, firstElement);
+        puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
-    /*@Test
+    @Test
     public void positive1ColumnElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(2, 0, -1, 0, 0));
         idsList.add(new PuzzleElementDefinition(3, 0, 0, 0, 1));
 
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, 0, Integer.MAX_VALUE);
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(1);
         expectedList.add(3);
         expectedList.add(2);
-        puzzleSolver.resolveTheOneRowPuzzle(idsList, firstElement);
+        puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
-    }*/
+    }
 
     @Test
     public void positive4ElementsTestResolveThePuzzle() {
@@ -311,13 +308,12 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
         idsList.add(new PuzzleElementDefinition(2, 0, -1, 0, 0));
 
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE);
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(1);
         expectedList.add(3);
         expectedList.add(2);
-        expectedList.add(2);
-        puzzleSolver.resolveTheOneRowPuzzle(idsList, firstElement);
+        expectedList.add(4);
+        puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
     @Test
@@ -329,20 +325,38 @@ public class SolverTest {
 
         List<String > expectedEvents = new ArrayList<>();
         expectedEvents.add(EventHandler.NO_SOLUTION);
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, Integer.MAX_VALUE, 0);
-        puzzleSolver.resolveTheOneRowPuzzle(idsList, firstElement);
+        puzzleSolver.solve(idsList);
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
+    }
+
+    @Test
+    public void positive6ElementsTestResolveThePuzzle() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
+        idsList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(2, 0, -1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
+        idsList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(3);
+        expectedList.add(2);
+        expectedList.add(4);
+        expectedList.add(5);
+        expectedList.add(6);
+        puzzleSolver.solve(idsList);
+        assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
     @Test
     public void positive1ElementTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-
-        PuzzleElementDefinition firstElement = new PuzzleElementDefinition(0, 0, Integer.MAX_VALUE, 0);
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(1);
-        puzzleSolver.resolveTheOneRowPuzzle(idsList, firstElement);
+        puzzleSolver.solve(idsList);
         assertEquals(puzzleSolver.getSolutionList(), expectedList);
     }
 

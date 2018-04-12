@@ -17,6 +17,7 @@ public class Solver {
     private int fakeNumber = Integer.MAX_VALUE;
     private int maxRow;
     private int maxColumn;
+    private boolean lastColumn;
 
     public List<Integer> getSolutionList() {
         return solutionList;
@@ -209,47 +210,109 @@ public class Solver {
     }
 
 
-    public void resolveTheOneRowPuzzle(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement) {
+    public void solve(List<PuzzleElementDefinition> validIdList) {
 
         List<Integer> availableRows = getSolverRows(validIdList);
         for (Integer row : availableRows) {
             maxRow = row;
             maxColumn = validIdList.size() / row;
-            int curRow = 1;
             List<PuzzleElementDefinition> testedList = copyList(validIdList);
-            solveRow(testedList, templateElement, calcFactorial(maxColumn), curRow);
-            if (!solverMap.isEmpty()) {
-                int finalRowMapSize = solverMap.get(curRow).size();
-                if (finalRowMapSize == maxColumn && curRow != maxRow) {// correct filled not last line
-                    solveRow(testedList, templateElement, calcFactorial(maxColumn), ++curRow);
-                } else if (finalRowMapSize == maxColumn && curRow == maxRow) {// correct filled last line and then stop flow, got solve result
-                    solutionMapToSolutionList();
-                    break;
-                } else {
-                    EventHandler.addEventToList(EventHandler.NO_SOLUTION);
-                }
-            } else {
-                EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+            solverMap.clear();
+            lastColumn = false;
+            if(solvePuzzle(testedList)){
+                break;
             }
         }
     }
 
-    public void solveRow(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement, int colNum, int curRow) {
-        while (!validIdList.isEmpty() && colNum != 0) {
-            for (int i = 0; i < validIdList.size() && colNum != 0; i++) {
+    private boolean solvePuzzle(List<PuzzleElementDefinition> testedList) {
+
+        for (int curRow = 1; curRow <= maxRow; curRow++) {
+            PuzzleElementDefinition leftCornerTemplate;
+            if (curRow == 1) {
+                leftCornerTemplate = leftFirstCornerTemplate();
+            } else {
+                leftCornerTemplate = leftCornerTemplate(curRow);
+            }
+            solveRow(testedList, leftCornerTemplate, calcMaxIterationNumber(testedList.size(), maxColumn), curRow);
+            if (!analyzeRowResult(curRow)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean analyzeRowResult(int curRow) {
+        if (!solverMap.isEmpty()) {
+            try {
+                solverMap.get(curRow).size();
+            }catch (NullPointerException e){
+                EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+                return false;
+            }
+            Integer finalRowMapSize = solverMap.get(curRow).size();
+            if (finalRowMapSize == maxColumn) {
+                if (curRow != maxRow) {// correct filled not last line
+                    lastColumn = false;
+                    return true;
+                }
+                if (curRow == maxRow) {// correct filled last line and then stop flow, got solve result
+                    solutionMapToSolutionList();
+                    return true;
+                }
+            } else {
+                EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+                return false;
+            }
+        }
+        EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+        return false;
+    }
+
+    private void solveRow(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement, int maxRotationAmount, int curRow) {
+        while (!validIdList.isEmpty() && maxRotationAmount != 0 && !lastColumn) {
+            for (int i = 0; i < validIdList.size() && maxRotationAmount != 0 && !lastColumn; i++) {
                 if (!isMatch(validIdList.get(i), templateElement)) {
                     validIdList = shiftElementToEndOfList(validIdList, validIdList.get(i));
-                    solveRow(validIdList, templateElement, --colNum, curRow);
+                    if (maxRotationAmount == 0 && validIdList.size() == 1) {
+                        break;
+                    } else {
+                        solveRow(validIdList, templateElement, --maxRotationAmount, curRow);
+                    }
                 } else {
                     addPEDToMap(validIdList.get(i), curRow);
-                    PuzzleElementDefinition template = templateBuilder(validIdList.get(i));
+                    PuzzleElementDefinition elementToRemove = validIdList.get(i);
                     validIdList.remove(validIdList.get(i));
                     if (!validIdList.isEmpty()) {
-                        solveRow(validIdList, template, --colNum, curRow);
+                        PuzzleElementDefinition template = templateBuilder(elementToRemove);
+                        solveRow(validIdList, template, validIdList.size(), curRow);
                     }
                 }
             }
         }
+    }
+
+    private PuzzleElementDefinition leftCornerTemplate(int curRow) {
+        if (curRow == maxRow && maxColumn == 1) {// last row 1 column
+            return new PuzzleElementDefinition(0, calcTop(curRow, 1), 0, 0);
+        }
+        if (maxRow - curRow > 0 && maxColumn == 1) {// middle row 1 column
+            return new PuzzleElementDefinition(0, calcTop(curRow, 1), 0, fakeNumber);
+        }
+        //if(curRow == maxRow){ last row more then 1 column
+        return new PuzzleElementDefinition(0, calcTop(curRow, 1), fakeNumber, 0);
+    }
+
+    private PuzzleElementDefinition leftFirstCornerTemplate() {
+        if (maxRow == 1 && maxColumn == 1) {
+            return new PuzzleElementDefinition(0, 0, 0, 0);
+        } else if (maxRow == 1 && maxColumn > 1) {
+            return new PuzzleElementDefinition(0, 0, fakeNumber, 0);
+        } else if (maxRow > 1 && maxColumn > 1) {
+            return new PuzzleElementDefinition(0, 0, fakeNumber, fakeNumber);
+        }
+        //if(maxRow > 1 && maxColumn == 1){
+        return new PuzzleElementDefinition(0, 0, 0, fakeNumber);
     }
 
     private void addPEDToMap(PuzzleElementDefinition elementDefinition, int curRow) {
@@ -264,7 +327,7 @@ public class Solver {
     }
 
     public void solutionMapToSolutionList() {
-        for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()){
+        for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
             List<PuzzleElementDefinition> listToPrint = entry.getValue();
             for (PuzzleElementDefinition element : listToPrint) {
                 solutionList.add(element.getId());
@@ -327,17 +390,20 @@ public class Solver {
         return validIdList;
     }
 
-    private static int calcFactorial(int i) {
-        if (i == 1) {
-            return 1;
-        } else {
-            return i * calcFactorial(i - 1);
+    private static int calcMaxIterationNumber(int elementAmount, int columnNum) {
+        int count = 0;
+        if(elementAmount == 2 || elementAmount == 1){
+            return elementAmount;
         }
+        for (int j = elementAmount; j > elementAmount - columnNum; j--) {
+            count += j;
+        }
+        return count;
     }
 
     private PuzzleElementDefinition templateBuilder(PuzzleElementDefinition curElement) {
         int curRow = solverMap.size();
-        if ((maxColumn - solverMap.size() == 1)) { //last column
+        if ((maxColumn - solverMap.get(curRow).size() == 1)) { //last column
             if (maxRow - curRow > 0 && curRow == 1) { //first row
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, fakeNumber);
             } else if (maxRow - curRow > 0) { //middle row
@@ -349,7 +415,7 @@ public class Solver {
             }
         }
 
-        if ((maxColumn - solverMap.size() > 1)) { //middle column
+        if ((maxColumn - solverMap.get(curRow).size() > 1)) { //middle column
             if (maxRow - curRow > 0 && curRow == 1) { //first row
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, fakeNumber);
             } else if (maxRow - curRow > 0) { //middle row
@@ -361,20 +427,16 @@ public class Solver {
             }
         }
 
-        if ((maxColumn - solverMap.size() == 0 && curRow > 1)) { //puzzle one column
+        if (maxColumn - solverMap.get(curRow).size() == 0) { //puzzle one column
+            lastColumn = true;
             //should exit row
-            if (maxRow - curRow > 0) { //middle row
-                return new PuzzleElementDefinition(0, calcTop(curRow, maxColumn), 0, fakeNumber);
-            } else if (maxRow - curRow == 0) { //last row
-                return new PuzzleElementDefinition(0, calcTop(curRow, maxColumn), 0, 0);
-            }
         }
         return new PuzzleElementDefinition(0, 0, 0, 0);// check return statement
     }
 
     private int calcTop(int curRow, int curColumn) {
         List<PuzzleElementDefinition> list = solverMap.get(curRow - 1);
-        PuzzleElementDefinition element = list.get(curColumn);
+        PuzzleElementDefinition element = list.get(curColumn - 1);
         return element.getBottom() * (-1);
     }
 
@@ -382,11 +444,14 @@ public class Solver {
         return element.getRight() * (-1);
     }
 
-
-    public static List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
+    // the method return puzzle available heights(rows) for all possible rectangles
+    private static List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
         List<Integer> retVal = new ArrayList<>();
         int numOfElements = puzzleElements.size();
-
+        if (numOfElements == 1) {
+            retVal.add(1);
+            return retVal;
+        }
         if (isPrime(numOfElements)) {
             retVal.add(1);
             retVal.add(numOfElements);
