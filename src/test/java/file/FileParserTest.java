@@ -44,7 +44,7 @@ public class FileParserTest {
 
     @Test
     public void readFile() throws Exception {
-        StringBuilder expectedSb = new StringBuilder("NumOfElements=2\n" +
+        StringBuilder expectedSb = new StringBuilder("NumElements=2\n" +
                 "1 0 0 0 0\n" +
                 "2 0 0 0 0");
         File file = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
@@ -106,11 +106,11 @@ public class FileParserTest {
 
     @ParameterizedTest
     @CsvSource({
-            "NumOfElements=3",
-            "NumOfElements=3            ",
-            "            NumOfElements=3",
-            "   NumOfElements=3         ",
-            "  NumOfElements   =   3    "
+            "NumElements=3",
+            "NumElements=3            ",
+            "            NumElements=3",
+            "   NumElements=3         ",
+            "  NumElements   =   3    "
     })
 
     //////////////////////////////////////// getNumOfElements() Tests ////////////////////////////////////////
@@ -122,11 +122,11 @@ public class FileParserTest {
 
     @ParameterizedTest
     @CsvSource({
-            "NumOfElements=3",
-            "NumOfElements=3            ",
-            "            NumOfElements=3",
-            "   NumOfElements=3         ",
-            "  NumOfElements   =   3    "
+            "NumElements=3",
+            "NumElements=3            ",
+            "            NumElements=3",
+            "   NumElements=3         ",
+            "  NumElements   =   3    "
     })
     public void failGetNumOfElementsNumValue(String firstLine) throws Exception {
         assertNotEquals(FileParserUtils.getNumOfElements(firstLine), 2);
@@ -134,13 +134,13 @@ public class FileParserTest {
 
     @ParameterizedTest
     @CsvSource({
-            "NumOfElements",
-            "NumOfElements=3=",
-            "NumOfElements        =          3          =         ",
-            "NumOfElements=3 NumOfElements=3",
-            "            NumOfElements==3",
-            "   =NumOfElements=3         ",
-            "  ===NumOfElements   =   3    "
+            "NumElements",
+            "NumElements=3=",
+            "NumElements        =          3          =         ",
+            "NumElements=3 NumElements=3",
+            "            NumElements==3",
+            "   =NumElements=3         ",
+            "  ===NumElements   =   3    "
     })
     public void failGetNumOfElementsMoreThanOneSplit(String firstLine) throws Exception {
         FileParserUtils.getNumOfElements(firstLine);
