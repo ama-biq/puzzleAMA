@@ -23,15 +23,15 @@ public class Solver {
 
     private List<Integer> solutionList = new ArrayList<>();
 
-    public void solveThePuzzle(File inputFile) throws Exception {
-        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
-        //TODO to handle throwed exception
-//        isEnoughCornerElementsForOneRow(listAfterParser);
-//        isSumOfAllEdgesEqual(listAfterParser);
-        if (isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
-            addEventToList("The pre-checks passed successfully.");
-
-    }
+//    public void solveThePuzzle(File inputFile) throws Exception {
+//        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+//        //TODO to handle throwed exception
+////        isEnoughCornerElementsForOneRow(listAfterParser);
+////        isSumOfAllEdgesEqual(listAfterParser);
+//        if (isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
+//            addEventToList("The pre-checks passed successfully.");
+//
+//    }
 
     public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
         //TODO check when to use
