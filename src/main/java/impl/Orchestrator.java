@@ -10,14 +10,15 @@ public class Orchestrator {
         List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
         if(list.isEmpty()){
             solver.writeErrorsToTheOutPutFile();
-        }else {
-            solver.solve(list);
+
+        }else if(solver.isSumOfEdgesZero(list)) {
+                solver.solve(list);
         }
         if(solver.getSolutionList().isEmpty()){
             solver.writeErrorsToTheOutPutFile();
         }else{
-            solver.addSolutionToFile();
-            solver.writeErrorsToTheOutPutFile();
+            solver.writeSolutionToTheOutPutFile();
+           // solver.writeErrorsToTheOutPutFile();
         }
 
     }

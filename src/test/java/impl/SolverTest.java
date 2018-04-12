@@ -1,17 +1,24 @@
 package impl;
 
+import file.FileUtils;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-//import sun.plugin2.main.client.PluginEmbeddedFrame;
+
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -461,55 +468,37 @@ public class SolverTest {
         assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + "TR"), "expected error message [" + EventHandler.MISSING_CORNER + " TR ] not found");
     }
 
-    /*@ParameterizedTest
-    @MethodSource("negativeRowElementPuzzle_MissingCornerElements")
-    public void negativeRowElementPuzzle_MissingCornerElements(int wide, List<String> corners, List<PuzzleElementDefinition> puzzleElements) {
-        assertTrue(Solver.isMissingCornerElements(wide, puzzleElements), "all corners are present");
-        assertTrue(corners.size() == EventHandler.getEventList().size(), "expected number of events is " + corners.size() + ", but was " + EventHandler.getEventList().size());
-        for (String corner : corners) {
-            assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + corner), "expected error message [" + EventHandler.MISSING_CORNER + corner + " ] not found");
-        }
+    @Test
+    public void firstAmirTest() throws Exception {
+        File inputFile = new File("src\\test\\resources\\FirstAmirFile.txt");
+        String expectedFileToString = readFile("src\\test\\resources\\FirstAmirFileExpected.txt");
+        String actualFileToString = readFile("src\\test\\resources\\OutPutFile.txt");
+        List<PuzzleElementDefinition> list;
+        list = puzzleSolver.checkTheInputFile(inputFile);
+
+            puzzleSolver.solve(list);
+
+            puzzleSolver.addSolutionToFile();
+            puzzleSolver.writeErrorsToTheOutPutFile();
     }
 
-    private static Stream<Arguments> negativeRowElementPuzzle_MissingCornerElements() {
-        List<PuzzleElementDefinition> ped1_2x2 = new ArrayList<>();
-        ped1_2x2.add(new PuzzleElementDefinition(1, -1, 0, 0, 0));
-        ped1_2x2.add(new PuzzleElementDefinition(2, 1, 0, 0, 0));
-        ped1_2x2.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
-        ped1_2x2.add(new PuzzleElementDefinition(4, 1, 0, 0, 0));
+        @Test
+        public void e2eNoCorner() throws Exception {
+            File inputFile = new File("src\\test\\resources\\SumOfEdgesNotZero.txt");
+            String expectedFileToString = readFile("src\\test\\resources\\FirstAmirFileExpected.txt");
+            String actualFileToString = readFile("src\\test\\resources\\OutPutFile.txt");
+            List<PuzzleElementDefinition>list;
+            list = puzzleSolver.checkTheInputFile(inputFile);
 
-        List<PuzzleElementDefinition> ped2_2x2 = new ArrayList<>();
-        ped2_2x2.add(new PuzzleElementDefinition(1, -1, -1, -1, 0));
-        ped2_2x2.add(new PuzzleElementDefinition(2, 1, 1, 1, 1));
-        ped2_2x2.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-        ped2_2x2.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
+            puzzleSolver.isSumOfEdgesZero(list);
+            puzzleSolver.writeErrorsToTheOutPutFile();
 
-        List<PuzzleElementDefinition> ped3_2x2 = new ArrayList<>();
-        ped3_2x2.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        ped3_2x2.add(new PuzzleElementDefinition(2, 1, 1, 1, 1));
-        ped3_2x2.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-        ped3_2x2.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
+    }
+    static String readFile(String path)
+            throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded);
+    }
 
-        List<PuzzleElementDefinition> ped4_2x2 = new ArrayList<>();
-        ped4_2x2.add(new PuzzleElementDefinition(1, -1, -1, -1, -1));
-        ped4_2x2.add(new PuzzleElementDefinition(2, 0, -1, 1, 0));
-        ped4_2x2.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-        ped4_2x2.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
-
-        return Stream.of(
-                Arguments.of(2, Arrays.asList("TL", "BL"), ped1_2x2),
-                Arguments.of(2, Arrays.asList("TL", "BR"), ped2_2x2),
-                Arguments.of(2, Arrays.asList("BR"), ped3_2x2),
-                Arguments.of(2, Arrays.asList("BL"), ped4_2x2)
-        );
-    }*/
-//    @Test
-//    public void checkTheInputFile() throws Exception {
-//        File inputFile = new File("src\\test\\resources\\NOTvalidPuzzle2PeacesOneRow.txt");
-//        List<PuzzleElementDefinition>list = puzzleSolver.checkTheInputFile(inputFile);
-//        if(list.isEmpty()){
-//            puzzleSolver.writeErrorsToTheOutPutFile();
-//        }
-//
-//    }
 }
