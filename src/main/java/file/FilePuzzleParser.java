@@ -7,18 +7,19 @@ import impl.PuzzleElementDefinition;
 import java.io.File;
 import java.util.*;
 
-public class FileParserUtils {
+public class FilePuzzleParser {
 
+    public static final String NUM_ELEMENTS = "NumElements";
     private List<PuzzleElementDefinition> pedArray = new ArrayList<>();
     private int numOfElements;
     private final int fake = Integer.MIN_VALUE;
 
 
-    public FileParserUtils(int numOfElements) {
+    public FilePuzzleParser(int numOfElements) {
         this.numOfElements = numOfElements;
     }
 
-    public FileParserUtils() {
+    public FilePuzzleParser() {
     }
 
 
@@ -27,7 +28,6 @@ public class FileParserUtils {
         StringBuilder sb = FileUtils.readFile(file);
         String[] lines = sb.toString().split("\\n");
         for (String line : lines) {
-
             if (isLineReadyForParse(line)) {
                 if (this.numOfElements == 0) {
                     this.numOfElements = getNumOfElements(line);
@@ -39,15 +39,10 @@ public class FileParserUtils {
                 }
             }
         }
-
-
         if (verifyPuzzleIDs(this.pedArray, this.numOfElements) && EventHandler.getEventList().isEmpty()) {
-
             return this.pedArray;
         }
-
         this.pedArray.clear();
-
         return this.pedArray;
     }
 
@@ -62,17 +57,17 @@ public class FileParserUtils {
         String split[] = firstLine.trim().split("=");
 
         if (split.length == 2 && amountOfEqualSigns == 1) {
-            if (split[0].trim().equals("NumOfElements")) {
+            if (split[0].trim().equals(NUM_ELEMENTS)) {
                 try {
                     return Integer.parseInt(split[1].trim());
                 } catch (Exception e) {
-                    EventHandler.addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+                    EventHandler.addEventToList(EventHandler.BAD_FORMAT_FOR_NUM_ELEMENTS + firstLine);
                 }
             } else {
-                EventHandler.addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+                EventHandler.addEventToList(EventHandler.BAD_FORMAT_FOR_NUM_ELEMENTS + firstLine);
             }
         }
-        EventHandler.addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+        EventHandler.addEventToList(EventHandler.BAD_FORMAT_FOR_NUM_ELEMENTS + firstLine);
 
         return fake;
     }
@@ -106,24 +101,47 @@ public class FileParserUtils {
                 return new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
             }
         }
-        EventHandler.addEventToList("Bad format for puzzle piece line: " + line);
+        EventHandler.addEventToList(EventHandler.BAD_FORMAT_PUZZLE_PIECES + line);
         return null;
     }
 
+    private List<Integer> cantHaveTheFollowingID(TreeSet<Integer> sortedSet, int numOfElements) {
+        Integer counter = 1;
+        ArrayList<Integer> retList = new ArrayList<>();
+        Iterator<Integer> iterator = sortedSet.iterator();
+        while (iterator.hasNext()) {
+            Integer element = iterator.next();
+            if (element > numOfElements) {
+                retList.add(element);
+            }
+            counter++;
+        }
+        return retList;
+
+    }
+
     public boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
+        boolean flag = true;
         Set<Integer> validSet = new HashSet<>();
-//        try {
         for (PuzzleElementDefinition element : puzzleElementDefinition) {
             validSet.add(element.getId());
-//            }
-//        } catch (InputMismatchException e) {
-            //todo write error message to the file - <moshe: The parseInt of the id is being checked at createPuzzleElementDefinition method>
         }
         TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
-        return (puzzleElementDefinition.size() == sortedSet.size() &&
-                sortedSet.first() == Integer.valueOf(1) &&
-                sortedSet.last() == sortedSet.size());
-        // throw new Exception();
+
+        List<Integer> greatedThanNumOfElementIDList = cantHaveTheFollowingID(sortedSet, numOfElements);
+        if (!greatedThanNumOfElementIDList.isEmpty()) {
+            EventHandler.addEventToList("Puzzle of size " + numOfElements + " cannot have the following IDs: " + greatedThanNumOfElementIDList.toString().replace("[", "").replace("]", ""));
+        }
+
+        if (sortedSet.first() != Integer.valueOf(1) ||
+                sortedSet.last() != sortedSet.size() ||
+                sortedSet.size() != numOfElements) {
+            List<String> missingElement = whichElementIdMissing(sortedSet, numOfElements);
+            EventHandler.addEventToList("Missing puzzle element(s) with the following IDs: " + missingElement.toString().replace("[", "").replace("]", ""));
+            flag = false;
+        }
+
+        return flag;
     }
 
 
@@ -147,12 +165,9 @@ public class FileParserUtils {
             return Integer.parseInt(id);
 
         } catch (Exception e) {
-            EventHandler.addEventToList("Bad format for puzzle piece line: " + line);
+            EventHandler.addEventToList(EventHandler.BAD_FORMAT_PUZZLE_PIECES + line);
         }
-
-
         return fake;
-
     }
 
     private int validRangeEdge(String edge, int id, String line) {
@@ -168,7 +183,6 @@ public class FileParserUtils {
         }
         return fake;
     }
-
 
 
 }

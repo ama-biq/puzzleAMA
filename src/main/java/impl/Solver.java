@@ -1,7 +1,7 @@
 package impl;
 
 
-import file.FileParserUtils;
+import file.FilePuzzleParser;
 import file.FileUtils;
 
 import java.io.File;
@@ -31,7 +31,8 @@ public class Solver {
     private List<Integer> solutionList = new ArrayList<>();
 
     public void solveThePuzzle(File inputFile) throws Exception {
-        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        FilePuzzleParser filePuzzleParser = new FilePuzzleParser();
+        List<PuzzleElementDefinition> listAfterParser = filePuzzleParser.fileToPEDArray(inputFile);
         //TODO to handle throwed exception
 //        isEnoughCornerElementsForOneRow(listAfterParser);
 //        isSumOfAllEdgesEqual(listAfterParser);
@@ -255,13 +256,11 @@ public class Solver {
                 }
             } else {
                 EventHandler.addEventToList(EventHandler.NO_SOLUTION);
-                System.out.println(solverMap);
                 solverMap.clear();
                 return false;
             }
         }
         EventHandler.addEventToList(EventHandler.NO_SOLUTION);
-        System.out.println(solverMap);
         solverMap.clear();
         return false;
     }
@@ -552,7 +551,7 @@ public class Solver {
         } else if (height == 1) {
             return isMissingRowPuzzleCorners(cornerElements);
         } else {
-            //TODO 2x2 and more
+            //TODO 2x2 and more should be developed
             return isMissingCornersInMap(cornerElements);
         }
     }
@@ -723,7 +722,8 @@ public class Solver {
     }
 
     public List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {
-        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        FilePuzzleParser filePuzzleParser = new FilePuzzleParser();
+        List<PuzzleElementDefinition> listAfterParser = filePuzzleParser.fileToPEDArray(inputFile);
         return listAfterParser;
 
     }

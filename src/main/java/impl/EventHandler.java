@@ -8,7 +8,8 @@ public class EventHandler {
     public static final String WRONG_STRAIGHT_EDGES = "Cannot solve puzzle: wrong number of straight edges";
     public static final String MISSING_CORNER = "Cannot solve puzzle: missing corner element: ";
     public static final String NO_SOLUTION = "Cannot solve puzzle: it seems that there is no proper solution";
-
+    public static final String BAD_FORMAT_FOR_NUM_ELEMENTS = "Bad format for NumElements declaration line: ";
+    public static final String BAD_FORMAT_PUZZLE_PIECES = "Bad format for puzzle piece line: ";
 
     private static Set<String> eventList = new HashSet<>();
     private static Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
@@ -21,7 +22,7 @@ public class EventHandler {
         return eventList;
     }
 
-    public static void emptyEventList(){
+    public static void emptyEventList() {
         eventList.clear();
     }
 }
