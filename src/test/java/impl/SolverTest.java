@@ -484,18 +484,18 @@ public class SolverTest {
 //
 //    }
 
-        @Test
-        public void e2eNoCorner() throws Exception {
-            File inputFile = new File("src\\test\\resources\\SumOfEdgesNotZero.txt");
-            String expectedFileToString = readFile("src\\test\\resources\\FirstAmirFileExpected.txt");
-            String actualFileToString = readFile("src\\test\\resources\\OutPutFile.txt");
-            List<PuzzleElementDefinition>list;
-            list = puzzleSolver.checkTheInputFile(inputFile);
-
-            puzzleSolver.isSumOfEdgesZero(list);
-            puzzleSolver.writeErrorsToTheOutPutFile();
-
-    }
+//        @Test
+//        public void e2eNoCorner() throws Exception {
+//            File inputFile = new File("src\\test\\resources\\SumOfEdgesNotZero.txt");
+//            String expectedFileToString = readFile("src\\test\\resources\\FirstAmirFileExpected.txt");
+//            String actualFileToString = readFile("src\\test\\resources\\OutPutFile.txt");
+//            List<PuzzleElementDefinition>list;
+//            list = puzzleSolver.checkTheInputFile(inputFile);
+//
+//            puzzleSolver.isSumOfEdgesZero(list);
+//            puzzleSolver.writeErrorsToTheOutPutFile();
+//
+//    }
     static String readFile(String path)
             throws IOException
     {
