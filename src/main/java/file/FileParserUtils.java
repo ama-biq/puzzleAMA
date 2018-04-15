@@ -150,9 +150,6 @@ public class FileParserUtils {
             flag = false;
         }
 
-
-
-
         return flag;
     }
 
