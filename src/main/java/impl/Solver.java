@@ -2,13 +2,19 @@ package impl;
 
 
 import file.FileParserUtils;
+import file.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static impl.EventHandler.addEventToList;
 
 public class Solver {
+
+    public Map<Integer, List<PuzzleElementDefinition>> getSolverMap() {
+        return solverMap;
+    }
 
     //    private List<PuzzleElementDefinition> testedList;
     private Map<Integer, List<PuzzleElementDefinition>> solverMap = new HashMap<>();
@@ -44,26 +50,12 @@ public class Solver {
         return sum == 0;
     }
 
-    public boolean isSumOfAllEdgesIsZero(List<PuzzleElementDefinition> puzzleElements) {
-        int sum = 0;
-        for (PuzzleElementDefinition puzzleElement : puzzleElements) {
-            sum = puzzleElement.getLeft() +
-                    puzzleElement.getUp() +
-                    puzzleElement.getRight() +
-                    puzzleElement.getBottom();
-        }
-        if (sum != 0) {
-            addEventToList(EventHandler.SUM_ZERO);
-            return false;
-        }
-        return true;
-    }
 
     public boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
         return (isAllElementDefinitionEqualsToZero(puzzleElementDefinition));
     }
 
-    public boolean isEnoughCornerElementsForSeveralRows(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    protected boolean isEnoughCornerElementsForSeveralRows(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTLExists = false;
         boolean isTRExists = false;
         boolean isBLExists = false;
@@ -150,7 +142,7 @@ public class Solver {
     }
 
 
-    public boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    protected boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTopCornerExists = false;
         boolean isBottomCornerExists = false;
         boolean isOneOfElementsSquare = false;
@@ -192,7 +184,7 @@ public class Solver {
                 puzzleElementDefinition.getRight() == 0 && puzzleElementDefinition.getBottom() == 0;
     }
 
-    public boolean isSumOfAllEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    protected boolean isSumOfAllEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         int leftSum = 0;
         int upSum = 0;
         int rightSum = 0;
@@ -208,19 +200,6 @@ public class Solver {
 
     }
 
-    public boolean checkIdValidity(List<PuzzleElementDefinition> listToValid) {
-        Set<Integer> validSet = new HashSet<>();
-        try {
-            for (PuzzleElementDefinition element : listToValid) {
-                validSet.add(element.getId());
-            }
-        } catch (InputMismatchException e) {
-            //todo write error message to the file
-        }
-        TreeSet<Integer> sortedSet = new TreeSet<>(validSet);
-        return (listToValid.size() == sortedSet.size() &&
-                sortedSet.last() == sortedSet.size());
-    }
 
     public void solve(List<PuzzleElementDefinition> validIdList) {
 
@@ -357,7 +336,7 @@ public class Solver {
 
     }
 
-    public void solutionMapToSolutionList() {
+    protected void solutionMapToSolutionList() {
         for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
             List<PuzzleElementDefinition> listToPrint = entry.getValue();
             for (PuzzleElementDefinition element : listToPrint) {
@@ -365,6 +344,10 @@ public class Solver {
             }
         }
     }
+
+    public void addSolutionToFile(){
+       EventHandler.addEventToList(solutionList.toString());
+        }
 
     private boolean isMatch(PuzzleElementDefinition currentElement, PuzzleElementDefinition templateElement) {
         int left = templateElement.getLeft();
@@ -549,7 +532,7 @@ public class Solver {
     }
 
     //the method should solve/fill errors in case corners are missing
-    public static boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+    protected static boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
 
         int numOfElements = puzzleElements.size();
         int height = numOfElements / wide;
@@ -737,6 +720,19 @@ public class Solver {
                 puzzleElement.getUp() == 0 &&
                 puzzleElement.getRight() == 0 &&
                 puzzleElement.getBottom() == 0);
+    }
+
+    public List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {
+        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        return listAfterParser;
+
+    }
+
+    protected void writeErrorsToTheOutPutFile() throws IOException {
+        FileUtils.writeFile();
+    }
+    protected void writeSolutionToTheOutPutFile() throws IOException {
+        FileUtils.writeSolutionToFile(solverMap);
     }
 }
 

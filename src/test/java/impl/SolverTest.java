@@ -6,6 +6,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -323,7 +329,7 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(3, 0, 0, 1, 0));
 
-        List<String> expectedEvents = new ArrayList<>();
+        List<String > expectedEvents = new ArrayList<>();
         expectedEvents.add(EventHandler.NO_SOLUTION);
         puzzleSolver.solve(idsList);
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
@@ -334,8 +340,8 @@ public class SolverTest {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, -1, 1));
         idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
-        idsList.add(new PuzzleElementDefinition(2, 0, 1, 0, 0));
-        idsList.add(new PuzzleElementDefinition(4, 0, -1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(2, 0, -1, 0, 0));
         idsList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
         idsList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
 
@@ -492,8 +498,7 @@ public class SolverTest {
         expectedList.add(6);
         puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
-    }*/
-
+    }
 
     @Test
     public void positive1ElementTestResolveThePuzzle() {

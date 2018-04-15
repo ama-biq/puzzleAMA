@@ -1,11 +1,17 @@
 package file;
 
+import impl.EventHandler;
+import impl.PuzzleElementDefinition;
+import impl.Solver;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FileUtils {
 
@@ -37,11 +43,26 @@ public class FileUtils {
 
     //todo . Previous version of this finction was
     //public static void writeFile(File file, List<String> output) throws IOException
-    public static void writeFile(List<String> output) throws IOException {
-        FileOutputStream fos = new FileOutputStream((new File("")));
+    public static void writeFile() throws IOException {
+        Set<String> output = EventHandler.getEventList();
+        FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             for(String str : output) {
                 writer.write(str + '\n');
+            }
+        }
+    }
+    public static void writeSolutionToFile(Map<Integer, List<PuzzleElementDefinition>> solverMap) throws IOException {
+        Solver solver = new Solver();
+        Map<Integer, List<PuzzleElementDefinition>>outMap = solverMap;
+        FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
+        try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
+            for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : outMap.entrySet()) {
+                List<PuzzleElementDefinition> list = entry.getValue();
+                for (PuzzleElementDefinition element : list){
+                    writer.write(Integer.toString(element.getId())+' ');
+                }
+                writer.write('\n');
             }
         }
     }

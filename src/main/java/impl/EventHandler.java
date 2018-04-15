@@ -1,7 +1,6 @@
 package impl;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class EventHandler {
 
@@ -12,6 +11,7 @@ public class EventHandler {
 
 
     private static Set<String> eventList = new HashSet<>();
+    private static Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
 
     public static void addEventToList(String error) {
         eventList.add(error);
