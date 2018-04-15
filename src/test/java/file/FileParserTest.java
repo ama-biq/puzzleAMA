@@ -234,9 +234,8 @@ public class FileParserTest {
         FileParserUtils testParser = new FileParserUtils(7);
         String[] testLine = line.split("\\s+");
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-        System.out.println(testParser.getWrongElementsFormat());
         int testedID = Integer.parseInt(testLine[0]);
-        assertTrue(testParser.getWrongElementsFormat().contains(testedID));
+        assertTrue(EventHandler.getEventList().contains("Puzzle ID " + testedID + " has wrong data: " + line));
         assertEquals(testPed, null);
     }
 
@@ -263,7 +262,7 @@ public class FileParserTest {
         int testedID = Integer.parseInt(testLine[0]);
         FileParserUtils testParser = new FileParserUtils();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-        assertTrue(testParser.getWrongElementsFormat().contains(testedID));
+        assertTrue(EventHandler.getEventList().contains("Bad format for puzzle piece line: " + line));
         assertEquals(testPed, null);
     }
 
