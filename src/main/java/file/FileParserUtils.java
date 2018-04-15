@@ -1,44 +1,30 @@
 package file;
 
 
-import impl.EventHandler;
 import impl.PuzzleElementDefinition;
 
 import java.io.File;
 import java.util.*;
 
+import static impl.EventHandler.addEventToList;
+import static impl.EventHandler.getEventList;
+
 public class FileParserUtils {
 
-    private List<PuzzleElementDefinition> pedArray = new ArrayList<>();
-//    private List<Integer> wrongElementsIds = new ArrayList<>();
-    private List<Integer> wrongElementsFormat = new ArrayList<>();
-    private List<Integer> mi = new ArrayList<>();
-    private int numOfElements;
-    private final int fake = Integer.MIN_VALUE;
+    private static List<PuzzleElementDefinition> pedArray = new ArrayList<>();
+    private static int numOfElements;
 
-
-    public FileParserUtils(int numOfElements) {
-        this.numOfElements = numOfElements;
-    }
-
-    public FileParserUtils() {
-    }
-
-
-    public List<PuzzleElementDefinition> fileToPEDArray(File file) throws Exception {
+    public static List<PuzzleElementDefinition> fileToPEDArray(File file) throws Exception {
 
         StringBuilder sb = FileUtils.readFile(file);
         String[] lines = sb.toString().split("\\n");
         for (String line : lines) {
 
             if (isLineReadyForParse(line)) {
-                if (this.numOfElements == 0) {
-                    this.numOfElements = getNumOfElements(line);
+                if (numOfElements == 0) {
+                    numOfElements = getNumOfElements(line);
                 } else {
-                    PuzzleElementDefinition createdPED = createPuzzleElementDefinition(line);
-                    if (createdPED != null) {
-                        this.pedArray.add(createdPED);
-                    }
+                    pedArray.add(createPuzzleElementDefinition(line));
                 }
             }
         }
@@ -54,12 +40,12 @@ public class FileParserUtils {
     }
 
 
-    public boolean isLineReadyForParse(String line) {
+    public static boolean isLineReadyForParse(String line) {
         return (!(line.trim().startsWith("#")) && !line.trim().isEmpty());
     }
 
     // TODO in case of error should return error
-    public int getNumOfElements(String firstLine) throws Exception {
+    public static int getNumOfElements(String firstLine) throws Exception {
         int amountOfEqualSigns = firstLine.length() - firstLine.replace("=", "").length();
         String split[] = firstLine.trim().split("=");
 
@@ -68,20 +54,22 @@ public class FileParserUtils {
                 try {
                     return Integer.parseInt(split[1].trim());
                 } catch (Exception e) {
-                    EventHandler.addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+                    addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
                 }
             } else {
-                EventHandler.addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+                addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
             }
         }
-        EventHandler.addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
+        addEventToList("Bad format for NumOfElements declaration line: " + firstLine);
 
-        return fake;
+        return 0;
     }
 
-    public PuzzleElementDefinition createPuzzleElementDefinition(String line) throws Exception {
+    public static PuzzleElementDefinition createPuzzleElementDefinition(String line) throws Exception {
+        int elementID = 0;
         boolean shouldCreatePED = true;
         int[] arr = new int[5];
+        int j = 0;
         String split[] = line.trim().split("\\s+");
         if (split.length == 5) {
             int id = 0;
@@ -132,52 +120,16 @@ public class FileParserUtils {
     }
 
 
-    ArrayList<String> whichElementIdMissing(Set<Integer> sortedSet, int numOfElements) {
+
+    static ArrayList<String> whichElementIdMissing(Set<Integer> sortedSet, int numOfElements) {
         Integer counter = 1;
-        ArrayList<String> missingiDElementsList = new ArrayList<>();
-        while (counter <= numOfElements) {
-            if (!sortedSet.contains(counter)) {
+        ArrayList<String>missingiDElementsList = new ArrayList<>();
+        while (counter <= numOfElements){
+            if(! sortedSet.contains(counter)){
                 missingiDElementsList.add(Integer.toString(counter));
             }
             counter++;
         }
         return missingiDElementsList;
     }
-
-
-    private int parsedId(String id, String line) {
-
-        try {
-
-            return Integer.parseInt(id);
-
-        } catch (Exception e) {
-            EventHandler.addEventToList("Bad format for puzzle piece line: " + line);
-        }
-
-
-        return fake;
-
-    }
-
-    private int validRangeEdge(String edge, int id, String line) {
-        try {
-            int parsedEdge = Integer.parseInt(edge);
-            if (parsedEdge >= -1 && parsedEdge <= 1) {
-                return parsedEdge;
-            } else {
-                this.wrongElementsFormat.add(id);
-            }
-        } catch (Exception e) {
-            EventHandler.addEventToList("Bad format for puzzle piece line: " + line);
-        }
-        return fake;
-    }
-
-
-    public List<Integer> getWrongElementsFormat() {
-        return wrongElementsFormat;
-    }
-
-
 }

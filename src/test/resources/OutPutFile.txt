@@ -1,0 +1,2 @@
+Cannot solve puzzle: it seems that there is no proper solution
+[1, 3, 2, 4]
