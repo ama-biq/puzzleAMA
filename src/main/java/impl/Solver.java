@@ -1,496 +1,692 @@
-//package file;
-//
-//import impl.EventHandler;
-//import impl.PuzzleElementDefinition;
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.params.ParameterizedTest;
-//import org.junit.jupiter.params.provider.Arguments;
-//import org.junit.jupiter.params.provider.CsvSource;
-//import org.junit.jupiter.params.provider.MethodSource;
-//import org.junit.jupiter.params.provider.ValueSource;
-//
-//import java.io.File;
-//import java.io.FileNotFoundException;
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.List;
-//import java.util.TreeSet;
-//import java.util.stream.Stream;
-//
-//import static impl.EventHandler.getEventList;
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//public class FileParserTest {
-//
-//
-//
-//    File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
-//    File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
-//    File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
-//    File valid4 = new File("src\\test\\resources\\validPuzzle4Peaces.txt");
-//    File valid5 = new File("src\\test\\resources\\validPuzzle5Peaces.txt");
-//    File valid6 = new File("src\\test\\resources\\validPuzzle6Peaces.txt");
-//    File novalid6 = new File("src\\test\\resources\\novalidPuzzle6Peaces.txt");
-//    File novalid5 = new File("src\\test\\resources\\novalidPuzzle5Peaces.txt");
-//
-//
-//
-//    List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
-//
-//    @BeforeEach
-//    public void beforeEach() {
-//        EventHandler.emptyEventList();
-//
-//    }
-//
-////////////////////////////////////////// FileUtils Tests ////////////////////////////////////////
-//
-//
-//    @Test
-//    public void readFile() throws Exception {
-//        StringBuilder expectedSb = new StringBuilder("NumOfElements=2\n" +
-//                "1 0 0 0 0\n" +
-//                "2 0 0 0 0");
-//        File file = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
-//        StringBuilder sb = FileUtils.readFile(file);
-//        Assertions.assertTrue(expectedSb.toString().equals(sb.toString()), "expected input file payload is - " + "{" + expectedSb + "}" + " actual is " + "{" + sb + "}");
-//    }
-//
-//    @Test
-//    public void fileNotFound() throws Exception {
-//        File file = new File("src\\test\\resources\\fileNotExist.txt");
-//        Assertions.assertThrows(FileNotFoundException.class, () -> {
-//            FileUtils.readFile(file);
-//        }, "expected exception is FileNotFoundException");
-//
-//    }
-//
-//    @Test
-//    public void badFolder() throws Exception {
-//        File file = new File("src\\test\\resources2\\validPuzzle2Peaces.txt");
-//        Assertions.assertThrows(FileNotFoundException.class, () -> {
-//            FileUtils.readFile(file);
-//        }, "expected exception is FileNotFoundException");
-//    }
-//
-//    //////////////////////////////////////// isLineReadyForParse() Tests ////////////////////////////////////////
-//
-//
-//    @ParameterizedTest
-//    @ValueSource(strings = {"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-//            "              AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-//            ",",
-//            "''",
-//            "AAAAAAAAAAA#                                      ",
-//            "AAAAAAAAAA#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-//            "!@#$%^&*()__+QWERTYUIONJSNKJNKJkjsdnckasdnndajkdjn",
-//    })
-//    public void passIsLineReadyForParse(String line) {
-//        FileParserUtils testParser = new FileParserUtils();
-//        assertTrue(testParser.isLineReadyForParse(line));
-//    }
-//
-//
-//    @ParameterizedTest
-//    @ValueSource(strings = {
-//            "                   ",
-//            "#                  ",
-//            "          #        ",
-//            "#      AAAAAAA     ",
-//            "#      AAAAAAA#####",
-//            "           #AAAAAAA"})
-//    public void failIsLineReadyForParse(String line) {
-//        FileParserUtils testParser = new FileParserUtils();
-//        assertFalse(testParser.isLineReadyForParse(line));
-//    }
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "NumOfElements=3",
-//            "NumOfElements=3            ",
-//            "            NumOfElements=3",
-//            "   NumOfElements=3         ",
-//            "  NumOfElements   =   3    "
-//    })
-//
-//    //////////////////////////////////////// getNumOfElements() Tests ////////////////////////////////////////
-//
-//
-//    public void passGetNumOfElementsNumValue(String firstLine) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        assertEquals(testParser.getNumOfElements(firstLine), 3);
-//    }
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "NumOfElements=3",
-//            "NumOfElements=3            ",
-//            "            NumOfElements=3",
-//            "   NumOfElements=3         ",
-//            "  NumOfElements   =   3    "
-//    })
-//    public void failGetNumOfElementsNumValue(String firstLine) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        assertNotEquals(testParser.getNumOfElements(firstLine), 2);
-//    }
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "NumOfElements",
-//            "NumOfElements=3=",
-//            "NumOfElements        =          3          =         ",
-//            "NumOfElements=3 NumOfElements=3",
-//            "            NumOfElements==3",
-//            "   =NumOfElements=3         ",
-//            "  ===NumOfElements   =   3    "
-//    })
-//    public void failGetNumOfElementsMoreThanOneSplit(String firstLine) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        testParser.getNumOfElements(firstLine);
-//
-//
-//        assertTrue(getEventList().contains("Bad format for NumOfElements declaration line: " + firstLine));
-//
-//    }
-//
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "numofelements=2",
-//            "NUMOFELEMENTS=2",
-//            "NumOfElements77=2",
-//            "Num Of Elements=3",
-//            "NumOfElementss=3"
-//
-//    })
-//    public void failGetNumOfElementsNotEqualNumOfElementsWord(String firstLine) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        testParser.getNumOfElements(firstLine);
-//        assertTrue(getEventList().contains("Bad format for NumOfElements declaration line: " + firstLine));
-//
-//    }
-//
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "NumOfElements=A",
-//            "NumOfElements=a",
-//            "NumOfElements=23A",
-//            "NumOfElements=a a a",
-//            "NumOfElements=#",
-//            "NumOfElements=        A",
-//            "NumOfElements=        $",
-//    })
-//    public void failGetNumOfElementsParseInt(String firstLine) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        testParser.getNumOfElements(firstLine);
-//        assertTrue(getEventList().contains("Bad format for NumOfElements declaration line: " + firstLine));
-//
-//
-//    }
-//
-//
-//    //////////////////////////////////////// createPuzzleElementDefinition() Tests ////////////////////////////////////////
-//
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "0 0 0 0 0",
-//            "1 1 1 1 1",
-//            "2 -1 -1 -1 -1",
-//            "5 0 1 0 1",
-//            "20 1 1 0 0",
-//            "7 1 1 1 0",
-//            "9 1 0 0 0"
-//    })
-//    public void passCreatePED(String line) throws Exception {
-//        String[] testLine = line.split("\\s+");
-//        System.out.println(Arrays.toString(testLine));
-//        int id = Integer.parseInt(testLine[0]);
-//        int left = Integer.parseInt(testLine[1]);
-//        int up = Integer.parseInt(testLine[2]);
-//        int right = Integer.parseInt(testLine[3]);
-//        int bottom = Integer.parseInt(testLine[4]);
-//        FileParserUtils testParser = new FileParserUtils();
-//
-//
-//        PuzzleElementDefinition referencePed = new PuzzleElementDefinition(id, left, up, right, bottom);
-//        PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-//        assertEquals(referencePed, testPed);
-//    }
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "0 4 0 0 0",
-//            "1 7 1 1 1",
-//            "0 4 -8 0 0",
-//            "1 2 3 4 5",
-//            "5 0 0 5 5",
-//            "7 -3 0 0 1"
-//    })
-//    public void failEdgesOfPEDnotValid(String line) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils(7);
-//        String[] testLine = line.split("\\s+");
-//        PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-//        int testedID = Integer.parseInt(testLine[0]);
-//        assertTrue(EventHandler.getEventList().contains("Puzzle ID " + testedID + " has wrong data: " + line));
-//        assertEquals(testPed, null);
-//    }
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "0 A 0 0 0",
-//            "B 1 1 1 1 "
-//    })
-//    public void failCreatePEDCannotParseIDOrEdge(String line) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-//        assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
-//        assertEquals(testPed, null);
-//    }
-//
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "0 0 0 0 ",
-//            "1 1 1 1 1 1"
-//    })
-//    public void failCreatePEDWrongAmountOfEdgesCanParseID(String line) throws Exception {
-//        String[] testLine = line.split("\\s+");
-//        int testedID = Integer.parseInt(testLine[0]);
-//        FileParserUtils testParser = new FileParserUtils();
-//        PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-//        assertTrue(EventHandler.getEventList().contains("Puzzle ID " + testedID + " has wrong data: " + line));
-//        assertEquals(testPed, null);
-//    }
-//
-//    @ParameterizedTest
-//    @CsvSource({
-//            "A 0 0 0 ",
-//            "B 1 1 1 1 1"
-//    })
-//    public void failCreatePEDWrongAmountOfEdgesCannotParseID(String line) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-//        assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
-//        assertEquals(testPed, null);
-//    }
-//
-//
-//    //////////////////////////////////////// verifyPuzzleIDs() Tests ////////////////////////////////////////
-//
-//
-//
-//    @ParameterizedTest
-//    @MethodSource("positiveTestCheckIdValidity")
-//    public void positiveTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
-//                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) throws Exception {
-//        setEdgesForFourElements(p1, p2, p3, p4);
-//        FileParserUtils testParser = new FileParserUtils();
-//        assertTrue(testParser.verifyPuzzleIDs(listOfPuzzleElementDefinitionsContainsId, 4));
-//    }
-//
-//    private static Stream<Arguments> positiveTestCheckIdValidity() {
-//        return Stream.of(
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
-//        );
-//    }
-//
-//    @ParameterizedTest
-//    @MethodSource("negativeTestCheckIdValidity")
-//    public void negativeTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
-//                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) throws Exception {
-//        setEdgesForFourElements(p1, p2, p3, p4);
-//        FileParserUtils testParser = new FileParserUtils();
-//        assertFalse(testParser.verifyPuzzleIDs(listOfPuzzleElementDefinitionsContainsId, 4));
-//    }
-//
-//    private static Stream<Arguments> negativeTestCheckIdValidity() {
-//        return Stream.of(
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 6,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( -6,1, 0, 0, 0)),
-//                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-//                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-//                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
-//        );
-//    }
-//
-//    private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
-//                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
-//        listOfPuzzleElementDefinitionsContainsId.add(ped1);
-//        listOfPuzzleElementDefinitionsContainsId.add(ped2);
-//        listOfPuzzleElementDefinitionsContainsId.add(ped3);
-//        listOfPuzzleElementDefinitionsContainsId.add(ped4);
-//    }
-//    @ParameterizedTest
-//    @CsvSource({
-//            "1,2,3,4,5",
-//            "2,3,1,5,4",
-//            "5,4,3,2,1"
-//    })
-//    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e) throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        TreeSet<Integer> setToValid = new TreeSet<>();
-//        setToValid.add(a);
-//        setToValid.add(b);
-//        setToValid.add(c);
-//        setToValid.add(d);
-//        setToValid.add(e);
-//        ArrayList<String> actualList = testParser.whichElementIdMissing(setToValid, setToValid.size());
-//        ArrayList<Integer> expectedList = new ArrayList<>();
-//        assertEquals(expectedList, actualList);
-//
-//    }
-//
-//
-//    //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
-//
-//
-//
-//
-//    @Test
-//    public void passCreateListOfPEDsValidFile2Peaces() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(valid2);
-//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
-//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-//        referenceList.add(referencePED1);
-//        referenceList.add(referencePED2);
-//
-//        assertTrue(referenceList.containsAll(testList)
-//                && testList.containsAll(referenceList));
-//
-//    }
-//
-//
-//    @Test
-//    public void passCreateListOfPEDsValidFile3Peaces() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(valid3);
-//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
-//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 0, 1, 0, -1);
-//        referenceList.add(referencePED1);
-//        referenceList.add(referencePED2);
-//        referenceList.add(referencePED3);
-//
-//        assertTrue(referenceList.containsAll(testList)
-//                && testList.containsAll(referenceList));
-//
-//    }
-//
-//
-//    @Test
-//    public void passCreateListOfPEDsValidFile4Peaces() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(valid4);
-//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
-//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 1, 1, 1, 1);
-//        PuzzleElementDefinition referencePED4 = new PuzzleElementDefinition(4, -1, 1, -1, 0);
-//        referenceList.add(referencePED1);
-//        referenceList.add(referencePED2);
-//        referenceList.add(referencePED3);
-//        referenceList.add(referencePED4);
-//
-//        assertTrue(referenceList.containsAll(testList)
-//                && testList.containsAll(referenceList));
-//
-//    }
-//
-//
-//    @Test
-//    public void passCreateListOfPEDsValidFile5Peaces() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(valid5);
-//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
-//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 1, 1, 1, 1);
-//        PuzzleElementDefinition referencePED4 = new PuzzleElementDefinition(4, 0, 1, 0, 1);
-//        PuzzleElementDefinition referencePED5 = new PuzzleElementDefinition(5, -1, 1, -1, 0);
-//        referenceList.add(referencePED1);
-//        referenceList.add(referencePED2);
-//        referenceList.add(referencePED3);
-//        referenceList.add(referencePED4);
-//        referenceList.add(referencePED5);
-//
-//        assertTrue(referenceList.containsAll(testList)
-//                && testList.containsAll(referenceList));
-//
-//    }
-//
-//    @Test
-//    public void passCreateListOfPEDsValidFile6Peaces() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(valid6);
-//        List<PuzzleElementDefinition> referenceList = new ArrayList<>();
-//        PuzzleElementDefinition referencePED1 = new PuzzleElementDefinition(1, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED2 = new PuzzleElementDefinition(2, 0, 0, 0, 0);
-//        PuzzleElementDefinition referencePED3 = new PuzzleElementDefinition(3, 1, 0, 1, 0);
-//        PuzzleElementDefinition referencePED4 = new PuzzleElementDefinition(4, 1, 1, 1, 1);
-//        PuzzleElementDefinition referencePED5 = new PuzzleElementDefinition(5, 0, 1, 0, 1);
-//        PuzzleElementDefinition referencePED6 = new PuzzleElementDefinition(6, -1, 1, -1, 0);
-//        referenceList.add(referencePED1);
-//        referenceList.add(referencePED2);
-//        referenceList.add(referencePED3);
-//        referenceList.add(referencePED4);
-//        referenceList.add(referencePED5);
-//        referenceList.add(referencePED6);
-//
-//        assertTrue(referenceList.containsAll(testList)
-//                && testList.containsAll(referenceList));
-//
-//    }
-//
-//
-//    @Test
-//    public void failCreateListOfPEDsMissingElement() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(novalid6);
-//
-//        assertTrue(testList.isEmpty());
-//    }
-//
-//    @Test
-//    public void failCreateListOfPEDsMissingEdge() throws Exception {
-//        FileParserUtils testParser = new FileParserUtils();
-//        List<PuzzleElementDefinition> testList = testParser.fileToPEDArray(novalid5);
-//
-//        assertTrue(testList.isEmpty());
-//    }
-//
-//}
-//
-//
-//
-//
-//
-//
+package impl;
+
+
+import file.FileParserUtils;
+import file.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import static impl.EventHandler.addEventToList;
+
+public class Solver {
+
+    public Map<Integer, List<PuzzleElementDefinition>> getSolverMap() {
+        return solverMap;
+    }
+
+    //    private List<PuzzleElementDefinition> testedList;
+    private Map<Integer, List<PuzzleElementDefinition>> solverMap = new HashMap<>();
+    private int fakeNumber = Integer.MAX_VALUE;
+    private int maxRow;
+    private int maxColumn;
+    private boolean lastColumn;
+
+    public List<Integer> getSolutionList() {
+        return solutionList;
+    }
+
+    private List<Integer> solutionList = new ArrayList<>();
+
+    public void solveThePuzzle(File inputFile) throws Exception {
+        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        //TODO to handle throwed exception
+//        isEnoughCornerElementsForOneRow(listAfterParser);
+//        isSumOfAllEdgesEqual(listAfterParser);
+        if (isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
+            addEventToList("The pre-checks passed successfully.");
+
+    }
+
+    public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
+        //TODO check when to use
+        int sum = puzzleElementDefinition.getLeft() +
+                puzzleElementDefinition.getUp() +
+                puzzleElementDefinition.getRight() +
+                puzzleElementDefinition.getBottom();
+
+        return sum == 0;
+    }
+
+
+    public boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
+        return (isAllElementDefinitionEqualsToZero(puzzleElementDefinition));
+    }
+
+    protected boolean isEnoughCornerElementsForSeveralRows(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+        boolean isTLExists = false;
+        boolean isTRExists = false;
+        boolean isBLExists = false;
+        boolean isBRExists = false;
+
+
+        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
+            if (!isTLExists && element.isTLExistsOnSeveralRowsPuzzle()) {
+                isTLExists = true;
+            } else if (!isTRExists && element.isTRExistsOnSeveralRowsPuzzle()) {
+                isTRExists = true;
+            } else if (!isBLExists && element.isBLExistsOnSeveralRowsPuzzle()) {
+                isBLExists = true;
+            } else if (!isBRExists && element.isBRExistsOnSeveralRowsPazzle()) {
+                isBRExists = true;
+            }
+        }
+        if (!isTLExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TL.getValue());
+        }
+        if (!isTRExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TR.getValue());
+        }
+        if (!isBLExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BL.getValue());
+        }
+        if (!isBRExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BR.getValue());
+        }
+        return (isTLExists && isTRExists && isBLExists && isBRExists);
+    }
+
+    public boolean isEnoughCornerElementsForOneRow(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+        boolean isLeftCornerExists = false;
+        boolean isRightCornerExists = false;
+        boolean isOneOfElementsSquare = false;
+
+        if (listOfPuzzleElementDefinitions.size() == 1) {
+            return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
+        }
+        if (isTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
+            return true;
+        }
+
+        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
+            if (!isOneOfElementsSquare) {
+                isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
+            }
+            if (!isLeftCornerExists && element.isLeftCornerExistsOnOneRowPuzzle()) {
+                isLeftCornerExists = true;
+            } else if (!isRightCornerExists && element.isRightCornerExistsOnOneRowPuzzle()) {
+                isRightCornerExists = true;
+            }
+            if ((isOneOfElementsSquare && isLeftCornerExists) || (isOneOfElementsSquare && isRightCornerExists)) {
+                return true;
+            }
+        }
+
+        if (!isLeftCornerExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TL.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BL.getValue());
+            return false;
+        } else if (!isRightCornerExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BR.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TR.getValue());
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    private boolean isTwoElementsAreSquare(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+        int counter = 0;
+        for (PuzzleElementDefinition elementDefinition : listOfPuzzleElementDefinitions) {
+            if (isAllElementDefinitionEqualsToZero(elementDefinition)) {
+                counter++;
+            }
+            if (counter == 2) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    protected boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+        boolean isTopCornerExists = false;
+        boolean isBottomCornerExists = false;
+        boolean isOneOfElementsSquare = false;
+
+        if (listOfPuzzleElementDefinitions.size() == 1) {
+            return isAllElementDefinitionEqualsToZero(listOfPuzzleElementDefinitions.get(0));
+        }
+
+        if (isTwoElementsAreSquare(listOfPuzzleElementDefinitions)) {
+            return true;
+        }
+
+        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
+            if (!isOneOfElementsSquare) {
+                isOneOfElementsSquare = isAllElementDefinitionEqualsToZero(element);
+            }
+            if (!isTopCornerExists && element.isTopCornerExistsOnOneColumnPuzzle()) {
+                isTopCornerExists = true;
+            } else if (!isBottomCornerExists && element.isBottomCornerExistsOnOneColumnPuzzle()) {
+                isBottomCornerExists = true;
+            }
+            if ((isOneOfElementsSquare && isTopCornerExists) || (isOneOfElementsSquare && isBottomCornerExists)) {
+                return true;
+            }
+        }
+        if (!isTopCornerExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TL.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.TR.getValue());
+        }
+        if (!isBottomCornerExists) {
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BL.getValue());
+            addEventToList(EventHandler.MISSING_CORNER + CornerNamesEnum.BR.getValue());
+        }
+        return (isTopCornerExists && isBottomCornerExists);
+    }
+
+    private boolean isAllElementDefinitionEqualsToZero(PuzzleElementDefinition puzzleElementDefinition) {
+        return puzzleElementDefinition.getLeft() == 0 && puzzleElementDefinition.getUp() == 0 &&
+                puzzleElementDefinition.getRight() == 0 && puzzleElementDefinition.getBottom() == 0;
+    }
+
+    protected boolean isSumOfAllEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+        int leftSum = 0;
+        int upSum = 0;
+        int rightSum = 0;
+        int bottomSum = 0;
+
+        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
+            leftSum += element.getLeft();
+            upSum += element.getUp();
+            rightSum += element.getRight();
+            bottomSum += element.getBottom();
+        }
+        return (leftSum == 0 && rightSum == 0 && upSum == 0 && bottomSum == 0);
+
+    }
+
+
+    public void solve(List<PuzzleElementDefinition> validIdList) {
+
+        List<Integer> availableRows = getSolverRows(validIdList);
+        for (Integer row : availableRows) {
+            maxRow = row;
+            maxColumn = validIdList.size() / row;
+            List<PuzzleElementDefinition> testedList = copyList(validIdList);
+            solverMap.clear();
+            lastColumn = false;
+            if(solvePuzzle(testedList)){
+                break;
+            }
+        }
+    }
+
+    private boolean solvePuzzle(List<PuzzleElementDefinition> testedList) {
+
+        for (int curRow = 1; curRow <= maxRow; curRow++) {
+            PuzzleElementDefinition leftCornerTemplate;
+            if (curRow == 1) {
+                leftCornerTemplate = leftFirstCornerTemplate();
+            } else {
+                leftCornerTemplate = leftCornerTemplate(curRow);
+            }
+            solveRow(testedList, leftCornerTemplate, calcMaxIterationNumber(testedList.size(), maxColumn), curRow);
+            if (!analyzeRowResult(curRow)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean analyzeRowResult(int curRow) {
+        if (!solverMap.isEmpty()) {
+            try {
+                solverMap.get(curRow).size();
+            }catch (NullPointerException e){
+                EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+                return false;
+            }
+            Integer finalRowMapSize = solverMap.get(curRow).size();
+            if (finalRowMapSize == maxColumn) {
+                if (curRow != maxRow) {// correct filled not last line
+                    lastColumn = false;
+                    return true;
+                }
+                if (curRow == maxRow) {// correct filled last line and then stop flow, got solve result
+                    solutionMapToSolutionList();
+                    return true;
+                }
+            } else {
+                EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+                return false;
+            }
+        }
+        EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+        return false;
+    }
+
+    private void solveRow(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition templateElement, int maxRotationAmount, int curRow) {
+        while (!validIdList.isEmpty() && maxRotationAmount != 0 && !lastColumn) {
+            for (int i = 0; i < validIdList.size() && maxRotationAmount != 0 && !lastColumn; i++) {
+                if (!isMatch(validIdList.get(i), templateElement)) {
+                    validIdList = shiftElementToEndOfList(validIdList, validIdList.get(i));
+                    if (maxRotationAmount == 0 && validIdList.size() == 1) {
+                        break;
+                    } else {
+                        solveRow(validIdList, templateElement, --maxRotationAmount, curRow);
+                    }
+                } else {
+                    addPEDToMap(validIdList.get(i), curRow);
+                    PuzzleElementDefinition elementToRemove = validIdList.get(i);
+                    validIdList.remove(validIdList.get(i));
+                    if (!validIdList.isEmpty()) {
+                        PuzzleElementDefinition template = templateBuilder(elementToRemove);
+                        solveRow(validIdList, template, validIdList.size(), curRow);
+                    }
+                }
+            }
+        }
+    }
+
+    private PuzzleElementDefinition leftCornerTemplate(int curRow) {
+        if (curRow == maxRow && maxColumn == 1) {// last row 1 column
+            return new PuzzleElementDefinition(0, calcTop(curRow, 1), 0, 0);
+        }
+        if (maxRow - curRow > 0 && maxColumn == 1) {// middle row 1 column
+            return new PuzzleElementDefinition(0, calcTop(curRow, 1), 0, fakeNumber);
+        }
+        //if(curRow == maxRow){ last row more then 1 column
+        return new PuzzleElementDefinition(0, calcTop(curRow, 1), fakeNumber, 0);
+    }
+
+    private PuzzleElementDefinition leftFirstCornerTemplate() {
+        if (maxRow == 1 && maxColumn == 1) {
+            return new PuzzleElementDefinition(0, 0, 0, 0);
+        } else if (maxRow == 1 && maxColumn > 1) {
+            return new PuzzleElementDefinition(0, 0, fakeNumber, 0);
+        } else if (maxRow > 1 && maxColumn > 1) {
+            return new PuzzleElementDefinition(0, 0, fakeNumber, fakeNumber);
+        }
+        //if(maxRow > 1 && maxColumn == 1){
+        return new PuzzleElementDefinition(0, 0, 0, fakeNumber);
+    }
+
+    private void addPEDToMap(PuzzleElementDefinition elementDefinition, int curRow) {
+
+        List<PuzzleElementDefinition> elementList = solverMap.get(curRow);
+        if (elementList == null) {
+            elementList = new ArrayList<>();
+        }
+        elementList.add(elementDefinition);
+        solverMap.put(curRow, elementList);
+
+    }
+
+    protected void solutionMapToSolutionList() {
+        for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
+            List<PuzzleElementDefinition> listToPrint = entry.getValue();
+            for (PuzzleElementDefinition element : listToPrint) {
+                solutionList.add(element.getId());
+            }
+        }
+    }
+
+    public void addSolutionToFile(){
+       EventHandler.addEventToList(solutionList.toString());
+        }
+
+    private boolean isMatch(PuzzleElementDefinition currentElement, PuzzleElementDefinition templateElement) {
+        int left = templateElement.getLeft();
+        if ((left <= 1 || left >= -1) && left != fakeNumber) {
+            if (!checkEdgeMatch(left, currentElement.getLeft())) {
+                return false;
+            }
+        }
+        int right = templateElement.getRight();
+        if ((right <= 1 || right >= -1) && right != fakeNumber) {
+            if (!checkEdgeMatch(right, currentElement.getRight())) {
+                return false;
+            }
+        }
+        int up = templateElement.getUp();
+        if ((up <= 1 || up >= -1) && up != fakeNumber) {
+            if (!checkEdgeMatch(up, currentElement.getUp())) {
+                return false;
+            }
+        }
+        int bottom = templateElement.getBottom();
+        if ((bottom <= 1 || bottom >= -1) && bottom != fakeNumber) {
+            if (!checkEdgeMatch(bottom, currentElement.getBottom())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkEdgeMatch(int currentElementEdge, int temlateEdge) {
+        return currentElementEdge == temlateEdge;
+    }
+
+    private PuzzleElementDefinition nextElementBuilder(PuzzleElementDefinition element) {
+        Integer leftEdge = element.getRight() * (-1);
+        return new PuzzleElementDefinition(leftEdge, 0, fakeNumber, 0);
+    }
+
+    private List<PuzzleElementDefinition> copyList(List<PuzzleElementDefinition> validIdList) {
+        List<PuzzleElementDefinition> retList = new ArrayList<>();
+        for (PuzzleElementDefinition element : validIdList) {
+            retList.add(element);
+        }
+        return retList;
+    }
+
+    private List<PuzzleElementDefinition> shiftElementToEndOfList(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition currentElement) {
+        validIdList.remove(currentElement);
+        validIdList.add(currentElement);
+        return validIdList;
+    }
+
+    private static int calcMaxIterationNumber(int elementAmount, int columnNum) {
+        int count = 0;
+        if(elementAmount == 2 || elementAmount == 1){
+            return elementAmount;
+        }
+        for (int j = elementAmount; j > elementAmount - columnNum; j--) {
+            count += j;
+        }
+        return count;
+    }
+
+    private PuzzleElementDefinition templateBuilder(PuzzleElementDefinition curElement) {
+        int curRow = solverMap.size();
+        if ((maxColumn - solverMap.get(curRow).size() == 1)) { //last column
+            if (maxRow - curRow > 0 && curRow == 1) { //first row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, fakeNumber);
+            } else if (maxRow - curRow > 0) { //middle row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), 0, fakeNumber);
+            } else if (maxRow - curRow == 0 && curRow == maxRow && maxRow == 1) { //puzzle one row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, 0);
+            } else if (maxRow - curRow == 0) { //last row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), 0, 0);
+            }
+        }
+
+        if ((maxColumn - solverMap.get(curRow).size() > 1)) { //middle column
+            if (maxRow - curRow > 0 && curRow == 1) { //first row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, fakeNumber);
+            } else if (maxRow - curRow > 0) { //middle row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), fakeNumber, fakeNumber);
+            } else if (maxRow - curRow == 0 && curRow == maxRow && maxRow == 1) { //puzzle one row
+                return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, 0);
+            } else if (maxRow - curRow == 0) { //last row
+                return new PuzzleElementDefinition(calcLeft(curElement), calcTop(curRow, maxColumn), fakeNumber, 0);
+            }
+        }
+
+        if (maxColumn - solverMap.get(curRow).size() == 0) { //puzzle one column
+            lastColumn = true;
+            //should exit row
+        }
+        return new PuzzleElementDefinition(0, 0, 0, 0);// check return statement
+    }
+
+    private int calcTop(int curRow, int curColumn) {
+        List<PuzzleElementDefinition> list = solverMap.get(curRow - 1);
+        PuzzleElementDefinition element = list.get(curColumn - 1);
+        return element.getBottom() * (-1);
+    }
+
+    private int calcLeft(PuzzleElementDefinition element) {
+        return element.getRight() * (-1);
+    }
+
+    // the method return puzzle available heights(rows) for all possible rectangles
+    private static List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
+        List<Integer> retVal = new ArrayList<>();
+        int numOfElements = puzzleElements.size();
+        if (numOfElements == 1) {
+            retVal.add(1);
+            return retVal;
+        }
+        if (isPrime(numOfElements)) {
+            retVal.add(1);
+            retVal.add(numOfElements);
+            return retVal;
+        } else {
+            return calculateRows(numOfElements);
+        }
+    }
+
+    private static List<Integer> calculateRows(int numOfElements) {
+        List<Integer> retVal = new ArrayList<>();
+        for (int i = 1; i <= numOfElements; i++) {
+            if (numOfElements % i == 0) {
+                retVal.add(i);
+            }
+        }
+        return retVal;
+    }
+
+    private static boolean isPrime(int number) {
+
+        if (number < 4) {
+            return true;
+        }
+        for (int i = 2; i <= number / 2; i++) {
+            if (number % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isSumOfEdgesZero(List<PuzzleElementDefinition> puzzleElements) {
+        int sum = 0;
+        for (PuzzleElementDefinition puzzleElement : puzzleElements) {
+            sum += (puzzleElement.getLeft() + puzzleElement.getUp() + puzzleElement.getRight() + puzzleElement.getBottom());
+        }
+        if (sum != 0) {
+            EventHandler.addEventToList(EventHandler.SUM_ZERO);
+        }
+        return sum == 0;
+    }
+
+    //the method should solve/fill errors in case corners are missing
+    protected static boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+
+        int numOfElements = puzzleElements.size();
+        int height = numOfElements / wide;
+        Map<CornerNamesEnum, Boolean> missingCorners = new HashMap<>();
+        Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements = getCornerElements(wide, puzzleElements);
+
+        if (numOfElements == 1) {
+            if (!cornerElements.get(CornerNamesEnum.SQ).isEmpty()) {
+                return false;
+            } else {
+                addMissingCornerErrorsIfExist(cornerElements);
+                return true;
+            }
+        }
+        if (wide == 1) {
+            return isMissingColumnPuzzleCorners(cornerElements);
+        } else if (height == 1) {
+            return isMissingRowPuzzleCorners(cornerElements);
+        } else {
+            //TODO 2x2 and more
+            return isMissingCornersInMap(cornerElements);
+        }
+    }
+
+    private static boolean isMissingColumnPuzzleCorners(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        int topCornersElement = cornerElements.get(CornerNamesEnum.TLTR).size();
+        int bottomCornersElement = cornerElements.get(CornerNamesEnum.BLBR).size();
+        int squareElements = cornerElements.get(CornerNamesEnum.SQ).size();
+        if (squareElements >= 2 ||
+                (topCornersElement != 0 && bottomCornersElement != 0) ||
+                (topCornersElement != 0 && squareElements > 0) ||
+                (bottomCornersElement != 0 && squareElements > 0)
+                ) {
+            return false;
+        }
+        if (squareElements == 1) {
+            PuzzleElementDefinition puzzleElement = cornerElements.get(CornerNamesEnum.SQ).get(0);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BL, puzzleElement);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
+        }
+        addMissingCornerErrorsIfExist(cornerElements);
+        return true;
+    }
+
+    private static boolean isMissingRowPuzzleCorners(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        int leftCornersElement = cornerElements.get(CornerNamesEnum.TLBL).size();
+        int rightCornersElement = cornerElements.get(CornerNamesEnum.TRBR).size();
+        int squareElements = cornerElements.get(CornerNamesEnum.SQ).size();
+        if (squareElements >= 2 ||
+                (leftCornersElement != 0 && rightCornersElement != 0) ||
+                (leftCornersElement != 0 && squareElements > 0) ||
+                (rightCornersElement != 0 && squareElements > 0)
+                ) {
+            return false;
+        }
+        if (squareElements == 1) {
+            PuzzleElementDefinition puzzleElement = cornerElements.get(CornerNamesEnum.SQ).get(0);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.TR, puzzleElement);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
+        }
+        addMissingCornerErrorsIfExist(cornerElements);
+        return true;
+    }
+
+    private static boolean isMissingCornersInMap(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        int topLeftCornersElement = cornerElements.get(CornerNamesEnum.TL).size();
+        int topRightCornersElement = cornerElements.get(CornerNamesEnum.TR).size();
+        int bottomLeftCornersElement = cornerElements.get(CornerNamesEnum.BL).size();
+        int bottomRightCornersElement = cornerElements.get(CornerNamesEnum.BR).size();
+        int squareElements = cornerElements.get(CornerNamesEnum.SQ).size();
+        if (squareElements >= 4 ||
+                (topLeftCornersElement != 0 && topRightCornersElement != 0 && bottomLeftCornersElement != 0 && bottomRightCornersElement != 0) ||
+                ((topLeftCornersElement != 0 || topRightCornersElement != 0 || bottomLeftCornersElement != 0 || bottomRightCornersElement != 0) && squareElements == 3)
+                ) {
+            return false;
+        }
+
+
+        if (squareElements == 2) {
+            if (topLeftCornersElement == 0) {
+
+            }
+        }
+        if (squareElements == 1) {
+            PuzzleElementDefinition puzzleElement = cornerElements.get(CornerNamesEnum.SQ).get(0);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.TR, puzzleElement);
+            fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
+        }
+        addMissingCornerErrorsIfExist(cornerElements);
+        return true;
+    }
+
+    private static void addMissingCornerErrorsIfExist(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
+        for (Map.Entry<CornerNamesEnum, List<PuzzleElementDefinition>> entry : cornerElements.entrySet()) {
+            if (entry.getValue().isEmpty() && (entry.getKey().getValue().equals("TL") ||
+                    entry.getKey().getValue().equals("TR") ||
+                    entry.getKey().getValue().equals("BL") ||
+                    entry.getKey().getValue().equals("BR"))
+                    ) {
+                EventHandler.addEventToList(EventHandler.MISSING_CORNER + entry.getKey().getValue());
+            }
+        }
+    }
+
+    private static Map<CornerNamesEnum, List<PuzzleElementDefinition>> getCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+
+        int height = puzzleElements.size() / wide;
+        Map<CornerNamesEnum, List<PuzzleElementDefinition>> availableCorners = new HashMap<>();
+        availableCorners.put(CornerNamesEnum.TL, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.BL, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.BR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.SQ, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TLTR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.BLBR, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TLBL, new ArrayList<>());
+        availableCorners.put(CornerNamesEnum.TRBR, new ArrayList<>());
+        for (PuzzleElementDefinition puzzleElement : puzzleElements) {
+            if (isSquare(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.SQ, puzzleElement);
+            } else if (isTopLeft(puzzleElement) && isTopRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TLTR, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TL, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TR, puzzleElement);
+                }
+            } else if (isBottomLeft(puzzleElement) && isBottomRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.BLBR, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BL, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BR, puzzleElement);
+                }
+            } else if (isTopLeft(puzzleElement) && isBottomLeft(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TLBL, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TL, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BL, puzzleElement);
+                }
+            } else if (isTopRight(puzzleElement) && isBottomRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TRBR, puzzleElement);
+                if (wide == 1 || height == 1) {
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.TR, puzzleElement);
+                    fillAvailableCornersMap(availableCorners, CornerNamesEnum.BR, puzzleElement);
+                }
+            } else if (isTopLeft(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TL, puzzleElement);
+            } else if (isTopRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.TR, puzzleElement);
+            } else if (isBottomLeft(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.BL, puzzleElement);
+            } else if (isBottomRight(puzzleElement)) {
+                fillAvailableCornersMap(availableCorners, CornerNamesEnum.BR, puzzleElement);
+            }
+        }
+        return availableCorners;
+    }
+
+    private static void fillAvailableCornersMap
+            (Map<CornerNamesEnum, List<PuzzleElementDefinition>> availableCorners, CornerNamesEnum
+                    corner, PuzzleElementDefinition puzzleElement) {
+        List<PuzzleElementDefinition> puzzleElements = availableCorners.get(corner);
+        puzzleElements.add(puzzleElement);
+        availableCorners.putIfAbsent(corner, puzzleElements);
+    }
+
+    private static boolean isBottomRight(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getRight() == 0 && puzzleElement.getBottom() == 0);
+    }
+
+    private static boolean isBottomLeft(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getLeft() == 0 && puzzleElement.getBottom() == 0);
+    }
+
+
+    private static boolean isTopRight(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getRight() == 0 && puzzleElement.getUp() == 0);
+    }
+
+    private static boolean isTopLeft(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getLeft() == 0 && puzzleElement.getUp() == 0);
+    }
+
+    private static boolean isSquare(PuzzleElementDefinition puzzleElement) {
+        return (puzzleElement.getLeft() == 0 &&
+                puzzleElement.getUp() == 0 &&
+                puzzleElement.getRight() == 0 &&
+                puzzleElement.getBottom() == 0);
+    }
+
+    public List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {
+        List<PuzzleElementDefinition> listAfterParser = FileParserUtils.fileToPEDArray(inputFile);
+        return listAfterParser;
+
+    }
+
+    protected void writeErrorsToTheOutPutFile() throws IOException {
+        FileUtils.writeFile();
+    }
+    protected void writeSolutionToTheOutPutFile() throws IOException {
+        FileUtils.writeSolutionToFile(solverMap);
+    }
+}
+

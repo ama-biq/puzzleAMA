@@ -26,7 +26,7 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
