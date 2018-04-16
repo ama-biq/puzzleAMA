@@ -134,7 +134,7 @@ public class FilePuzzleParserTest {
     })
     public void failGetNumElementsNumValue(String firstLine) throws Exception {
         FilePuzzleParser testParser = new FilePuzzleParser();
-        assertNotEquals(testParser.getNumOfElements(firstLine), 2);
+        assertNotEquals(2, testParser.getNumOfElements(firstLine));
     }
 
     @ParameterizedTest
@@ -237,7 +237,7 @@ public class FilePuzzleParserTest {
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         int testedID = Integer.parseInt(testLine[0]);
         assertTrue(EventHandler.getEventList().contains("Puzzle ID " + testedID + " has wrong data: " + line));
-        assertEquals(testPed, null);
+        assertEquals(null, testPed);
     }
 
     @ParameterizedTest
@@ -249,7 +249,7 @@ public class FilePuzzleParserTest {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
-        assertEquals(testPed, null);
+        assertEquals(null, testPed);
     }
 
 
@@ -264,7 +264,7 @@ public class FilePuzzleParserTest {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         assertTrue(EventHandler.getEventList().contains("Bad format for puzzle piece line: " + line));
-        assertEquals(testPed, null);
+        assertEquals(null, testPed);
     }
 
     @ParameterizedTest
@@ -276,7 +276,7 @@ public class FilePuzzleParserTest {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
-        assertEquals(testPed, null);
+        assertEquals(null, testPed);
     }
 
 
