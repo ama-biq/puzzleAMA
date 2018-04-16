@@ -16,7 +16,6 @@ public class Solver {
         return solverMap;
     }
 
-    //    private List<PuzzleElementDefinition> testedList;
     private Map<Integer, List<PuzzleElementDefinition>> solverMap = new HashMap<>();
     private int fakeNumber = Integer.MAX_VALUE;
     private int maxRow;

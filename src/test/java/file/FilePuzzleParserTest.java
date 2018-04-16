@@ -2,6 +2,7 @@ package file;
 
 import impl.EventHandler;
 import impl.PuzzleElementDefinition;
+import impl.Solver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -486,6 +487,7 @@ public class FilePuzzleParserTest {
 
         assertTrue(testList.isEmpty());
     }
+
 
 }
 
