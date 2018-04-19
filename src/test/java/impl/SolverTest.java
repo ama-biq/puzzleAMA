@@ -7,7 +7,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -23,6 +25,7 @@ public class SolverTest {
     }
 
     Solver puzzleSolver = new Solver();
+    Orchestrator orchestrator = new Orchestrator();
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
 
@@ -399,12 +402,62 @@ public class SolverTest {
 
     @Test
     public void E2EnoCorners() throws Exception {
-        File inputFile = new File("src\\test\\resources\\NoCorners.txt");
-        List<PuzzleElementDefinition> list = puzzleSolver.checkTheInputFile(inputFile);
-        puzzleSolver.solve(list);
-        puzzleSolver.writeErrorsToTheOutPutFile();
+        String inputFilePath = "src\\test\\resources\\NoCorners.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
         String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
         String expected = usingBufferedReader("src\\test\\resources\\ExpectedNoTRcorner.txt");
+        assertEquals(expected, out);
+    }
+
+    @Test
+    public void firstE2EoneElement() throws Exception {
+        String inputFilePath = "src\\test\\resources\\1AmirFileIn.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\1AmirFileExpected.txt");
+        assertEquals(expected, out);
+    }
+
+    @Test
+    public void fourElementsPuzzleElementE2Etest() throws Exception {
+        String inputFilePath = "src\\test\\resources\\2AmirFile.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
+        assertEquals(expected, out);
+    }
+
+    @Test
+    public void missingPuzzleElementE2Etest() throws Exception {
+        String inputFilePath = "src\\test\\resources\\3AmirFile.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\3AmirFileExpected.txt");
+        assertEquals(expected, out);
+    }
+
+    @Test
+    public void multipleErrorsE2Etest() throws Exception {
+        String inputFilePath = "src\\test\\resources\\4AmirFile.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\4AmirFileExpected.txt");
+        assertEquals(expected, out);
+    }
+    @Test
+    public void severalIdMissingE2Etest() throws Exception {
+        String inputFilePath = "src\\test\\resources\\7AmirFile.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\7AmirFileExpected.txt");
+        assertEquals(expected, out);
+    }
+    @Test
+    public void oneColumnSolutionE2Etest() throws Exception {
+        String inputFilePath = "src\\test\\resources\\10AmirFile.txt";
+        orchestrator.orchestrateThePuzzle(inputFilePath);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\10AmirFileExpected.txt");
         assertEquals(expected, out);
     }
 
