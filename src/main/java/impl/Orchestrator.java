@@ -13,13 +13,13 @@ public class Orchestrator {
 
         }else if(solver.isSumOfEdgesZero(list)) {
             //todo  check in loop corners, sum of all edges and straight edges
-                solver.solve(list);
+                solver.solve(list, 3);
         }
-        if(solver.getSolutionList().isEmpty()){
+        /*if(solver.getSolutionList().isEmpty()){
             solver.writeErrorsToTheOutPutFile();
         }else{
             solver.writeSolutionToTheOutPutFile();
-        }
+        }*/
 
     }
 }

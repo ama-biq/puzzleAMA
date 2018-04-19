@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -256,34 +257,6 @@ public class SolverTest {
     }
 
     @Test
-    public void positive2ElementsTestResolveThePuzzle() {
-        List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        idsList.add(new PuzzleElementDefinition(2, 0, 0, 0, 0));
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(2);
-        puzzleSolver.solve(idsList);
-        assertEquals(puzzleSolver.getSolutionList(), expectedList);
-
-    }
-
-    @Test
-    public void positive3ElementsTestResolveThePuzzle() {
-        List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
-        idsList.add(new PuzzleElementDefinition(3, 0, 0, 1, 0));
-
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(3);
-        expectedList.add(2);
-        puzzleSolver.solve(idsList);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
-    }
-
-    @Test
     public void positive1ColumnElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
@@ -294,24 +267,7 @@ public class SolverTest {
         expectedList.add(1);
         expectedList.add(3);
         expectedList.add(2);
-        puzzleSolver.solve(idsList);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
-    }
-
-    @Test
-    public void positive4ElementsTestResolveThePuzzle() {
-        List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(1, 0, 0, -1, 1));
-        idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
-        idsList.add(new PuzzleElementDefinition(2, 0, -1, 0, 0));
-        idsList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
-
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(3);
-        expectedList.add(2);
-        expectedList.add(4);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 3);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
@@ -324,7 +280,7 @@ public class SolverTest {
 
         List<String > expectedEvents = new ArrayList<>();
         expectedEvents.add(EventHandler.NO_SOLUTION);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 1);
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
     }
 
@@ -345,9 +301,50 @@ public class SolverTest {
         expectedList.add(2);
         expectedList.add(5);
         expectedList.add(6);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 3);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
+
+    //-------------------------------------------------------
+
+    @Test
+    public void TwoRowPuzzle() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(2, 0, 0, -1, 0));
+        idsList.add(new PuzzleElementDefinition(3, 1, 0, -1, 0));
+        idsList.add(new PuzzleElementDefinition(5, 1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(6, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(6);
+        expectedList.add(4);
+        expectedList.add(2);
+        expectedList.add(3);
+        expectedList.add(5);
+        puzzleSolver.solve(idsList, 2);
+        assertEquals(expectedList, puzzleSolver.getSolutionList());
+    }
+
+
+    @Test
+    public void OneRowPuzzle() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 1, 0));
+        idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(3, -1, 0, 1, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(3);
+        expectedList.add(2);
+        puzzleSolver.solve(idsList, 1);
+        assertEquals(expectedList, puzzleSolver.getSolutionList());
+    }
+
+    //---------------------------------------------------------
 
     @Test
     public void positive9ElementsTestResolveThePuzzle() {
@@ -374,7 +371,7 @@ public class SolverTest {
         expectedList.add(7);
         expectedList.add(1);
         expectedList.add(4);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 3);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
@@ -399,20 +396,22 @@ public class SolverTest {
         expectedList.add(2);
         expectedList.add(3);
         expectedList.add(4);
+
         expectedList.add(5);
         expectedList.add(6);
         expectedList.add(7);
         expectedList.add(8);
+
         expectedList.add(9);
         expectedList.add(10);
         expectedList.add(11);
         expectedList.add(12);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 3);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
     //TODO not worked yet, needs to improve code
-    /*@Test
+    @Test
     public void positive16ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(7, -1, 1, -1, 1));
@@ -451,9 +450,9 @@ public class SolverTest {
         expectedList.add(8);
         expectedList.add(12);
         expectedList.add(16);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 4);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
-    }*/
+    }
 
    /* @Test
     public void positive24ElementsTestResolveThePuzzle() {
