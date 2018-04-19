@@ -12,7 +12,6 @@ public class EventHandler {
     public static final String BAD_FORMAT_PUZZLE_PIECES = "Bad format for puzzle piece line: ";
 
     private static Set<String> eventList = new HashSet<>();
-    private static Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
 
     public static void addEventToList(String error) {
         eventList.add(error);
