@@ -36,19 +36,9 @@ public class Solver {
         //TODO to handle throwed exception
 //        isEnoughCornerElementsForOneRow(listAfterParser);
 //        isSumOfAllEdgesEqual(listAfterParser);
-        if (isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
-            addEventToList("The pre-checks passed successfully.");
+//        if (isEnoughCornerElementsForOneRow(listAfterParser) && isSumOfAllEdgesEqual(listAfterParser))
+//            addEventToList("The pre-checks passed successfully.");
 
-    }
-
-    public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
-        //TODO check when to use
-        int sum = puzzleElementDefinition.getLeft() +
-                puzzleElementDefinition.getUp() +
-                puzzleElementDefinition.getRight() +
-                puzzleElementDefinition.getBottom();
-
-        return sum == 0;
     }
 
 
@@ -185,26 +175,15 @@ public class Solver {
                 puzzleElementDefinition.getRight() == 0 && puzzleElementDefinition.getBottom() == 0;
     }
 
-    protected boolean isSumOfAllEdgesEqual(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
-        int leftSum = 0;
-        int upSum = 0;
-        int rightSum = 0;
-        int bottomSum = 0;
 
-        for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
-            leftSum += element.getLeft();
-            upSum += element.getUp();
-            rightSum += element.getRight();
-            bottomSum += element.getBottom();
-        }
-        return (leftSum == 0 && rightSum == 0 && upSum == 0 && bottomSum == 0);
-
-    }
 
 
     public void solve(List<PuzzleElementDefinition> validIdList) {
-
-        List<Integer> availableRows = getSolverRows(validIdList);
+//        if(isMissingCornerElements(2, validIdList)){
+//            validIdList.clear();
+//            return; //todo code review
+//        }
+        List<Integer> availableRows = getPossibleNumberOfRows(validIdList);
         for (Integer row : availableRows) {
             maxRow = row;
             maxColumn = validIdList.size() / row;
@@ -344,9 +323,6 @@ public class Solver {
         }
     }
 
-    public void addSolutionToFile(){
-       EventHandler.addEventToList(solutionList.toString());
-        }
 
     private boolean isMatch(PuzzleElementDefinition currentElement, PuzzleElementDefinition templateElement) {
         int left = templateElement.getLeft();
@@ -480,7 +456,7 @@ public class Solver {
     }
 
     // the method return puzzle available heights(rows) for all possible rectangles
-    private static List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
+    static List<Integer> getPossibleNumberOfRows(List<PuzzleElementDefinition> puzzleElements) {
         List<Integer> retVal = new ArrayList<>();
         int numOfElements = puzzleElements.size();
         if (numOfElements == 1) {
@@ -531,12 +507,12 @@ public class Solver {
     }
 
     //the method should solve/fill errors in case corners are missing
-    protected static boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+    protected static boolean isMissingCornerElements(int amountOfRows, List<PuzzleElementDefinition> puzzleElements) {
 
         int numOfElements = puzzleElements.size();
-        int height = numOfElements / wide;
+        int height = numOfElements / amountOfRows;
         Map<CornerNamesEnum, Boolean> missingCorners = new HashMap<>();
-        Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements = getCornerElements(wide, puzzleElements);
+        Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements = getCornerElements(amountOfRows, puzzleElements);
 
         if (numOfElements == 1) {
             if (!cornerElements.get(CornerNamesEnum.SQ).isEmpty()) {
@@ -546,7 +522,7 @@ public class Solver {
                 return true;
             }
         }
-        if (wide == 1) {
+        if (amountOfRows == 1) {
             return isMissingColumnPuzzleCorners(cornerElements);
         } else if (height == 1) {
             return isMissingRowPuzzleCorners(cornerElements);

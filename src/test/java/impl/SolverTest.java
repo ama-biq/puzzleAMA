@@ -1,11 +1,13 @@
 package impl;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,25 +26,6 @@ public class SolverTest {
     PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
 
-
-    @Test
-    public void positiveOneElementIsSumOfAllEdgesIsZero() {
-
-        setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
-        assertTrue(puzzleSolver.isSumOfAllEdgesIsZero(puzzleElementDefinition));
-    }
-
-
-    @Test
-    public void negativeOneElementIsSumOfAllEdgesIsZero() {
-
-        puzzleElementDefinition.setLeft(0);
-        puzzleElementDefinition.setUp(1);
-        puzzleElementDefinition.setRight(0);
-        puzzleElementDefinition.setBottom(0);
-        assertFalse(puzzleSolver.isSumOfAllEdgesIsZero(puzzleElementDefinition));
-
-    }
 
     @Test
     public void testPositiveIsEnoughStraitEdges() {
@@ -104,7 +87,7 @@ public class SolverTest {
     }
 
     @ParameterizedTest
-    @MethodSource("testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn")
+    @MethodSource("dataForTestNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn")
 
     public void testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
@@ -113,7 +96,7 @@ public class SolverTest {
     }
 
 
-    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn() {
+    private static Stream<Arguments> dataForTestNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneColumn() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(1, 1, 1, 1), new PuzzleElementDefinition(-1, -1, -1, -1)),
                 Arguments.of(new PuzzleElementDefinition(1, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 0)),
@@ -124,7 +107,7 @@ public class SolverTest {
     }
 
     @ParameterizedTest
-    @MethodSource("testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows")
+    @MethodSource("dataForTestPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows")
 
     public void testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
@@ -132,7 +115,7 @@ public class SolverTest {
         assertTrue(puzzleSolver.isEnoughCornerElementsForOneRow(listOfPuzzleElementDefinitionsWithoutId));
     }
 
-    private static Stream<Arguments> testPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows() {
+    private static Stream<Arguments> dataForTestPositiveIsEnoughCornerElementsForPuzzleOfSeveralElementOneRows() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 0)),
                 Arguments.of(new PuzzleElementDefinition(1, 0, 0, 0), new PuzzleElementDefinition(0, 0, 1, 0)),
@@ -150,7 +133,7 @@ public class SolverTest {
 
 
     @ParameterizedTest
-    @MethodSource("testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow")
+    @MethodSource("dataForTestNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow")
 
     public void testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
 
@@ -159,7 +142,7 @@ public class SolverTest {
 
     }
 
-    private static Stream<Arguments> testNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow() {
+    private static Stream<Arguments> dataForTestNegativeIsEnoughCornerElementsForPuzzleOfSeveralElementOneRow() {
         return Stream.of(
                 Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0), new PuzzleElementDefinition(0, 0, 0, 1)),
                 Arguments.of(new PuzzleElementDefinition(0, 0, 1, 0), new PuzzleElementDefinition(0, 0, 0, 1)),
@@ -186,7 +169,7 @@ public class SolverTest {
     @MethodSource("positiveTestisSumOfAllEdgesEqualForTwoElements")
     public void positiveTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
         setEdgesForTwoElements(p1, p2);
-        assertTrue(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitionsWithoutId));
+        assertTrue(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElementDefinitionsWithoutId));
     }
 
 
@@ -194,7 +177,7 @@ public class SolverTest {
     @MethodSource("negativeTestisSumOfAllEdgesEqualForTwoElements")
     public void negativeTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
         setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isSumOfAllEdgesEqual(listOfPuzzleElementDefinitionsWithoutId));
+        assertFalse(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElementDefinitionsWithoutId));
 
     }
 
@@ -267,7 +250,7 @@ public class SolverTest {
         assertEquals(puzzleSolver.getSolutionList(), expectedList);
 
     }
-
+    @Disabled
     @Test
     public void positive3ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
@@ -283,6 +266,7 @@ public class SolverTest {
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
+    @Disabled
     @Test
     public void positive1ColumnElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
@@ -298,8 +282,9 @@ public class SolverTest {
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
+
     @Test
-    public void positive4ElementsTestResolveThePuzzle() {
+    public void positive4ElementsTestResolveThePuzzle() throws IOException {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, -1, 1));
         idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
@@ -312,6 +297,7 @@ public class SolverTest {
         expectedList.add(2);
         expectedList.add(4);
         puzzleSolver.solve(idsList);
+        puzzleSolver.writeErrorsToTheOutPutFile();
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
@@ -327,7 +313,7 @@ public class SolverTest {
         puzzleSolver.solve(idsList);
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
     }
-
+@Disabled
     @Test
     public void positive6ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
@@ -348,7 +334,7 @@ public class SolverTest {
         puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
-
+    @Disabled
     @Test
     public void positive9ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
@@ -409,6 +395,37 @@ public class SolverTest {
         expectedList.add(12);
         puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
+    }
+
+    @Test
+    public void E2EnoCorners() throws Exception {
+        File inputFile = new File("src\\test\\resources\\NoCorners.txt");
+        List<PuzzleElementDefinition> list = puzzleSolver.checkTheInputFile(inputFile);
+        puzzleSolver.solve(list);
+        puzzleSolver.writeErrorsToTheOutPutFile();
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\ExpectedNoTRcorner.txt");
+        assertEquals(expected, out);
+    }
+
+
+    private static String usingBufferedReader(String filePath)
+    {
+        StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
+        {
+
+            String sCurrentLine;
+            while ((sCurrentLine = br.readLine()) != null)
+            {
+                contentBuilder.append(sCurrentLine).append("\n");
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return contentBuilder.toString();
     }
 
     //TODO not worked yet, needs to improve code
@@ -507,24 +524,7 @@ public class SolverTest {
 
     //---------------------------------------------------------------------------------------
 
-    @Test
-    public void positiveSumOfAllElementEdgesIsZero() {
 
-        List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
-        listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 1, 0, -1));
-        listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, 1, -1));
-        assertTrue(Solver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is not zero");
-    }
-
-    @Test
-    public void negativeSumOfAllElementEdgesIsNotZero() {
-
-        List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
-        listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, -1, -1));
-        assertFalse(Solver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is zero");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
-    }
 
     @Test
     public void positiveOneElementCornerTest() {

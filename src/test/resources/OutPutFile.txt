@@ -1,3 +1,2 @@
-4 7 1 6 
-8 2 3 11 
-9 10 5 12 
+Cannot solve puzzle: missing corner element: BL
+Cannot solve puzzle: missing corner element: BR
