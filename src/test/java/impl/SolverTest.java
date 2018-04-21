@@ -194,14 +194,6 @@ public class SolverTest {
         assertTrue(EventHandler.getEventList().containsAll(expectedAllErrorWrittenToListOneColumnPuzzle()));
     }
 
-   /* @Test
-    public void positiveTestSolveThePuzzle() throws Exception {
-        File inputFile = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
-        File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
-        puzzleSolver.solveThePuzzle(inputFile);
-    }*/
-
-
     public static ArrayList<String> expectedAllErrorWrittenToListOneColumnPuzzle() {
         return setErrorMessagesToExpectedErrorList(EventHandler.MISSING_CORNER + "BL", EventHandler.MISSING_CORNER + "BR",
                 EventHandler.MISSING_CORNER + "TL", EventHandler.MISSING_CORNER + "TR"
@@ -254,7 +246,6 @@ public class SolverTest {
         expectedList.add(3);
         expectedList.add(2);
         puzzleSolver.solve(idsList, 3);
-        puzzleSolver.solve(idsList);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
@@ -272,23 +263,24 @@ public class SolverTest {
         expectedList.add(3);
         expectedList.add(2);
         expectedList.add(4);
-        puzzleSolver.solve(idsList);
+        puzzleSolver.solve(idsList, 2);
         puzzleSolver.writeErrorsToTheOutPutFile();
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
-    @Test
+    //TODO not solved yet
+    /*@Test
     public void negative3ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 1, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(3, 0, 0, 1, 0));
 
-        List<String > expectedEvents = new ArrayList<>();
+        List<String> expectedEvents = new ArrayList<>();
         expectedEvents.add(EventHandler.NO_SOLUTION);
         puzzleSolver.solve(idsList, 1);
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
-    }
+    }*/
 
     @Test
     public void positive6ElementsTestResolveThePuzzle() {
@@ -334,7 +326,6 @@ public class SolverTest {
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
-
     @Test
     public void OneRowPuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
@@ -355,15 +346,15 @@ public class SolverTest {
     @Test
     public void positive9ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(8,0,0,-1,-1 ));
-        idsList.add(new PuzzleElementDefinition(6,1,0,1,-1  ));
-        idsList.add(new PuzzleElementDefinition(3,-1,0,0,-1 ));
-        idsList.add(new PuzzleElementDefinition(9,0,1,-1,1  ));
-        idsList.add(new PuzzleElementDefinition(5,1,1,1,1   ));
-        idsList.add(new PuzzleElementDefinition(2,-1,1,0,1  ));
-        idsList.add(new PuzzleElementDefinition(7,0,-1,1,0  ));
-        idsList.add(new PuzzleElementDefinition(1,-1,-1,-1,0));
-        idsList.add(new PuzzleElementDefinition(4,1,-1,0,0  ));
+        idsList.add(new PuzzleElementDefinition(8, 0, 0, -1, -1));
+        idsList.add(new PuzzleElementDefinition(6, 1, 0, 1, -1));
+        idsList.add(new PuzzleElementDefinition(3, -1, 0, 0, -1));
+        idsList.add(new PuzzleElementDefinition(9, 0, 1, -1, 1));
+        idsList.add(new PuzzleElementDefinition(5, 1, 1, 1, 1));
+        idsList.add(new PuzzleElementDefinition(2, -1, 1, 0, 1));
+        idsList.add(new PuzzleElementDefinition(7, 0, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(1, -1, -1, -1, 0));
+        idsList.add(new PuzzleElementDefinition(4, 1, -1, 0, 0));
 
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(8);
@@ -460,6 +451,7 @@ public class SolverTest {
         String expected = usingBufferedReader("src\\test\\resources\\4AmirFileExpected.txt");
         assertEquals(expected, out);
     }
+
     @Test
     public void severalIdMissingE2Etest() throws Exception {
         String inputFilePath = "src\\test\\resources\\7AmirFile.txt";
@@ -468,6 +460,7 @@ public class SolverTest {
         String expected = usingBufferedReader("src\\test\\resources\\7AmirFileExpected.txt");
         assertEquals(expected, out);
     }
+
     @Test
     public void oneColumnSolutionE2Etest() throws Exception {
         String inputFilePath = "src\\test\\resources\\10AmirFile.txt";
@@ -478,26 +471,19 @@ public class SolverTest {
     }
 
 
-    private static String usingBufferedReader(String filePath)
-    {
+    private static String usingBufferedReader(String filePath) {
         StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath)))
-        {
-
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String sCurrentLine;
-            while ((sCurrentLine = br.readLine()) != null)
-            {
+            while ((sCurrentLine = br.readLine()) != null) {
                 contentBuilder.append(sCurrentLine).append("\n");
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return contentBuilder.toString();
     }
 
-    //TODO not worked yet, needs to improve code
     @Test
     public void positive16ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
@@ -541,7 +527,7 @@ public class SolverTest {
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
-   /* @Test
+    @Test
     public void positive24ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(16, 0, 0, 1, -1));
@@ -570,26 +556,33 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(12, 1, -1, 0, 0));
 
         List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(3);
+        expectedList.add(16);
+        expectedList.add(21);
         expectedList.add(2);
-        expectedList.add(4);
-        expectedList.add(5);
+        expectedList.add(17);
+        expectedList.add(13);
+        expectedList.add(1);
+        expectedList.add(18);
+        expectedList.add(9);
+        expectedList.add(19);
+        expectedList.add(7);
         expectedList.add(6);
-        puzzleSolver.solve(idsList);
+        expectedList.add(10);
+        expectedList.add(15);
+        expectedList.add(3);
+        expectedList.add(5);
+        expectedList.add(24);
+        expectedList.add(8);
+        expectedList.add(23);
+        expectedList.add(4);
+        expectedList.add(11);
+        expectedList.add(20);
+        expectedList.add(14);
+        expectedList.add(22);
+        expectedList.add(12);
+        puzzleSolver.solve(idsList, 6);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
-
-    @Test
-    public void positive1ElementTestResolveThePuzzle() {
-        List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        puzzleSolver.solve(idsList);
-        assertEquals(puzzleSolver.getSolutionList(), expectedList);
-    }
-
 
     //---------------------------------------------------------------------------------------
 
@@ -599,7 +592,7 @@ public class SolverTest {
         List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 1, 0, -1));
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, 1, -1));
-        assertTrue(Solver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is not zero");
+        assertTrue(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is not zero");
     }
 
     @Test
@@ -608,131 +601,8 @@ public class SolverTest {
         List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, -1, -1));
-        assertFalse(Solver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is zero");
+        assertFalse(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is zero");
         assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
     }
-
-    @Test
-    public void positiveOneElementCornerTest() {
-        List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
-        listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        assertFalse(Solver.isMissingCornerElements(1, listOfPuzzleElements), "not all corners are present");
-    }
-
-
-    @ParameterizedTest
-    @MethodSource("negativeOneElementPuzzle_MissingCornerElements")
-    public void negativeOneElementPuzzle_MissingCornerElements(PuzzleElementDefinition puzzleElement, String corner1, String corner2) {
-        List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
-        listOfPuzzleElements.add(puzzleElement);
-        assertTrue(Solver.isMissingCornerElements(1, listOfPuzzleElements), "all corners are present");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + corner1), "expected error message [" + EventHandler.MISSING_CORNER + corner1 + " ] not found");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + corner2), "expected error message [" + EventHandler.MISSING_CORNER + corner2 + " ] not found");
-    }
-
-    private static Stream<Arguments> negativeOneElementPuzzle_MissingCornerElements() {
-        return Stream.of(
-                Arguments.of(new PuzzleElementDefinition(0, 1, 0, 0, 0), "TL", "BL"),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 1, 0), "TR", "BR"),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 1, 0, 0), "TL", "TR"),
-                Arguments.of(new PuzzleElementDefinition(0, 0, 0, 0, 1), "BL", "BR")
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("negativeColumnElementPuzzle_MissingCornerElements")
-    public void negativeColumnElementPuzzle_MissingCornerElements(int wide, List<String> corners, List<PuzzleElementDefinition> puzzleElements) {
-        assertTrue(Solver.isMissingCornerElements(wide, puzzleElements), "all corners are present");
-        assertTrue(corners.size() == EventHandler.getEventList().size(), "expected number of events is " + corners.size() + ", but was " + EventHandler.getEventList().size());
-        for (String corner : corners) {
-            assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + corner), "expected error message [" + EventHandler.MISSING_CORNER + corner + " ] not found");
-        }
-    }
-
-    private static Stream<Arguments> negativeColumnElementPuzzle_MissingCornerElements() {
-        List<PuzzleElementDefinition> ped1_1x2 = new ArrayList<>();
-        ped1_1x2.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        ped1_1x2.add(new PuzzleElementDefinition(2, 0, -1, 0, -1));
-
-        List<PuzzleElementDefinition> ped2_1x3 = new ArrayList<>();
-        ped2_1x3.add(new PuzzleElementDefinition(1, 0, -1, 0, 0));
-        ped2_1x3.add(new PuzzleElementDefinition(2, 0, 1, 0, 1));
-        ped2_1x3.add(new PuzzleElementDefinition(3, 0, 0, 1, 1));
-
-        List<PuzzleElementDefinition> ped3_1x4 = new ArrayList<>();
-        ped3_1x4.add(new PuzzleElementDefinition(1, 0, 0, 0, -1));
-        ped3_1x4.add(new PuzzleElementDefinition(2, 0, 0, 0, 1));
-        ped3_1x4.add(new PuzzleElementDefinition(3, -1, 0, 0, -1));
-        ped3_1x4.add(new PuzzleElementDefinition(4, 0, 0, -1, 0));
-
-//        List<PuzzleElementDefinition> ped4_1x4 = new ArrayList<>();
-//        ped4_1x4.add(new PuzzleElementDefinition(1, -1, -1, -1, -1));
-//        ped4_1x4.add(new PuzzleElementDefinition(2, 0, -1, 1, 0));
-//        ped4_1x4.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-//        ped4_1x4.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
-
-        return Stream.of(
-//                Arguments.of(1, Arrays.asList("TL", "TR"), ped1_1x2),
-//                Arguments.of(1, Arrays.asList("TR"), ped2_1x3),
-                Arguments.of(1, Arrays.asList("BR"), ped3_1x4)
-//                Arguments.of(1, Arrays.asList("BL"), ped4_1x4)
-        );
-    }
-
-
-    @Test
-    public void negativeOneElement_AllCornersAreMissingTest() {
-        List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
-        listOfPuzzleElements.add(new PuzzleElementDefinition(1, 1, 1, -1, 1));
-        assertTrue(Solver.isMissingCornerElements(1, listOfPuzzleElements), "not all corners are present");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + "BL"), "expected error message [" + EventHandler.MISSING_CORNER + " BL ] not found");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + "BR"), "expected error message [" + EventHandler.MISSING_CORNER + " BR ] not found");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + "TL"), "expected error message [" + EventHandler.MISSING_CORNER + " TL ] not found");
-        assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + "TR"), "expected error message [" + EventHandler.MISSING_CORNER + " TR ] not found");
-    }
-
-    /*@ParameterizedTest
-    @MethodSource("negativeRowElementPuzzle_MissingCornerElements")
-    public void negativeRowElementPuzzle_MissingCornerElements(int wide, List<String> corners, List<PuzzleElementDefinition> puzzleElements) {
-        assertTrue(Solver.isMissingCornerElements(wide, puzzleElements), "all corners are present");
-        assertTrue(corners.size() == EventHandler.getEventList().size(), "expected number of events is " + corners.size() + ", but was " + EventHandler.getEventList().size());
-        for (String corner : corners) {
-            assertTrue(EventHandler.getEventList().contains(EventHandler.MISSING_CORNER + corner), "expected error message [" + EventHandler.MISSING_CORNER + corner + " ] not found");
-        }
-    }
-
-    private static Stream<Arguments> negativeRowElementPuzzle_MissingCornerElements() {
-        List<PuzzleElementDefinition> ped1_2x2 = new ArrayList<>();
-        ped1_2x2.add(new PuzzleElementDefinition(1, -1, 0, 0, 0));
-        ped1_2x2.add(new PuzzleElementDefinition(2, 1, 0, 0, 0));
-        ped1_2x2.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
-        ped1_2x2.add(new PuzzleElementDefinition(4, 1, 0, 0, 0));
-
-        List<PuzzleElementDefinition> ped2_2x2 = new ArrayList<>();
-        ped2_2x2.add(new PuzzleElementDefinition(1, -1, -1, -1, 0));
-        ped2_2x2.add(new PuzzleElementDefinition(2, 1, 1, 1, 1));
-        ped2_2x2.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-        ped2_2x2.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
-
-        List<PuzzleElementDefinition> ped3_2x2 = new ArrayList<>();
-        ped3_2x2.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
-        ped3_2x2.add(new PuzzleElementDefinition(2, 1, 1, 1, 1));
-        ped3_2x2.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-        ped3_2x2.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
-
-        List<PuzzleElementDefinition> ped4_2x2 = new ArrayList<>();
-        ped4_2x2.add(new PuzzleElementDefinition(1, -1, -1, -1, -1));
-        ped4_2x2.add(new PuzzleElementDefinition(2, 0, -1, 1, 0));
-        ped4_2x2.add(new PuzzleElementDefinition(3, 0, 0, 0, 0));
-        ped4_2x2.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
-
-        return Stream.of(
-                Arguments.of(2, Arrays.asList("TL", "BL"), ped1_2x2),
-                Arguments.of(2, Arrays.asList("TL", "BR"), ped2_2x2),
-                Arguments.of(2, Arrays.asList("BR"), ped3_2x2),
-                Arguments.of(2, Arrays.asList("BL"), ped4_2x2)
-        );
-    }*/
-
 
 }

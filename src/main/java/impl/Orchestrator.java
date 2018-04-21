@@ -1,11 +1,9 @@
 package impl;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import static impl.Solver.getPossibleNumberOfRows;
 
 public class Orchestrator {
 
@@ -13,35 +11,28 @@ public class Orchestrator {
         File inputFile = new File(receivedFilePath);
          Solver solver = new Solver();
          List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
-        if (list.isEmpty())
-
-        {
+        if (list.isEmpty()){
             solver.writeErrorsToTheOutPutFile();
-
         } else if (solver.isSumOfEdgesZero(list)) {
-            List<Integer> possibleNumberOfRowsList = getPossibleNumberOfRows(list);
-            for (Integer row : possibleNumberOfRowsList) {
-                solver.isMissingCornerElements(row, list);
+            List<Integer> rowList = solver.getSolverRows(list);
+            List<Integer> possibleNumberOfRowsList = new ArrayList<>();
+            for (Integer row : rowList) {
+                if(!solver.isMissingCornerElements(row, list)){
+                    possibleNumberOfRowsList.add(row);
+                }
             }
-
             if(EventHandler.getEventList().isEmpty()) {
-
-                //List <Integer> tempList = getPossibleNumberOfRows(list);
-                //  call to getPossibleNumbon each loop
-
-                //in loop ON tempList call to
-                //isMissingCornerElements(int amountOfRows, List<PuzzleElementDefinition> puzzleElements)
-                // in loop call to number of straight edges, this method  not implemented yet
-                //to run in loop on solve, solve get list and Integer from actual list
-                solver.solve(list, 3);
+                for (Integer row : possibleNumberOfRowsList) {
+                    if(solver.solve(list, row)){
+                        break;
+                    }
+                }
             }
         }
         if (solver.getSolutionList().isEmpty())
         {
             solver.writeErrorsToTheOutPutFile();
-        }else
-
-        {
+        }else{
             solver.writeSolutionToTheOutPutFile();
         }
 

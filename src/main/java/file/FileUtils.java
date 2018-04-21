@@ -59,10 +59,12 @@ public class FileUtils {
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : outMap.entrySet()) {
                 List<PuzzleElementDefinition> list = entry.getValue();
+                StringBuilder sb = new StringBuilder();
                 for (PuzzleElementDefinition element : list){
-                    writer.write(Integer.toString(element.getId())+' ');
+                    sb.append(Integer.toString(element.getId())+ ' ');
+//                    writer.write(Integer.toString(element.getId())+ ' ');
                 }
-                writer.write('\n');
+                writer.write(sb.toString().trim() + '\n');
             }
         }
     }

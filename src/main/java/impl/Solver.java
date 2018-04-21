@@ -20,10 +20,11 @@ public class Solver {
     private int maxColumn;
     //
     private Map<Position, List<PuzzleElementDefinition>> poolMap = new HashMap<>();
+    private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
     private boolean lastColumn;
     private int maxRotationNumInFirstRow;
 
-    public List<Integer> getSolutionList() {
+    List<Integer> getSolutionList() {
         return solutionList;
     }
 
@@ -40,11 +41,11 @@ public class Solver {
     }
 
 
-    public boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
+    boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
         return (isAllElementDefinitionEqualsToZero(puzzleElementDefinition));
     }
 
-    protected boolean isEnoughCornerElementsForSeveralRows(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    boolean isEnoughCornerElementsForSeveralRows(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTLExists = false;
         boolean isTRExists = false;
         boolean isBLExists = false;
@@ -77,7 +78,7 @@ public class Solver {
         return (isTLExists && isTRExists && isBLExists && isBRExists);
     }
 
-    public boolean isEnoughCornerElementsForOneRow(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    boolean isEnoughCornerElementsForOneRow(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isLeftCornerExists = false;
         boolean isRightCornerExists = false;
         boolean isOneOfElementsSquare = false;
@@ -131,7 +132,7 @@ public class Solver {
     }
 
 
-    protected boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
+    boolean isEnoughCornerElementsForOneColumn(List<PuzzleElementDefinition> listOfPuzzleElementDefinitions) {
         boolean isTopCornerExists = false;
         boolean isBottomCornerExists = false;
         boolean isOneOfElementsSquare = false;
@@ -190,46 +191,58 @@ public class Solver {
     }
 
 
-    public void solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber) {
+    boolean solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber) {
 
-        Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
         maxRow = solutionRowNumber;
         maxColumn = validIdList.size() / solutionRowNumber;
         lastColumn = false;
         int startIndex = 0;
-        solvePuzzle(validIdList, startIndex, solutionMap);
+        poolMap.clear();
+        if (solvePuzzle(validIdList, startIndex, solutionMap)) {
+            solutionMapToSolutionList(solutionMap);
+            return true;
+        }
+        return false;
     }
 
     private boolean solvePuzzle(List<PuzzleElementDefinition> currentElementList, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
-        Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
-        PuzzleElementDefinition templateElement = getTemplateByIndex(index, solutionMap);
-        PuzzleElementDefinition curElement;
-        if (poolMap.get(position) == null) {
-            buildPositionElementMapByTemplate(templateElement, currentElementList, position);//find all elements that match to template
-        }
-        if (!poolMap.get(position).isEmpty()) {
-            curElement = poolMap.get(position).get(0);
-//            if(curElementNotInSolution)
-            addElementToSolutionMap(curElement, index, solutionMap);
-            currentElementList.remove(curElement);
-            removeElementFromPool(position);
-            ++index;
-        } else {
-            --index;
-            if (index < 0) {
-                return false;
+        while ((!currentElementList.isEmpty() || !analyzeResult(solutionMap)) && index >= 0) {
+            Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
+            PuzzleElementDefinition curElement;
+            if (poolMap.get(position) == null) {
+                PuzzleElementDefinition templateElement = getTemplateByIndex(index, solutionMap);
+                buildPositionElementMapByTemplate(templateElement, currentElementList, position);//find all elements that match to template
             }
-            PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
-            currentElementList = shiftElementToEndOfList(currentElementList, lastElement);
-            deleteLastElementFromSolution(solutionMap);
-            removeEmptyListFromPool(position);
+            if (!poolMap.get(position).isEmpty()) {
+                curElement = poolMap.get(position).get(0);
+                addElementToSolutionMap(curElement, index, solutionMap);
+                currentElementList.remove(curElement);
+                removeElementFromPool(position);
+                ++index;
+            } else {
+                --index;
+                if (!solutionMap.isEmpty() && index >= 0) {
+                    PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
+                    currentElementList = shiftElementToEndOfList(currentElementList, lastElement);
+                    deleteLastElementFromSolution(solutionMap);
+                    removeEmptyListFromPool(position);
+                }else {
+                    return false;
+                }
+            }
+            solvePuzzle(currentElementList, index, solutionMap);
         }
+        return isPuzzleSolved(solutionMap);
+    }
+
+    private boolean isPuzzleSolved(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
         if (analyzeResult(solutionMap)) {
             return true;
         } else {
-            solvePuzzle(currentElementList, index, solutionMap);
+            EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+            solutionMap.clear();
+            return false;
         }
-        return false;
     }
 
     // the method should be invoked in case of all positions of puzzle for current cycle is checked
@@ -292,7 +305,6 @@ public class Solver {
         }
     }
 
-
     private boolean analyzeResult(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
 
         int count = 0;
@@ -303,18 +315,14 @@ public class Solver {
                 }
             }
             if (maxColumn * maxRow == count) {
-                solutionMapToSolutionList(solutionMap);
                 return true;
             }
         }
-        EventHandler.addEventToList(EventHandler.NO_SOLUTION);
-        //  solverMap.clear();
         return false;
     }
 
     private PuzzleElementDefinition leftCornerTemplate(int curRow, int curColumn, Map<Integer, List<PuzzleElementDefinition>> solverMap) {
         int filledRows = solverMap.size();
-        List<PuzzleElementDefinition> list = solverMap.get(curRow - 1);
         if (curRow == maxRow && maxColumn == 1) {// last row 1 column puzzle
             return new PuzzleElementDefinition(0, calcMiddleTop(curRow, curColumn, solverMap), 0, 0);
         }
@@ -376,7 +384,7 @@ public class Solver {
     }
 
     private boolean checkEdgeMatch(int templateEdge, int currentElementEdge) {
-        return templateEdge == fakeNumber ||currentElementEdge == templateEdge;
+        return templateEdge == fakeNumber || currentElementEdge == templateEdge;
     }
 
     private PuzzleElementDefinition nextElementBuilder(PuzzleElementDefinition element) {
@@ -442,7 +450,7 @@ public class Solver {
     }
 
     // the method return puzzle available heights(rows) for all possible rectangles
-    private List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
+    List<Integer> getSolverRows(List<PuzzleElementDefinition> puzzleElements) {
         List<Integer> retVal = new ArrayList<>();
         int numOfElements = puzzleElements.size();
         if (numOfElements == 1) {
@@ -482,14 +490,16 @@ public class Solver {
     }
 
     public boolean isSumOfEdgesZero(List<PuzzleElementDefinition> puzzleElements) {
-        int sum = 0;
+        int sumVerticalEdges = 0;
+        int sumHorizontalEdges = 0;
         for (PuzzleElementDefinition puzzleElement : puzzleElements) {
-            sum += (puzzleElement.getLeft() + puzzleElement.getUp() + puzzleElement.getRight() + puzzleElement.getBottom());
+            sumHorizontalEdges += puzzleElement.getUp() + puzzleElement.getBottom();
+            sumVerticalEdges += puzzleElement.getLeft() + puzzleElement.getRight();
         }
-        if (sum != 0) {
+        if (sumHorizontalEdges != 0 || sumVerticalEdges != 0) {
             EventHandler.addEventToList(EventHandler.SUM_ZERO);
         }
-        return sum == 0;
+        return (sumHorizontalEdges == 0 && sumVerticalEdges == 0);
     }
 
     //the method should solve/fill errors in case corners are missing
@@ -514,7 +524,8 @@ public class Solver {
             return isMissingRowPuzzleCorners(cornerElements);
         } else {
             //TODO 2x2 and more should be developed
-            return isMissingCornersInMap(cornerElements);
+            //return isMissingCornersInMap(cornerElements);
+            return false;
         }
     }
 
@@ -535,7 +546,8 @@ public class Solver {
             fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
         }
         addMissingCornerErrorsIfExist(cornerElements);
-        return true;
+        //TODO not work perfect
+        return false;
     }
 
     private boolean isMissingRowPuzzleCorners(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
@@ -555,7 +567,8 @@ public class Solver {
             fillAvailableCornersMap(cornerElements, CornerNamesEnum.BR, puzzleElement);
         }
         addMissingCornerErrorsIfExist(cornerElements);
-        return true;
+        //TODO not work perfect
+        return false;
     }
 
     private boolean isMissingCornersInMap(Map<CornerNamesEnum, List<PuzzleElementDefinition>> cornerElements) {
@@ -683,19 +696,22 @@ public class Solver {
                 puzzleElement.getBottom() == 0);
     }
 
-    public List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {
+    List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {
         FilePuzzleParser filePuzzleParser = new FilePuzzleParser();
-        List<PuzzleElementDefinition> listAfterParser = filePuzzleParser.fileToPEDArray(inputFile);
-        return listAfterParser;
+        return filePuzzleParser.fileToPEDArray(inputFile);
 
     }
 
-    protected void writeErrorsToTheOutPutFile() throws IOException {
+    void writeErrorsToTheOutPutFile() throws IOException {
         FileUtils.writeFile();
     }
 
-    protected void writeSolutionToTheOutPutFile(Map<Integer, List<PuzzleElementDefinition>> solverMap) throws IOException {
-        FileUtils.writeSolutionToFile(solverMap);
+    void writeSolutionToTheOutPutFile() throws IOException {
+        FileUtils.writeSolutionToFile(solutionMap);
+    }
+
+    public Map<Integer, List<PuzzleElementDefinition>> getSolution() {
+        return solutionMap;
     }
 }
 
