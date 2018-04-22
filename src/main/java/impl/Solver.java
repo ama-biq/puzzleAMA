@@ -217,7 +217,7 @@ public class Solver {
             if (poolMap.get(position).isEmpty()) {
                 // no available elements for this position
                 --index;
-                if (!solutionMap.isEmpty() && index >= 0) {
+                if (!solutionMap.isEmpty()) {
                     PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
                     freePuzzleElements = shiftElementToEndOfList(freePuzzleElements, lastElement);
                     deleteLastElementFromSolution(solutionMap);
@@ -479,7 +479,7 @@ public class Solver {
         return true;
     }
 
-    public boolean isSumOfEdgesZero(List<PuzzleElementDefinition> puzzleElements) {
+    boolean isSumOfParallelEdgesZero(List<PuzzleElementDefinition> puzzleElements) {
         int sumVerticalEdges = 0;
         int sumHorizontalEdges = 0;
         for (PuzzleElementDefinition puzzleElement : puzzleElements) {
@@ -493,7 +493,7 @@ public class Solver {
     }
 
     //the method should solve/fill errors in case corners are missing
-    protected boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+    boolean isMissingCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
 
         int numOfElements = puzzleElements.size();
         int height = numOfElements / wide;
@@ -601,7 +601,7 @@ public class Solver {
         }
     }
 
-    protected Map<CornerNamesEnum, List<PuzzleElementDefinition>> getCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
+    Map<CornerNamesEnum, List<PuzzleElementDefinition>> getCornerElements(int wide, List<PuzzleElementDefinition> puzzleElements) {
 
         int height = puzzleElements.size() / wide;
         Map<CornerNamesEnum, List<PuzzleElementDefinition>> availableCorners = new HashMap<>();

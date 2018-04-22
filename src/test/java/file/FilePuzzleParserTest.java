@@ -26,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class FilePuzzleParserTest {
 
 
-
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid3 = new File("src\\test\\resources\\validPuzzle3Peaces.txt");
@@ -35,7 +34,6 @@ public class FilePuzzleParserTest {
     File valid6 = new File("src\\test\\resources\\validPuzzle6Peaces.txt");
     File novalid6 = new File("src\\test\\resources\\novalidPuzzle6Peaces.txt");
     File novalid5 = new File("src\\test\\resources\\novalidPuzzle5Peaces.txt");
-
 
 
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
@@ -119,7 +117,7 @@ public class FilePuzzleParserTest {
     //////////////////////////////////////// getNumOfElements() Tests ////////////////////////////////////////
 
 
-    public void passGetNumElementsNumValue(String firstLine) throws Exception {
+    public void passGetNumElementsNumValue(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         assertEquals(3, testParser.getNumOfElements(firstLine));
     }
@@ -132,7 +130,7 @@ public class FilePuzzleParserTest {
             "   NumElements=3         ",
             "  NumElements   =   3    "
     })
-    public void failGetNumElementsNumValue(String firstLine) throws Exception {
+    public void failGetNumElementsNumValue(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         assertNotEquals(2, testParser.getNumOfElements(firstLine));
     }
@@ -147,7 +145,7 @@ public class FilePuzzleParserTest {
             "   =NumElements=3         ",
             "  ===NumElements   =   3    "
     })
-    public void failGetNumElementsMoreThanOneSplit(String firstLine) throws Exception {
+    public void failGetNumElementsMoreThanOneSplit(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         testParser.getNumOfElements(firstLine);
 
@@ -166,7 +164,7 @@ public class FilePuzzleParserTest {
             "NumElementss=3"
 
     })
-    public void failGetNumElementsNotEqualNumElementsWord(String firstLine) throws Exception {
+    public void failGetNumElementsNotEqualNumElementsWord(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         testParser.getNumOfElements(firstLine);
         assertTrue(getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
@@ -184,7 +182,7 @@ public class FilePuzzleParserTest {
             "NumElements=        A",
             "NumElements=        $",
     })
-    public void failGetNumElementsParseInt(String firstLine) throws Exception {
+    public void failGetNumElementsParseInt(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         testParser.getNumOfElements(firstLine);
         assertTrue(getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
@@ -206,7 +204,7 @@ public class FilePuzzleParserTest {
             "7 1 1 1 0",
             "9 1 0 0 0"
     })
-    public void passCreatePED(String line) throws Exception {
+    public void passCreatePED(String line) {
         String[] testLine = line.split("\\s+");
         System.out.println(Arrays.toString(testLine));
         int id = Integer.parseInt(testLine[0]);
@@ -231,7 +229,7 @@ public class FilePuzzleParserTest {
             "5 0 0 5 5",
             "7 -3 0 0 1"
     })
-    public void failEdgesOfPEDnotValid(String line) throws Exception {
+    public void failEdgesOfPEDnotValid(String line) {
         FilePuzzleParser testParser = new FilePuzzleParser(7);
         String[] testLine = line.split("\\s+");
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
@@ -245,7 +243,7 @@ public class FilePuzzleParserTest {
             "0 A 0 0 0",
             "B 1 1 1 1 "
     })
-    public void failCreatePEDCannotParseIDOrEdge(String line) throws Exception {
+    public void failCreatePEDCannotParseIDOrEdge(String line) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
@@ -258,7 +256,7 @@ public class FilePuzzleParserTest {
             "0 0 0 0 ",
             "1 1 1 1 1 1"
     })
-    public void failCreatePEDWrongAmountOfEdgesCanParseID(String line) throws Exception {
+    public void failCreatePEDWrongAmountOfEdgesCanParseID(String line) {
         String[] testLine = line.split("\\s+");
         int testedID = Integer.parseInt(testLine[0]);
         FilePuzzleParser testParser = new FilePuzzleParser();
@@ -272,7 +270,7 @@ public class FilePuzzleParserTest {
             "A 0 0 0 ",
             "B 1 1 1 1 1"
     })
-    public void failCreatePEDWrongAmountOfEdgesCannotParseID(String line) throws Exception {
+    public void failCreatePEDWrongAmountOfEdgesCannotParseID(String line) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
@@ -283,11 +281,10 @@ public class FilePuzzleParserTest {
     //////////////////////////////////////// verifyPuzzleIDs() Tests ////////////////////////////////////////
 
 
-
     @ParameterizedTest
     @MethodSource("positiveTestCheckIdValidity")
     public void positiveTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
-                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) throws Exception {
+                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) {
         setEdgesForFourElements(p1, p2, p3, p4);
         FilePuzzleParser testParser = new FilePuzzleParser();
         assertTrue(testParser.verifyPuzzleIDs(listOfPuzzleElementDefinitionsContainsId, 4));
@@ -295,21 +292,21 @@ public class FilePuzzleParserTest {
 
     private static Stream<Arguments> positiveTestCheckIdValidity() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0))
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0))
         );
     }
 
     @ParameterizedTest
     @MethodSource("negativeTestCheckIdValidity")
     public void negativeTestCheckIdValidity(PuzzleElementDefinition p1, PuzzleElementDefinition p2,
-                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) throws Exception {
+                                            PuzzleElementDefinition p3, PuzzleElementDefinition p4) {
         setEdgesForFourElements(p1, p2, p3, p4);
         FilePuzzleParser testParser = new FilePuzzleParser();
         assertFalse(testParser.verifyPuzzleIDs(listOfPuzzleElementDefinitionsContainsId, 4));
@@ -317,43 +314,44 @@ public class FilePuzzleParserTest {
 
     private static Stream<Arguments> negativeTestCheckIdValidity() {
         return Stream.of(
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 1,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 6,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 5,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 0,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 3,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0)),
-                Arguments.of(new PuzzleElementDefinition( 1,1, 0, 0, 0),
-                        new PuzzleElementDefinition( 2,0, 0, 0, 0),
-                        new PuzzleElementDefinition( 4,1, 0, 0, 0),
-                        new PuzzleElementDefinition( -6,1, 0, 0, 0))
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(1, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(6, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(5, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(0, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(3, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(-6, 1, 0, 0, 0)),
+                Arguments.of(new PuzzleElementDefinition(1, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(2, 0, 0, 0, 0),
+                        new PuzzleElementDefinition(4, 1, 0, 0, 0),
+                        new PuzzleElementDefinition(-6, 1, 0, 0, 0))
         );
     }
 
     private void setEdgesForFourElements(PuzzleElementDefinition ped1, PuzzleElementDefinition ped2,
-                                         PuzzleElementDefinition ped3,PuzzleElementDefinition ped4) {
+                                         PuzzleElementDefinition ped3, PuzzleElementDefinition ped4) {
         listOfPuzzleElementDefinitionsContainsId.add(ped1);
         listOfPuzzleElementDefinitionsContainsId.add(ped2);
         listOfPuzzleElementDefinitionsContainsId.add(ped3);
         listOfPuzzleElementDefinitionsContainsId.add(ped4);
     }
+
     @ParameterizedTest
     @CsvSource({
             "1,2,3,4,5",
             "2,3,1,5,4",
             "5,4,3,2,1"
     })
-    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e) throws Exception {
+    public void positiveTestWichElementMissing(int a, int b, int c, int d, int e) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         TreeSet<Integer> setToValid = new TreeSet<>();
         setToValid.add(a);
@@ -369,8 +367,6 @@ public class FilePuzzleParserTest {
 
 
     //////////////////////////////////////// fileToPEDArray() Tests ////////////////////////////////////////
-
-
 
 
     @Test

@@ -1,7 +1,6 @@
 package impl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -173,7 +171,7 @@ public class SolverTest {
     @MethodSource("positiveTestisSumOfAllEdgesEqualForTwoElements")
     public void positiveTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
         setEdgesForTwoElements(p1, p2);
-        assertTrue(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElementDefinitionsWithoutId));
+        assertTrue(puzzleSolver.isSumOfParallelEdgesZero(listOfPuzzleElementDefinitionsWithoutId));
     }
 
 
@@ -181,7 +179,7 @@ public class SolverTest {
     @MethodSource("negativeTestisSumOfAllEdgesEqualForTwoElements")
     public void negativeTestisSumOfAllEdgesEqualForTwoElements(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
         setEdgesForTwoElements(p1, p2);
-        assertFalse(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElementDefinitionsWithoutId));
+        assertFalse(puzzleSolver.isSumOfParallelEdgesZero(listOfPuzzleElementDefinitionsWithoutId));
 
     }
 
@@ -591,7 +589,7 @@ public class SolverTest {
         List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 1, 0, -1));
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, 1, -1));
-        assertTrue(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is not zero");
+        assertTrue(puzzleSolver.isSumOfParallelEdgesZero(listOfPuzzleElements), "sum of edges is not zero");
     }
 
     @Test
@@ -600,7 +598,7 @@ public class SolverTest {
         List<PuzzleElementDefinition> listOfPuzzleElements = new ArrayList<>();
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, -1, -1));
-        assertFalse(puzzleSolver.isSumOfEdgesZero(listOfPuzzleElements), "sum of edges is zero");
+        assertFalse(puzzleSolver.isSumOfParallelEdgesZero(listOfPuzzleElements), "sum of edges is zero");
         assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
     }
 

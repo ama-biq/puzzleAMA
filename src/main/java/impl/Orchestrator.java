@@ -13,7 +13,7 @@ public class Orchestrator {
          List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
         if (list.isEmpty()){
             solver.writeErrorsToTheOutPutFile();
-        } else if (solver.isSumOfEdgesZero(list)) {
+        } else if (solver.isSumOfParallelEdgesZero(list)) {
             List<Integer> rowList = solver.getSolverRows(list);
             List<Integer> possibleNumberOfRowsList = new ArrayList<>();
             for (Integer row : rowList) {

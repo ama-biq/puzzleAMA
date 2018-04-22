@@ -16,7 +16,7 @@ import java.util.Set;
 public class FileUtils {
 
 
-    public static StringBuilder readFile(File file, Charset encoding) throws Exception {
+    private static StringBuilder readFile(File file, Charset encoding) throws Exception {
         FileInputStream fis;
         try {
             fis = new FileInputStream(file);
@@ -37,12 +37,10 @@ public class FileUtils {
     }
 
 
-    public static StringBuilder readFile(File file) throws Exception {
+    static StringBuilder readFile(File file) throws Exception {
         return readFile(file, StandardCharsets.UTF_8);
     }
 
-    //todo . Previous version of this finction was
-    //public static void writeFile(File file, List<String> output) throws IOException
     public static void writeFile() throws IOException {
         Set<String> output = EventHandler.getEventList();
         FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
@@ -53,16 +51,13 @@ public class FileUtils {
         }
     }
     public static void writeSolutionToFile(Map<Integer, List<PuzzleElementDefinition>> solverMap) throws IOException {
-        Solver solver = new Solver();
-        Map<Integer, List<PuzzleElementDefinition>>outMap = solverMap;
         FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
-            for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : outMap.entrySet()) {
+            for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
                 List<PuzzleElementDefinition> list = entry.getValue();
                 StringBuilder sb = new StringBuilder();
                 for (PuzzleElementDefinition element : list){
-                    sb.append(Integer.toString(element.getId())+ ' ');
-//                    writer.write(Integer.toString(element.getId())+ ' ');
+                    sb.append(element.getId()+ ' ');
                 }
                 writer.write(sb.toString().trim() + '\n');
             }

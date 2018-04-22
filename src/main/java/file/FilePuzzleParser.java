@@ -9,13 +9,13 @@ import java.util.*;
 
 public class FilePuzzleParser {
 
-    public static final String NUM_ELEMENTS = "NumElements";
+    private static final String NUM_ELEMENTS = "NumElements";
     private List<PuzzleElementDefinition> pedArray = new ArrayList<>();
     private int numOfElements;
-    private final int fake = Integer.MIN_VALUE;
+    private static final int fake = Integer.MIN_VALUE;
 
 
-    public FilePuzzleParser(int numOfElements) {
+    FilePuzzleParser(int numOfElements) {
         this.numOfElements = numOfElements;
     }
 
@@ -47,20 +47,19 @@ public class FilePuzzleParser {
     }
 
 
-    public boolean isLineReadyForParse(String line) {
+    boolean isLineReadyForParse(String line) {
         return (!(line.trim().startsWith("#")) && !line.trim().isEmpty());
     }
 
-    // TODO in case of error should return error
-    public int getNumOfElements(String firstLine) throws Exception {
+    int getNumOfElements(String firstLine) {
         int amountOfEqualSigns = firstLine.length() - firstLine.replace("=", "").length();
-        String split[] = firstLine.trim().split("=");
+        String[] split = firstLine.trim().split("=");
 
         if (split.length == 2 && amountOfEqualSigns == 1) {
             if (split[0].trim().equals(NUM_ELEMENTS)) {
                 try {
                     return Integer.parseInt(split[1].trim());
-                } catch (Exception e) {
+                } catch (NumberFormatException e) {
                     EventHandler.addEventToList(EventHandler.BAD_FORMAT_FOR_NUM_ELEMENTS + firstLine);
                 }
             } else {
@@ -72,10 +71,10 @@ public class FilePuzzleParser {
         return fake;
     }
 
-    public PuzzleElementDefinition createPuzzleElementDefinition(String line) throws Exception {
+    PuzzleElementDefinition createPuzzleElementDefinition(String line){
         boolean shouldCreatePED = true;
         int[] arr = new int[5];
-        String split[] = line.trim().split("\\s+");
+        String[] split = line.trim().split("\\s+");
         if (split.length == 5) {
             int id = 0;
             for (int i = 0; i < split.length; i++) {
@@ -97,7 +96,7 @@ public class FilePuzzleParser {
                     }
                 }
             }
-            if (shouldCreatePED == true) {
+            if (shouldCreatePED) {
                 return new PuzzleElementDefinition(arr[0], arr[1], arr[2], arr[3], arr[4]);
             }
         }
@@ -108,9 +107,7 @@ public class FilePuzzleParser {
     private List<Integer> cantHaveTheFollowingID(TreeSet<Integer> sortedSet, int numOfElements) {
         Integer counter = 1;
         ArrayList<Integer> retList = new ArrayList<>();
-        Iterator<Integer> iterator = sortedSet.iterator();
-        while (iterator.hasNext()) {
-            Integer element = iterator.next();
+        for (Integer element : sortedSet) {
             if (element > numOfElements) {
                 retList.add(element);
             }
@@ -120,7 +117,7 @@ public class FilePuzzleParser {
 
     }
 
-    public boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) throws Exception {
+    boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements){
         boolean flag = true;
         Set<Integer> validSet = new HashSet<>();
         for (PuzzleElementDefinition element : puzzleElementDefinition) {
