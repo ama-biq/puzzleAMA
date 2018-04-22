@@ -190,7 +190,6 @@ public class Solver {
 
     }
 
-
     boolean solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber) {
 
         maxRow = solutionRowNumber;
@@ -202,47 +201,43 @@ public class Solver {
             solutionMapToSolutionList(solutionMap);
             return true;
         }
+        solutionMap.clear();
+        EventHandler.addEventToList(EventHandler.NO_SOLUTION);
         return false;
     }
 
-    private boolean solvePuzzle(List<PuzzleElementDefinition> currentElementList, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
-        while ((!currentElementList.isEmpty() || !analyzeResult(solutionMap)) && index >= 0) {
+    private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
+        while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0) {
             Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
             PuzzleElementDefinition curElement;
             if (poolMap.get(position) == null) {
-                PuzzleElementDefinition templateElement = getTemplateByIndex(index, solutionMap);
-                buildPositionElementMapByTemplate(templateElement, currentElementList, position);//find all elements that match to template
+                PuzzleElementDefinition template = getTemplateByIndex(index, solutionMap);
+                buildPositionElementMapByTemplate(template, freePuzzleElements, position);//find all elements that match to template
             }
-            if (!poolMap.get(position).isEmpty()) {
-                curElement = poolMap.get(position).get(0);
-                addElementToSolutionMap(curElement, index, solutionMap);
-                currentElementList.remove(curElement);
-                removeElementFromPool(position);
-                ++index;
-            } else {
+            if (poolMap.get(position).isEmpty()) {
+                // no available elements for this position
                 --index;
                 if (!solutionMap.isEmpty() && index >= 0) {
                     PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
-                    currentElementList = shiftElementToEndOfList(currentElementList, lastElement);
+                    freePuzzleElements = shiftElementToEndOfList(freePuzzleElements, lastElement);
                     deleteLastElementFromSolution(solutionMap);
                     removeEmptyListFromPool(position);
-                }else {
+                } else {
                     return false;
                 }
+            } else {
+                curElement = poolMap.get(position).get(0);
+                addElementToSolutionMap(curElement, index, solutionMap);
+                freePuzzleElements.remove(curElement);
+                removeElementFromPool(position);
+                ++index;
             }
-            solvePuzzle(currentElementList, index, solutionMap);
         }
         return isPuzzleSolved(solutionMap);
     }
 
     private boolean isPuzzleSolved(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
-        if (analyzeResult(solutionMap)) {
-            return true;
-        } else {
-            EventHandler.addEventToList(EventHandler.NO_SOLUTION);
-            solutionMap.clear();
-            return false;
-        }
+        return isPuzzleFull(solutionMap);
     }
 
     // the method should be invoked in case of all positions of puzzle for current cycle is checked
@@ -305,7 +300,7 @@ public class Solver {
         }
     }
 
-    private boolean analyzeResult(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
+    private boolean isPuzzleFull(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
 
         int count = 0;
         if (!solutionMap.isEmpty()) {
@@ -385,11 +380,6 @@ public class Solver {
 
     private boolean checkEdgeMatch(int templateEdge, int currentElementEdge) {
         return templateEdge == fakeNumber || currentElementEdge == templateEdge;
-    }
-
-    private PuzzleElementDefinition nextElementBuilder(PuzzleElementDefinition element) {
-        Integer leftEdge = element.getRight() * (-1);
-        return new PuzzleElementDefinition(leftEdge, 0, fakeNumber, 0);
     }
 
     private List<PuzzleElementDefinition> shiftElementToEndOfList(List<PuzzleElementDefinition> validIdList, PuzzleElementDefinition currentElement) {

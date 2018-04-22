@@ -268,8 +268,7 @@ public class SolverTest {
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
-    //TODO not solved yet
-    /*@Test
+    @Test
     public void negative3ElementsTestResolveThePuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 1, 0, 0, 0));
@@ -280,7 +279,7 @@ public class SolverTest {
         expectedEvents.add(EventHandler.NO_SOLUTION);
         puzzleSolver.solve(idsList, 1);
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
-    }*/
+    }
 
     @Test
     public void positive6ElementsTestResolveThePuzzle() {
