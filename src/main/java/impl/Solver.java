@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static impl.EventHandler.addEventToList;
 
@@ -190,7 +191,10 @@ public class Solver {
 
     }
 
-    boolean solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber) {
+    synchronized boolean solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber) {
+        return solve(validIdList, solutionRowNumber, new AtomicBoolean(false));
+    }
+    synchronized boolean solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber, AtomicBoolean flag) {
 
         maxRow = solutionRowNumber;
         maxColumn = validIdList.size() / solutionRowNumber;
@@ -199,14 +203,17 @@ public class Solver {
         poolMap.clear();
         if (solvePuzzle(validIdList, startIndex, solutionMap)) {
             solutionMapToSolutionList(solutionMap);
+            System.out.println("solutionMap" + solutionMap.toString());
+            flag.compareAndSet(false, true);
             return true;
         }
+        System.out.println("solutionMap False" + solutionMap.toString());
         solutionMap.clear();
         EventHandler.addEventToList(EventHandler.NO_SOLUTION);
         return false;
     }
 
-    private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
+    synchronized private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
         while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0) {
             Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
             PuzzleElementDefinition curElement;
