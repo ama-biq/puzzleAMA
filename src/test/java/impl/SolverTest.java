@@ -1,5 +1,6 @@
 package impl;
 
+import file.FileUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,6 +8,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class SolverTest {
     @BeforeEach
     public void beforeEach() {
         EventHandler.emptyEventList();
+        FileUtils.deleteFile(new File("src\\test\\resources\\OutPutFile.txt"));
     }
 
     Solver puzzleSolver = new Solver();
@@ -263,7 +266,6 @@ public class SolverTest {
         expectedList.add(2);
         expectedList.add(4);
         puzzleSolver.solve(idsList, 2);
-        puzzleSolver.writeErrorsToTheOutPutFile();
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
@@ -467,7 +469,6 @@ public class SolverTest {
         String expected = usingBufferedReader("src\\test\\resources\\10AmirFileExpected.txt");
         assertEquals(expected, out);
     }
-
 
     private static String usingBufferedReader(String filePath) {
         StringBuilder contentBuilder = new StringBuilder();

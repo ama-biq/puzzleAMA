@@ -50,6 +50,7 @@ public class FileUtils {
             }
         }
     }
+
     public static void writeSolutionToFile(Map<Integer, List<PuzzleElementDefinition>> solverMap) throws IOException {
         FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
@@ -64,5 +65,8 @@ public class FileUtils {
         }
     }
 
+    public static void deleteFile(File fileToDelete){
+        fileToDelete.delete();
+    }
 
 }

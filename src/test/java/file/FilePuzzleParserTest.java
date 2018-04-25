@@ -2,7 +2,6 @@ package file;
 
 import impl.EventHandler;
 import impl.PuzzleElementDefinition;
-import impl.Solver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,11 +19,9 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
-import static impl.EventHandler.getEventList;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilePuzzleParserTest {
-
 
     File lineReadyForParse = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
     File valid2 = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
@@ -35,13 +32,13 @@ public class FilePuzzleParserTest {
     File novalid6 = new File("src\\test\\resources\\novalidPuzzle6Peaces.txt");
     File novalid5 = new File("src\\test\\resources\\novalidPuzzle5Peaces.txt");
 
-
     List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsContainsId = new ArrayList<>();
+    EventHandler eventHandler = new EventHandler();
+    FileUtils fileUtils = new FileUtils();
 
     @BeforeEach
     public void beforeEach() {
-        EventHandler.emptyEventList();
-
+        eventHandler.emptyEventList();
     }
 
 //////////////////////////////////////// FileUtils Tests ////////////////////////////////////////
@@ -53,7 +50,7 @@ public class FilePuzzleParserTest {
                 "1 0 0 0 0\n" +
                 "2 0 0 0 0");
         File file = new File("src\\test\\resources\\validPuzzle2Peaces.txt");
-        StringBuilder sb = FileUtils.readFile(file);
+        StringBuilder sb = fileUtils.readFile(file);
         Assertions.assertTrue(expectedSb.toString().equals(sb.toString()), "expected input file payload is - " + "{" + expectedSb + "}" + " actual is " + "{" + sb + "}");
     }
 
@@ -61,7 +58,7 @@ public class FilePuzzleParserTest {
     public void fileNotFound() throws Exception {
         File file = new File("src\\test\\resources\\fileNotExist.txt");
         Assertions.assertThrows(FileNotFoundException.class, () -> {
-            FileUtils.readFile(file);
+            fileUtils.readFile(file);
         }, "expected exception is FileNotFoundException");
 
     }
@@ -70,7 +67,7 @@ public class FilePuzzleParserTest {
     public void badFolder() throws Exception {
         File file = new File("src\\test\\resources2\\validPuzzle2Peaces.txt");
         Assertions.assertThrows(FileNotFoundException.class, () -> {
-            FileUtils.readFile(file);
+            fileUtils.readFile(file);
         }, "expected exception is FileNotFoundException");
     }
 
@@ -150,7 +147,7 @@ public class FilePuzzleParserTest {
         testParser.getNumOfElements(firstLine);
 
 
-        assertTrue(getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
+        assertTrue(eventHandler.getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
 
     }
 
@@ -167,7 +164,7 @@ public class FilePuzzleParserTest {
     public void failGetNumElementsNotEqualNumElementsWord(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         testParser.getNumOfElements(firstLine);
-        assertTrue(getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
+        assertTrue(eventHandler.getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
 
     }
 
@@ -185,7 +182,7 @@ public class FilePuzzleParserTest {
     public void failGetNumElementsParseInt(String firstLine) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         testParser.getNumOfElements(firstLine);
-        assertTrue(getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
+        assertTrue(eventHandler.getEventList().contains("Bad format for NumElements declaration line: " + firstLine));
 
 
     }
@@ -234,7 +231,7 @@ public class FilePuzzleParserTest {
         String[] testLine = line.split("\\s+");
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
         int testedID = Integer.parseInt(testLine[0]);
-        assertTrue(EventHandler.getEventList().contains("Puzzle ID " + testedID + " has wrong data: " + line));
+        assertTrue(eventHandler.getEventList().contains("Puzzle ID " + testedID + " has wrong data: " + line));
         assertEquals(null, testPed);
     }
 
@@ -246,7 +243,7 @@ public class FilePuzzleParserTest {
     public void failCreatePEDCannotParseIDOrEdge(String line) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-        assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
+        assertTrue(eventHandler.getEventList().contains("Bad format for puzzle piece line: " + line));
         assertEquals(null, testPed);
     }
 
@@ -261,7 +258,7 @@ public class FilePuzzleParserTest {
         int testedID = Integer.parseInt(testLine[0]);
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-        assertTrue(EventHandler.getEventList().contains("Bad format for puzzle piece line: " + line));
+        assertTrue(eventHandler.getEventList().contains("Bad format for puzzle piece line: " + line));
         assertEquals(null, testPed);
     }
 
@@ -273,7 +270,7 @@ public class FilePuzzleParserTest {
     public void failCreatePEDWrongAmountOfEdgesCannotParseID(String line) {
         FilePuzzleParser testParser = new FilePuzzleParser();
         PuzzleElementDefinition testPed = testParser.createPuzzleElementDefinition(line);
-        assertTrue(getEventList().contains("Bad format for puzzle piece line: " + line));
+        assertTrue(eventHandler.getEventList().contains("Bad format for puzzle piece line: " + line));
         assertEquals(null, testPed);
     }
 

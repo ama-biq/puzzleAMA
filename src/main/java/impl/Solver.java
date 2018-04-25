@@ -23,12 +23,11 @@ public class Solver {
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
     private boolean lastColumn;
     private int maxRotationNumInFirstRow;
+    private List<Integer> solutionList = new ArrayList<>();
 
     List<Integer> getSolutionList() {
         return solutionList;
     }
-
-    private List<Integer> solutionList = new ArrayList<>();
 
     public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
         //TODO check when to use
@@ -39,7 +38,6 @@ public class Solver {
 
         return sum == 0;
     }
-
 
     boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
         return (isAllElementDefinitionEqualsToZero(puzzleElementDefinition));
@@ -199,15 +197,31 @@ public class Solver {
         poolMap.clear();
         if (solvePuzzle(validIdList, startIndex, solutionMap)) {
             solutionMapToSolutionList(solutionMap);
+            Orchestrator.isSolved.compareAndSet(false, true);
+            try {
+                writeSolutionToTheOutPutFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return true;
         }
         solutionMap.clear();
         EventHandler.addEventToList(EventHandler.NO_SOLUTION);
+        try {
+            if (!Orchestrator.isSolved.get()) {
+                writeErrorsToTheOutPutFile();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
     private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
         while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0) {
+            if (Orchestrator.isSolved.get()) {
+                return false;
+            }
             Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
             PuzzleElementDefinition curElement;
             if (poolMap.get(position) == null) {
