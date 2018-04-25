@@ -57,7 +57,7 @@ public class FileUtils {
                 List<PuzzleElementDefinition> list = entry.getValue();
                 StringBuilder sb = new StringBuilder();
                 for (PuzzleElementDefinition element : list){
-                    sb.append(element.getId()+ ' ');
+                    sb.append(element.getId()+ " ");
                 }
                 writer.write(sb.toString().trim() + '\n');
             }

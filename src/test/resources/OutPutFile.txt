@@ -1,1 +1,2 @@
-Cannot solve puzzle: missing corner element: TR
+1 3
+2 4
