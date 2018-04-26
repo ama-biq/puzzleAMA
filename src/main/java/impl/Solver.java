@@ -21,8 +21,6 @@ public class Solver {
     //
     private Map<Position, List<PuzzleElementDefinition>> poolMap = new HashMap<>();
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
-    private boolean lastColumn;
-    private int maxRotationNumInFirstRow;
     private List<Integer> solutionList = new ArrayList<>();
 
     List<Integer> getSolutionList() {
@@ -192,7 +190,6 @@ public class Solver {
 
         maxRow = solutionRowNumber;
         maxColumn = validIdList.size() / solutionRowNumber;
-        lastColumn = false;
         int startIndex = 0;
         poolMap.clear();
         if (solvePuzzle(validIdList, startIndex, solutionMap)) {
@@ -428,10 +425,6 @@ public class Solver {
             if (maxRow - curRow > 0) { //middle row
                 return new PuzzleElementDefinition(calcLeft(curElement), calcMiddleTop(curRow, curColumn, solverMap), fakeNumber, fakeNumber);
             }
-        }
-        if (maxColumn - curColumn == 0) { //puzzle one column
-            lastColumn = true;
-            //should exit row
         }
         return new PuzzleElementDefinition(0, 0, 0, 0);// check return statement
     }

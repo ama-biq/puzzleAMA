@@ -39,7 +39,6 @@ public class Orchestrator {
             while (threadPool.getActiveCount()!=0){
                 Thread.sleep(1000);
             }
-            System.out.println("isSolved: " + isSolved.get());
         }
     }
 
