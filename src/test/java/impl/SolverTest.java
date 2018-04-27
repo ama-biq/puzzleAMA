@@ -718,4 +718,10 @@ public class SolverTest {
         assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
     }
 
+    @Test
+    public void isElementsEqual() {
+        PuzzleElementDefinition p1 = (new PuzzleElementDefinition(1, 0, 1, -1, 0));
+        PuzzleElementDefinition p2 = (new PuzzleElementDefinition(2, 1, -1, 0, 0));
+        assertTrue(puzzleSolver.isElementsEquals(p1, p2), p2.getRotationAngle() +" " + p1.getRotationAngle());
+    }
 }

@@ -36,7 +36,7 @@ public class Orchestrator {
                     --rowCount;
                 }
             }
-            while (threadPool.getActiveCount()!=0){
+            while (threadPool.getActiveCount() != 0) {
                 Thread.sleep(1000);
             }
         }

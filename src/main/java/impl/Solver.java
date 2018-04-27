@@ -710,5 +710,35 @@ public class Solver {
     public Map<Integer, List<PuzzleElementDefinition>> getSolution() {
         return solutionMap;
     }
+
+
+    PuzzleElementDefinition rotate90(PuzzleElementDefinition element) {
+
+        int up = element.getLeft();
+        int right = element.getUp();
+        int bottom = element.getRight();
+        int left = element.getBottom();
+        int rotation = element.getRotationAngle() + 90;
+        if (rotation == 360) {
+            rotation = 0;
+        }
+        element.setLeft(left);
+        element.setUp(up);
+        element.setRight(right);
+        element.setBottom(bottom);
+        element.setRotationAngle(rotation);
+        return element;
+
+    }
+
+    boolean isElementsEquals(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
+        for (int i = 0; i < 3; i++) {
+            if (p1.equals(rotate90(p2))) {
+                System.out.println(p2.getRotationAngle() + " " + p1.getRotationAngle());
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
