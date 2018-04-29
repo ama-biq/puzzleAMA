@@ -90,8 +90,8 @@ public class CmdPuzzleParser {
                         if (((indexOfthreadKey - indexOfInputKey) > 1 || (indexOfthreadKey - indexOfInputKey) < -1) && ((indexOfthreadKey - indexOfOutputKey) > 1 || (indexOfthreadKey - indexOfOutputKey) < -1)) {
                             try {
                                 threadArgumentValue = Integer.parseInt(args[indexOfthreadKey + 1]);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            } catch (NumberFormatException e) {
+                               printUsage();
                             }
                         } else {
                             printUsage();
@@ -107,8 +107,8 @@ public class CmdPuzzleParser {
 
                             try {
                                 threadArgumentValue = Integer.parseInt(args[indexOfthreadKey + 1]);
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            } catch (NumberFormatException e) {
+                                printUsage();
                             }
                             isRotateArgumentExist = true;
                         } else {
