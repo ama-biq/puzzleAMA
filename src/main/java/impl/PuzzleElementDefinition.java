@@ -116,8 +116,20 @@ public class PuzzleElementDefinition {
                 ", up=" + up +
                 ", right=" + right +
                 ", bottom=" + bottom +
+                ", rotationAngle=" + rotationAngle +
                 '}';
     }
+
+    /* @Override
+    public String toString() {
+        return "PuzzleElementDefinition{" +
+                "id=" + id +
+                ", left=" + left +
+                ", up=" + up +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }*/
 
     public boolean isTLExistsOnSeveralRowsPuzzle() {
         return (getRight() == 0 && getUp() == 0);

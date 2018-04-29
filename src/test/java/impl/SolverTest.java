@@ -588,8 +588,9 @@ public class SolverTest {
 
 
 //test should be uncommented after indexing solution
-    /*@Test
+    @Test
     public void positive48ElementsTestResolveThePuzzle() {
+
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(17, 1, 0, 0, 1));
         idsList.add(new PuzzleElementDefinition(13, 0, 1, 1, -1));
@@ -692,10 +693,13 @@ public class SolverTest {
         expectedList.add(314);
         expectedList.add(322);
         expectedList.add(312);
+        Long start = System.currentTimeMillis();
         puzzleSolver.solve(idsList, 12);
+        Long end = System.currentTimeMillis();
+        System.out.println("time: " + (end - start));
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
-*/
+
 
     //---------------------------------------------------------------------------------------
 

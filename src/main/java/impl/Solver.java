@@ -16,12 +16,15 @@ import static impl.EventHandler.addEventToList;
 public class Solver {
 
     private int fakeNumber = Integer.MAX_VALUE;
+    private final String SEPARATOR = "_";
     private int maxRow;
     private int maxColumn;
     //
     private Map<Position, List<PuzzleElementDefinition>> poolMap = new HashMap<>();
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
     private List<Integer> solutionList = new ArrayList<>();
+    private Map<String, List<PuzzleElementDefinition>> indexedPool = new HashMap<>();
+    private List<Integer> usedIds = new ArrayList<>();
 
     List<Integer> getSolutionList() {
         return solutionList;
@@ -186,13 +189,16 @@ public class Solver {
 
     }
 
-    boolean solve(List<PuzzleElementDefinition> validIdList, int solutionRowNumber) {
+    boolean solve(List<PuzzleElementDefinition> puzzlePieces, int solutionRowNumber) {
 
         maxRow = solutionRowNumber;
-        maxColumn = validIdList.size() / solutionRowNumber;
+        maxColumn = puzzlePieces.size() / solutionRowNumber;
         int startIndex = 0;
         poolMap.clear();
-        if (solvePuzzle(validIdList, startIndex, solutionMap)) {
+        boolean rotate = false;
+        indexPuzzlePieces(puzzlePieces, rotate);
+        if (solvePuzzle(indexedPool, startIndex, solutionMap, rotate)) {
+            //if (solvePuzzle(puzzlePieces, startIndex, solutionMap)) {
             solutionMapToSolutionList(solutionMap);
             Orchestrator.isSolved.compareAndSet(false, true);
             try {
@@ -214,7 +220,46 @@ public class Solver {
         return false;
     }
 
-    private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
+    private boolean solvePuzzle(Map<String, List<PuzzleElementDefinition>> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate) {
+        while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0) {
+            if (Orchestrator.isSolved.get()) {
+                return false;
+            }
+            Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
+            PuzzleElementDefinition curElement;
+            if (poolMap.get(position) == null) {
+                PuzzleElementDefinition template = getTemplateByIndex(index, solutionMap);
+                buildCandidateElements(template, position);
+//                buildPositionElementMapByTemplate(template, freePuzzleElements, position);//find all elements that match to template
+            }
+            if (poolMap.get(position).isEmpty()) {
+                // no available elements for this position
+                --index;
+                if (!solutionMap.isEmpty()) {
+                    PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
+                    deleteLastElementFromSolution(solutionMap);
+                    //                   setPuzzlePieceToMap(lastElement, rotate);
+                    setPuzzlePieceToMap(lastElement);
+                    removeEmptyListFromPool(position);
+                    usedIds.remove(lastElement.getId());
+                } else {
+                    return false;
+                }
+            } else {
+                curElement = poolMap.get(position).get(0);
+                usedIds.add(curElement.getId());
+                addElementToSolutionMap(curElement, index, solutionMap);
+                //               removePieceFromIndexedMap(curElement, rotate);
+                removePieceFromIndexedMap(curElement);
+                removeElementFromPool(position);
+                ++index;
+            }
+        }
+        return isPuzzleSolved(solutionMap);
+    }
+
+
+    /*private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
         while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0) {
             if (Orchestrator.isSolved.get()) {
                 return false;
@@ -245,7 +290,7 @@ public class Solver {
             }
         }
         return isPuzzleSolved(solutionMap);
-    }
+    }*/
 
     private boolean isPuzzleSolved(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
         return isPuzzleFull(solutionMap);
@@ -727,18 +772,112 @@ public class Solver {
         element.setRight(right);
         element.setBottom(bottom);
         element.setRotationAngle(rotation);
-        return element;
+        return new PuzzleElementDefinition(element.getId(), left, up, right, bottom, rotation);
 
     }
 
     boolean isElementsEquals(PuzzleElementDefinition p1, PuzzleElementDefinition p2) {
         for (int i = 0; i < 3; i++) {
             if (p1.equals(rotate90(p2))) {
-                System.out.println(p2.getRotationAngle() + " " + p1.getRotationAngle());
                 return true;
             }
         }
         return false;
     }
+
+
+    private void buildCandidateElements(PuzzleElementDefinition template, Position position) {
+
+        List<PuzzleElementDefinition> list = new ArrayList<>();
+        String matcher = buildMatcher(template);
+
+        for (Map.Entry<String, List<PuzzleElementDefinition>> entry : indexedPool.entrySet()) {
+            if (entry.getKey().matches(matcher)) {
+                List<PuzzleElementDefinition> tempList = entry.getValue();
+                if (tempList != null) {
+                    for (PuzzleElementDefinition p : tempList) {
+                        if (!usedIds.contains(p.getId())) {
+                            list.add(p);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        poolMap.put(position, list);
+        System.out.println("poolMap: " + poolMap);
+    }
+
+    private String buildMatcher(PuzzleElementDefinition template) {
+        return getMatcher(template.getLeft()) + SEPARATOR +
+                getMatcher(template.getUp()) + SEPARATOR +
+                getMatcher(template.getRight()) + SEPARATOR +
+                getMatcher(template.getBottom());
+
+    }
+
+    private String getMatcher(int num) {
+        return num == fakeNumber ? "(-?)[01]" : "" + num;
+    }
+
+    private void indexPuzzlePieces(List<PuzzleElementDefinition> puzzle, boolean rotate) {
+        for (PuzzleElementDefinition piece : puzzle) {
+            setPuzzlePieceToMap(piece, rotate);
+        }
+    }
+
+    private void setPuzzlePieceToMap(PuzzleElementDefinition piece, boolean rotate) {
+        if (rotate) {
+            for (int i = 0; i < 4; i++) {
+                piece = rotate90(piece);
+                setPuzzlePieceToMap(piece);
+            }
+        } else {
+            setPuzzlePieceToMap(piece);
+        }
+    }
+
+    //add one piece to indexedPool
+    private void setPuzzlePieceToMap(PuzzleElementDefinition p) {
+        String key = createPieceKey(p);
+        List<PuzzleElementDefinition> list = indexedPool.get(key);
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        list.add(p);
+        indexedPool.put(key, list);
+    }
+
+    private void removePieceFromIndexedMap(PuzzleElementDefinition piece, boolean rotate) {
+        if (rotate) {
+            for (int i = 0; i < 4; i++) {
+                piece = rotate90(piece);
+                removePieceFromIndexedMap(piece);
+            }
+        } else {
+            removePieceFromIndexedMap(piece);
+        }
+    }
+
+    //remove one piece from indexedPool
+    private void removePieceFromIndexedMap(PuzzleElementDefinition piece) {
+        String key = createPieceKey(piece);
+        List<PuzzleElementDefinition> list = indexedPool.get(key);
+        list.remove(piece);
+        if (!list.isEmpty()) {
+            indexedPool.put(key, list);
+        } else {
+            indexedPool.remove(key);
+        }
+    }
+
+
+    private String createPieceKey(PuzzleElementDefinition p) {
+        return (p.getLeft()) + SEPARATOR +
+                (p.getUp()) + SEPARATOR +
+                (p.getRight()) + SEPARATOR +
+                (p.getBottom());
+    }
+
 }
 
