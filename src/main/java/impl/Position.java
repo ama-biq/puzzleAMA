@@ -43,4 +43,9 @@ public class Position {
         result = 31 * result + column;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return row +"" + column;
+    }
 }

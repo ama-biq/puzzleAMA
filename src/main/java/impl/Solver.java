@@ -3,6 +3,7 @@ package impl;
 
 import file.FilePuzzleParser;
 import file.FileUtils;
+import org.omg.PortableInterceptor.ServerRequestInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -195,7 +196,7 @@ public class Solver {
         maxColumn = puzzlePieces.size() / solutionRowNumber;
         int startIndex = 0;
         poolMap.clear();
-        boolean rotate = false;
+        boolean rotate = true;
         indexPuzzlePieces(puzzlePieces, rotate);
         if (solvePuzzle(indexedPool, startIndex, solutionMap, rotate)) {
             //if (solvePuzzle(puzzlePieces, startIndex, solutionMap)) {
@@ -230,7 +231,6 @@ public class Solver {
             if (poolMap.get(position) == null) {
                 PuzzleElementDefinition template = getTemplateByIndex(index, solutionMap);
                 buildCandidateElements(template, position);
-//                buildPositionElementMapByTemplate(template, freePuzzleElements, position);//find all elements that match to template
             }
             if (poolMap.get(position).isEmpty()) {
                 // no available elements for this position
@@ -238,7 +238,6 @@ public class Solver {
                 if (!solutionMap.isEmpty()) {
                     PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
                     deleteLastElementFromSolution(solutionMap);
-                    //                   setPuzzlePieceToMap(lastElement, rotate);
                     setPuzzlePieceToMap(lastElement);
                     removeEmptyListFromPool(position);
                     usedIds.remove(lastElement.getId());
@@ -249,7 +248,6 @@ public class Solver {
                 curElement = poolMap.get(position).get(0);
                 usedIds.add(curElement.getId());
                 addElementToSolutionMap(curElement, index, solutionMap);
-                //               removePieceFromIndexedMap(curElement, rotate);
                 removePieceFromIndexedMap(curElement);
                 removeElementFromPool(position);
                 ++index;
@@ -257,40 +255,6 @@ public class Solver {
         }
         return isPuzzleSolved(solutionMap);
     }
-
-
-    /*private boolean solvePuzzle(List<PuzzleElementDefinition> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
-        while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0) {
-            if (Orchestrator.isSolved.get()) {
-                return false;
-            }
-            Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
-            PuzzleElementDefinition curElement;
-            if (poolMap.get(position) == null) {
-                PuzzleElementDefinition template = getTemplateByIndex(index, solutionMap);
-                buildPositionElementMapByTemplate(template, freePuzzleElements, position);//find all elements that match to template
-            }
-            if (poolMap.get(position).isEmpty()) {
-                // no available elements for this position
-                --index;
-                if (!solutionMap.isEmpty()) {
-                    PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
-                    freePuzzleElements = shiftElementToEndOfList(freePuzzleElements, lastElement);
-                    deleteLastElementFromSolution(solutionMap);
-                    removeEmptyListFromPool(position);
-                } else {
-                    return false;
-                }
-            } else {
-                curElement = poolMap.get(position).get(0);
-                addElementToSolutionMap(curElement, index, solutionMap);
-                freePuzzleElements.remove(curElement);
-                removeElementFromPool(position);
-                ++index;
-            }
-        }
-        return isPuzzleSolved(solutionMap);
-    }*/
 
     private boolean isPuzzleSolved(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
         return isPuzzleFull(solutionMap);
@@ -805,7 +769,6 @@ public class Solver {
             }
         }
         poolMap.put(position, list);
-        System.out.println("poolMap: " + poolMap);
     }
 
     private String buildMatcher(PuzzleElementDefinition template) {
@@ -838,13 +801,14 @@ public class Solver {
     }
 
     //add one piece to indexedPool
-    private void setPuzzlePieceToMap(PuzzleElementDefinition p) {
-        String key = createPieceKey(p);
+    private void setPuzzlePieceToMap(PuzzleElementDefinition piece) {
+        String key = createPieceKey(piece);
         List<PuzzleElementDefinition> list = indexedPool.get(key);
         if (list == null) {
             list = new ArrayList<>();
         }
-        list.add(p);
+        PuzzleElementDefinition newPiece = new PuzzleElementDefinition(piece);
+        list.add(newPiece);
         indexedPool.put(key, list);
     }
 

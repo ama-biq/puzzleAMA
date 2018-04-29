@@ -320,6 +320,7 @@ public class SolverTest {
         expectedList.add(1);
         expectedList.add(6);
         expectedList.add(4);
+
         expectedList.add(2);
         expectedList.add(3);
         expectedList.add(5);

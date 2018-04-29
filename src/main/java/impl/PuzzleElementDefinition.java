@@ -8,6 +8,7 @@ public class PuzzleElementDefinition {
     private int right;
     private int bottom;
     private int rotationAngle = 0;
+    private PuzzleElementDefinition piece;
 
     public PuzzleElementDefinition() {
     }
@@ -35,6 +36,16 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
         this.rotationAngle = rotationAngle;
     }
+
+   //////////////
+   public PuzzleElementDefinition(PuzzleElementDefinition piece) {
+       this.id = piece.id;
+       this.left = piece.left;
+       this.up = piece.up;
+       this.right = piece.right;
+       this.bottom = piece.bottom;
+       this.rotationAngle = piece.rotationAngle;
+   }
 
     public int getRotationAngle() {
         return rotationAngle;
