@@ -44,10 +44,19 @@ public class Orchestrator {
 
 
     public static void main(String[] args) throws Exception {
+
+
         Scanner sc = new Scanner(System.in);
         String inPath = sc.next();
         Orchestrator orchestrator = new Orchestrator();
         orchestrator.orchestrateThePuzzle(inPath);
+
+
+
+
+
+
+
 
     }
 }
