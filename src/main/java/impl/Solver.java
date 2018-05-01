@@ -17,7 +17,7 @@ import static impl.EventHandler.addEventToList;
 public class Solver {
 
     private int fakeNumber = Integer.MAX_VALUE;
-    private final String SEPARATOR = "_";
+    private static final String SEPARATOR = "_";
     private int maxRow;
     private int maxColumn;
     //
@@ -37,16 +37,6 @@ public class Solver {
                 .flatMap(List::stream)
                 .map(PuzzleElementDefinition::getId)
                 .collect(Collectors.toList());
-    }
-
-    public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
-        //TODO check when to use
-        int sum = puzzleElementDefinition.getLeft() +
-                puzzleElementDefinition.getUp() +
-                puzzleElementDefinition.getRight() +
-                puzzleElementDefinition.getBottom();
-
-        return sum == 0;
     }
 
     boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
@@ -204,7 +194,7 @@ public class Solver {
         maxColumn = puzzlePieces.size() / solutionRowNumber;
         int startIndex = 0;
         candidatePiecePool.clear();
-        boolean rotate = false;
+        boolean rotate = true;
         indexPuzzlePieces(puzzlePieces, rotate);
         if (solvePuzzle(indexedPool, startIndex, solutionMap, rotate)) {
             solutionMapToSolutionList(solutionMap);
@@ -497,22 +487,18 @@ public class Solver {
         FileUtils.writeFile();
     }
 
-    void writeSolutionToTheOutPutFile() throws IOException {
+    private void writeSolutionToTheOutPutFile() throws IOException {
         FileUtils.writeSolutionToFile(solutionMap);
     }
 
-    public Map<Integer, List<PuzzleElementDefinition>> getSolution() {
-        return solutionMap;
-    }
-
-    PuzzleElementDefinition rotate(PuzzleElementDefinition element, int angle) {
+    private PuzzleElementDefinition rotate(PuzzleElementDefinition element, int angle) {
         for (int i = 0; i < angle / 90; i++) {
             element = rotate90(element);
         }
         return element;
     }
 
-    PuzzleElementDefinition rotate90(PuzzleElementDefinition element) {
+    private PuzzleElementDefinition rotate90(PuzzleElementDefinition element) {
 
         int up = element.getLeft();
         int right = element.getUp();
@@ -572,9 +558,10 @@ public class Solver {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {
                 setPuzzlePieceToMap(piece);
-            } else if (isParallelEdgesEquals(piece) && !isSquare(piece)) {
-                PuzzleElementDefinition newPiece = rotate(piece, 180);
-                setPuzzlePieceToMap(newPiece);
+            } else if (isParallelEdgesEquals(piece) && !isAllEdgesEquals(piece)) {
+                setPuzzlePieceToMap(piece);
+                piece = getRotatedPuzzleElement(piece);
+                setPuzzlePieceToMap(piece);
             } else {
                 for (int i = 0; i < 4; i++) {
                     PuzzleElementDefinition newPiece = rotate90(piece);
@@ -610,9 +597,10 @@ public class Solver {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {
                 removePieceFromIndexedMap(piece);
-            } else if (isParallelEdgesEquals(piece) && !isSquare(piece)) {
-                PuzzleElementDefinition newPiece = rotate(piece, 180);
-                removePieceFromIndexedMap(newPiece);
+            } else if (isParallelEdgesEquals(piece) && !isAllEdgesEquals(piece)) {
+                removePieceFromIndexedMap(piece);
+                piece = getRotatedPuzzleElement(piece);
+                removePieceFromIndexedMap(piece);
             } else {
                 for (int i = 0; i < 4; i++) {
                     PuzzleElementDefinition newPiece = rotate90(piece);
@@ -622,6 +610,17 @@ public class Solver {
         } else {
             removePieceFromIndexedMap(piece);
         }
+    }
+
+    private PuzzleElementDefinition getRotatedPuzzleElement(PuzzleElementDefinition piece) {
+        PuzzleElementDefinition newPiece = piece;
+        if(piece.getRotationAngle() == 0) {
+            newPiece = rotate90(piece);
+        }
+        if(piece.getRotationAngle() == 90){
+            newPiece = rotate(piece, 270);
+        }
+        return newPiece;
     }
 
     //remove one piece from indexedPool
