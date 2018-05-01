@@ -614,10 +614,10 @@ public class Solver {
 
     private PuzzleElementDefinition getRotatedPuzzleElement(PuzzleElementDefinition piece) {
         PuzzleElementDefinition newPiece = piece;
-        if(piece.getRotationAngle() == 0) {
+        if (piece.getRotationAngle() == 0) {
             newPiece = rotate90(piece);
         }
-        if(piece.getRotationAngle() == 90){
+        if (piece.getRotationAngle() == 90) {
             newPiece = rotate(piece, 270);
         }
         return newPiece;
