@@ -131,17 +131,6 @@ public class PuzzleElementDefinition {
                 '}';
     }
 
-    /* @Override
-    public String toString() {
-        return "PuzzleElementDefinition{" +
-                "id=" + id +
-                ", left=" + left +
-                ", up=" + up +
-                ", right=" + right +
-                ", bottom=" + bottom +
-                '}';
-    }*/
-
     public boolean isTLExistsOnSeveralRowsPuzzle() {
         return (getRight() == 0 && getUp() == 0);
     }
@@ -179,19 +168,22 @@ public class PuzzleElementDefinition {
 
         PuzzleElementDefinition that = (PuzzleElementDefinition) o;
 
-        if (getLeft() != that.getLeft()) return false;
-        if (getUp() != that.getUp()) return false;
-        if (getRight() != that.getRight()) return false;
-        return getBottom() == that.getBottom();
+        if (id != that.id) return false;
+        if (left != that.left) return false;
+        if (up != that.up) return false;
+        if (right != that.right) return false;
+        if (bottom != that.bottom) return false;
+        return rotationAngle == that.rotationAngle;
     }
 
     @Override
     public int hashCode() {
-        int result = left;
+        int result = id;
+        result = 31 * result + left;
         result = 31 * result + up;
         result = 31 * result + right;
         result = 31 * result + bottom;
+        result = 31 * result + rotationAngle;
         return result;
     }
-
 }
