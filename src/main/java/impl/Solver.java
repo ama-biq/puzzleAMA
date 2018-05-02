@@ -196,7 +196,7 @@ public class Solver {
         candidatePiecePool.clear();
         boolean rotate = true;
         indexPuzzlePieces(puzzlePieces, rotate);
-        if (solvePuzzle(indexedPool, startIndex, solutionMap, rotate)) {
+        if (solvePuzzle(startIndex, solutionMap, rotate)) {
             solutionMapToSolutionList(solutionMap);
             Orchestrator.isSolved.compareAndSet(false, true);
             try {
@@ -218,8 +218,8 @@ public class Solver {
         return false;
     }
 
-    private boolean solvePuzzle(Map<String, List<PuzzleElementDefinition>> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate) {
-        while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0 && !Orchestrator.isSolved.get()) {
+    private boolean solvePuzzle(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate) {
+        while (!isPuzzleFull(solutionMap) && index >= 0 && !Orchestrator.isSolved.get()) {
             Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
             List<PuzzleElementDefinition> list = candidatePiecePool.get(position);
             if (list == null) {
@@ -230,31 +230,31 @@ public class Solver {
                 // no available elements for this position
                 --index;
                 if (!solutionMap.isEmpty()) {
-                    careOnNotMatchedPuzzlePiece(solutionMap, rotate, position);
+                    careNotMatchedPuzzlePiece(solutionMap, rotate, position);
                 } else {
                     return false;
                 }
             } else {
-                careOnMatchedPuzzlePiece(index, solutionMap, rotate, position);
+                careMatchedPuzzlePiece(index, solutionMap, rotate, position);
                 ++index;
             }
         }
         return isPuzzleSolved(solutionMap);
     }
 
-    private void careOnMatchedPuzzlePiece(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
+    private void careMatchedPuzzlePiece(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
         PuzzleElementDefinition curElement;
         curElement = candidatePiecePool.get(position).get(0);
         usedIds.add(curElement.getId());
         addElementToSolutionMap(curElement, index, solutionMap);
         removePieceFromIndexedMap(curElement, rotate);
-        removeElementFromPool(position);
+        removeElementFromCandidatePool(position);
     }
 
-    private void careOnNotMatchedPuzzlePiece(Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
+    private void careNotMatchedPuzzlePiece(Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
         PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
         deleteLastElementFromSolution(solutionMap);
-        setPuzzlePieceToMap(lastElement, rotate);
+        setPuzzlePieceToIndexedMap(lastElement, rotate);
         removeEmptyListFromPool(position);
         usedIds.remove(lastElement.getId());
     }
@@ -271,7 +271,7 @@ public class Solver {
         }
     }
 
-    private void removeElementFromPool(Position position) {
+    private void removeElementFromCandidatePool(Position position) {
         List<PuzzleElementDefinition> list = candidatePiecePool.get(position);
         list.remove(0);
         candidatePiecePool.put(position, list);
@@ -551,25 +551,25 @@ public class Solver {
     }
 
     private void indexPuzzlePieces(List<PuzzleElementDefinition> puzzle, boolean rotate) {
-        puzzle.forEach(piece -> setPuzzlePieceToMap(piece, rotate));
+        puzzle.forEach(piece -> setPuzzlePieceToIndexedMap(piece, rotate));
     }
 
-    private void setPuzzlePieceToMap(PuzzleElementDefinition piece, boolean rotate) {
+    private void setPuzzlePieceToIndexedMap(PuzzleElementDefinition piece, boolean rotate) {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {
-                setPuzzlePieceToMap(piece);
+                setPuzzlePieceToIndexedMap(piece);
             } else if (isParallelEdgesEquals(piece) && !isAllEdgesEquals(piece)) {
-                setPuzzlePieceToMap(piece);
+                setPuzzlePieceToIndexedMap(piece);
                 piece = getRotatedPuzzleElement(piece);
-                setPuzzlePieceToMap(piece);
+                setPuzzlePieceToIndexedMap(piece);
             } else {
                 for (int i = 0; i < 4; i++) {
                     PuzzleElementDefinition newPiece = rotate90(piece);
-                    setPuzzlePieceToMap(newPiece);
+                    setPuzzlePieceToIndexedMap(newPiece);
                 }
             }
         } else {
-            setPuzzlePieceToMap(piece);
+            setPuzzlePieceToIndexedMap(piece);
         }
     }
 
@@ -582,7 +582,7 @@ public class Solver {
     }
 
     //add one piece to indexedPool
-    private void setPuzzlePieceToMap(PuzzleElementDefinition piece) {
+    private void setPuzzlePieceToIndexedMap(PuzzleElementDefinition piece) {
         String key = createPieceKey(piece);
         List<PuzzleElementDefinition> list = indexedPool.get(key);
         if (list == null) {
