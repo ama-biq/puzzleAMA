@@ -10,72 +10,55 @@ public class CmdPuzzleParserTest {
     public void passProper7Args() {
         String[] args = {"-input", "inputValue", "-output", "outputValue", "-rotate", "-threads", "3"};
         CmdPuzzleParser referenceParser = new CmdPuzzleParser();
-        referenceParser.setInputArgumentValue("inputValue");
-        referenceParser.setOutputArgumentValue("outputValue");
-        referenceParser.setRotateArgumentExist(true);
-        referenceParser.setThreadArgumentValue(3);
-
+        referenceParser.setFileInputPath("inputValue");
+        referenceParser.setFileOutputPath("outputValue");
+        referenceParser.setRotate(true);
+        referenceParser.setThreadAmount(3);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-
         assertEquals(referenceParser,testParser);
-
     }
 
     @Test
     public void passProper6ArgsWithoutThreads() {
         String[] args = {"-input", "inputValue", "-output", "outputValue", "-rotate"};
         CmdPuzzleParser referenceParser = new CmdPuzzleParser();
-        referenceParser.setInputArgumentValue("inputValue");
-        referenceParser.setOutputArgumentValue("outputValue");
-        referenceParser.setRotateArgumentExist(true);
-
-
+        referenceParser.setFileInputPath("inputValue");
+        referenceParser.setFileOutputPath("outputValue");
+        referenceParser.setRotate(true);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-
         assertEquals(referenceParser,testParser);
-
     }
 
     @Test
     public void passProper6ArgsWithoutRotate() {
         String[] args = {"-input", "inputValue", "-output", "outputValue", "-threads", "3"};
         CmdPuzzleParser referenceParser = new CmdPuzzleParser();
-        referenceParser.setInputArgumentValue("inputValue");
-        referenceParser.setOutputArgumentValue("outputValue");
-        referenceParser.setThreadArgumentValue(3);
-
-
-
+        referenceParser.setFileInputPath("inputValue");
+        referenceParser.setFileOutputPath("outputValue");
+        referenceParser.setThreadAmount(3);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-
         assertEquals(referenceParser,testParser);
-
     }
 
     @Test
     public void passProperOnly4Args() {
         String[] args = {"-input", "inputValue", "-output", "outputValue"};
         CmdPuzzleParser referenceParser = new CmdPuzzleParser();
-        referenceParser.setInputArgumentValue("inputValue");
-        referenceParser.setOutputArgumentValue("outputValue");
-
+        referenceParser.setFileInputPath("inputValue");
+        referenceParser.setFileOutputPath("outputValue");
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-
         assertEquals(referenceParser,testParser);
-
     }
 
     @Test
     public void pass7ArgsNotInOrder() {
         String[] args = {"-output", "outputValue","-input", "inputValue", "-threads", "3", "-rotate"};
         CmdPuzzleParser referenceParser = new CmdPuzzleParser();
-        referenceParser.setInputArgumentValue("inputValue");
-        referenceParser.setOutputArgumentValue("outputValue");
-        referenceParser.setRotateArgumentExist(true);
-        referenceParser.setThreadArgumentValue(3);
-
+        referenceParser.setFileInputPath("inputValue");
+        referenceParser.setFileOutputPath("outputValue");
+        referenceParser.setRotate(true);
+        referenceParser.setThreadAmount(3);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-
         assertEquals(referenceParser,testParser);
     }
 

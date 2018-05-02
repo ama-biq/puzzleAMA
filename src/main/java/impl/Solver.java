@@ -188,19 +188,19 @@ public class Solver {
 
     }
 
-    boolean solve(List<PuzzleElementDefinition> puzzlePieces, int solutionRowNumber) {
+    boolean solve(List<PuzzleElementDefinition> puzzlePieces, int solutionRowNumber, boolean rotate, File file) {
 
         maxRow = solutionRowNumber;
         maxColumn = puzzlePieces.size() / solutionRowNumber;
         int startIndex = 0;
         candidatePiecePool.clear();
-        boolean rotate = true;
+      //  boolean rotate = true;
         indexPuzzlePieces(puzzlePieces, rotate);
         if (solvePuzzle(startIndex, solutionMap, rotate)) {
             solutionMapToSolutionList(solutionMap);
             Orchestrator.isSolved.compareAndSet(false, true);
             try {
-                writeSolutionToTheOutPutFile();
+                writeSolutionToTheOutPutFile(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -487,8 +487,8 @@ public class Solver {
         FileUtils.writeFile();
     }
 
-    private void writeSolutionToTheOutPutFile() throws IOException {
-        FileUtils.writeSolutionToFile(solutionMap);
+    private void writeSolutionToTheOutPutFile(File file) throws IOException {
+        FileUtils.writeSolutionToFile(solutionMap, file);
     }
 
     private PuzzleElementDefinition rotate(PuzzleElementDefinition element, int angle) {
