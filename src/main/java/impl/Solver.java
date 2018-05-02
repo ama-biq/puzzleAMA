@@ -6,10 +6,7 @@ import file.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static impl.EventHandler.addEventToList;
@@ -611,7 +608,7 @@ public class Solver {
             if (isAllEdgesEquals(piece)) {
                 removePieceFromIndexedMap(piece);
             } else if (isParallelEdgesEquals(piece) && !isSquare(piece)) {
-                PuzzleElementDefinition newPiece = rotate(piece, 180);
+                PuzzleElementDefinition newPiece = rotate90(piece);
                 removePieceFromIndexedMap(newPiece);
             } else {
                 for (int i = 0; i < 4; i++) {
@@ -643,5 +640,18 @@ public class Solver {
                 (p.getBottom());
     }
 
-}
+    public boolean validatePuzzleSolution() {
+        boolean isValid = false;
 
+
+        Set<Integer> setOfIds = new HashSet<>();
+        if (Orchestrator.isSolved.get()) {
+            int sumOfSides = 0;
+            // validate rows
+            for(int i=0; i< solutionMap.size(); i++){
+
+            }
+        }
+        return isValid;
+    }
+}

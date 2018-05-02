@@ -35,6 +35,14 @@ public class SolverTest {
 
 
     @Test
+    public void testValidatePuzzleSolution(){
+        List<PuzzleElementDefinition> idsList = getPuzzleElementDefinitionList();
+        puzzleSolver.solve(idsList, 4);
+        assertTrue(puzzleSolver.validatePuzzleSolution());
+
+    }
+
+    @Test
     public void testPositiveIsEnoughStraitEdges() {
 
         setAllPuzzleElementDefinitionToZero(puzzleElementDefinition);
@@ -488,23 +496,7 @@ public class SolverTest {
 
     @Test
     public void positive16ElementsTestResolveThePuzzle() {
-        List<PuzzleElementDefinition> idsList = new ArrayList<>();
-        idsList.add(new PuzzleElementDefinition(7, -1, 1, -1, 1));
-        idsList.add(new PuzzleElementDefinition(9, 1, 0, -1, 1));
-        idsList.add(new PuzzleElementDefinition(1, 0, 0, 1, 1));
-        idsList.add(new PuzzleElementDefinition(4, 0, -1, -1, 0));
-        idsList.add(new PuzzleElementDefinition(6, 1, -1, 1, -1));
-        idsList.add(new PuzzleElementDefinition(13, 1, 0, 0, 1));
-        idsList.add(new PuzzleElementDefinition(2, 0, -1, -1, -1));
-        idsList.add(new PuzzleElementDefinition(3, 0, 1, 1, 1));
-        idsList.add(new PuzzleElementDefinition(8, 1, -1, 1, 0));
-        idsList.add(new PuzzleElementDefinition(10, -1, -1, 1, -1));
-        idsList.add(new PuzzleElementDefinition(16, -1, -1, 0, 0));
-        idsList.add(new PuzzleElementDefinition(15, 1, 1, 0, 1));
-        idsList.add(new PuzzleElementDefinition(14, -1, -1, 0, -1));
-        idsList.add(new PuzzleElementDefinition(5, -1, 0, -1, 1));
-        idsList.add(new PuzzleElementDefinition(12, -1, -1, 1, 0));
-        idsList.add(new PuzzleElementDefinition(11, 1, 1, -1, 1));
+        List<PuzzleElementDefinition> idsList = getPuzzleElementDefinitionList();
         List<Integer> expectedList = new ArrayList<>();
         expectedList.add(1);
         expectedList.add(5);
@@ -529,7 +521,26 @@ public class SolverTest {
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
 
-
+    private List<PuzzleElementDefinition> getPuzzleElementDefinitionList() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(7, -1, 1, -1, 1));
+        idsList.add(new PuzzleElementDefinition(9, 1, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 1, 1));
+        idsList.add(new PuzzleElementDefinition(4, 0, -1, -1, 0));
+        idsList.add(new PuzzleElementDefinition(6, 1, -1, 1, -1));
+        idsList.add(new PuzzleElementDefinition(13, 1, 0, 0, 1));
+        idsList.add(new PuzzleElementDefinition(2, 0, -1, -1, -1));
+        idsList.add(new PuzzleElementDefinition(3, 0, 1, 1, 1));
+        idsList.add(new PuzzleElementDefinition(8, 1, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(10, -1, -1, 1, -1));
+        idsList.add(new PuzzleElementDefinition(16, -1, -1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(15, 1, 1, 0, 1));
+        idsList.add(new PuzzleElementDefinition(14, -1, -1, 0, -1));
+        idsList.add(new PuzzleElementDefinition(5, -1, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(12, -1, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(11, 1, 1, -1, 1));
+        return idsList;
+    }
 
 
     @Test
