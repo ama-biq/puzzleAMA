@@ -51,8 +51,8 @@ public class FileUtils {
         }
     }
 
-    public static void writeSolutionToFile(Map<Integer, List<PuzzleElementDefinition>> solverMap) throws IOException {
-        FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
+    public static void writeSolutionToFile(Map<Integer, List<PuzzleElementDefinition>> solverMap, File file) throws IOException {
+        FileOutputStream fos = new FileOutputStream(file);
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
                 List<PuzzleElementDefinition> list = entry.getValue();

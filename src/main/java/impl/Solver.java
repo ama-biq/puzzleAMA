@@ -6,7 +6,10 @@ import file.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static impl.EventHandler.addEventToList;
@@ -14,7 +17,7 @@ import static impl.EventHandler.addEventToList;
 public class Solver {
 
     private int fakeNumber = Integer.MAX_VALUE;
-    private final String SEPARATOR = "_";
+    private static final String SEPARATOR = "_";
     private int maxRow;
     private int maxColumn;
     //
@@ -34,16 +37,6 @@ public class Solver {
                 .flatMap(List::stream)
                 .map(PuzzleElementDefinition::getId)
                 .collect(Collectors.toList());
-    }
-
-    public boolean isSumOfAllEdgesIsZero(PuzzleElementDefinition puzzleElementDefinition) {
-        //TODO check when to use
-        int sum = puzzleElementDefinition.getLeft() +
-                puzzleElementDefinition.getUp() +
-                puzzleElementDefinition.getRight() +
-                puzzleElementDefinition.getBottom();
-
-        return sum == 0;
     }
 
     boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
@@ -195,19 +188,19 @@ public class Solver {
 
     }
 
-    boolean solve(List<PuzzleElementDefinition> puzzlePieces, int solutionRowNumber) {
+    boolean solve(List<PuzzleElementDefinition> puzzlePieces, int solutionRowNumber, boolean rotate, File file) {
 
         maxRow = solutionRowNumber;
         maxColumn = puzzlePieces.size() / solutionRowNumber;
         int startIndex = 0;
         candidatePiecePool.clear();
-        boolean rotate = false;
+      //  boolean rotate = true;
         indexPuzzlePieces(puzzlePieces, rotate);
-        if (solvePuzzle(indexedPool, startIndex, solutionMap, rotate)) {
+        if (solvePuzzle(startIndex, solutionMap, rotate)) {
             solutionMapToSolutionList(solutionMap);
             Orchestrator.isSolved.compareAndSet(false, true);
             try {
-                writeSolutionToTheOutPutFile();
+                writeSolutionToTheOutPutFile(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -225,8 +218,8 @@ public class Solver {
         return false;
     }
 
-    private boolean solvePuzzle(Map<String, List<PuzzleElementDefinition>> freePuzzleElements, int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate) {
-        while ((!freePuzzleElements.isEmpty() || !isPuzzleFull(solutionMap)) && index >= 0 && !Orchestrator.isSolved.get()) {
+    private boolean solvePuzzle(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate) {
+        while (!isPuzzleFull(solutionMap) && index >= 0 && !Orchestrator.isSolved.get()) {
             Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
             List<PuzzleElementDefinition> list = candidatePiecePool.get(position);
             if (list == null) {
@@ -237,31 +230,31 @@ public class Solver {
                 // no available elements for this position
                 --index;
                 if (!solutionMap.isEmpty()) {
-                    careOnNotMatchedPuzzlePiece(solutionMap, rotate, position);
+                    careNotMatchedPuzzlePiece(solutionMap, rotate, position);
                 } else {
                     return false;
                 }
             } else {
-                careOnMatchedPuzzlePiece(index, solutionMap, rotate, position);
+                careMatchedPuzzlePiece(index, solutionMap, rotate, position);
                 ++index;
             }
         }
         return isPuzzleSolved(solutionMap);
     }
 
-    private void careOnMatchedPuzzlePiece(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
+    private void careMatchedPuzzlePiece(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
         PuzzleElementDefinition curElement;
         curElement = candidatePiecePool.get(position).get(0);
         usedIds.add(curElement.getId());
         addElementToSolutionMap(curElement, index, solutionMap);
         removePieceFromIndexedMap(curElement, rotate);
-        removeElementFromPool(position);
+        removeElementFromCandidatePool(position);
     }
 
-    private void careOnNotMatchedPuzzlePiece(Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
+    private void careNotMatchedPuzzlePiece(Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
         PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
         deleteLastElementFromSolution(solutionMap);
-        setPuzzlePieceToMap(lastElement, rotate);
+        setPuzzlePieceToIndexedMap(lastElement, rotate);
         removeEmptyListFromPool(position);
         usedIds.remove(lastElement.getId());
     }
@@ -278,7 +271,7 @@ public class Solver {
         }
     }
 
-    private void removeElementFromPool(Position position) {
+    private void removeElementFromCandidatePool(Position position) {
         List<PuzzleElementDefinition> list = candidatePiecePool.get(position);
         list.remove(0);
         candidatePiecePool.put(position, list);
@@ -494,22 +487,18 @@ public class Solver {
         FileUtils.writeFile();
     }
 
-    void writeSolutionToTheOutPutFile() throws IOException {
-        FileUtils.writeSolutionToFile(solutionMap);
+    private void writeSolutionToTheOutPutFile(File file) throws IOException {
+        FileUtils.writeSolutionToFile(solutionMap, file);
     }
 
-    public Map<Integer, List<PuzzleElementDefinition>> getSolution() {
-        return solutionMap;
-    }
-
-    PuzzleElementDefinition rotate(PuzzleElementDefinition element, int angle) {
+    private PuzzleElementDefinition rotate(PuzzleElementDefinition element, int angle) {
         for (int i = 0; i < angle / 90; i++) {
             element = rotate90(element);
         }
         return element;
     }
 
-    PuzzleElementDefinition rotate90(PuzzleElementDefinition element) {
+    private PuzzleElementDefinition rotate90(PuzzleElementDefinition element) {
 
         int up = element.getLeft();
         int right = element.getUp();
@@ -562,24 +551,25 @@ public class Solver {
     }
 
     private void indexPuzzlePieces(List<PuzzleElementDefinition> puzzle, boolean rotate) {
-        puzzle.forEach(piece -> setPuzzlePieceToMap(piece, rotate));
+        puzzle.forEach(piece -> setPuzzlePieceToIndexedMap(piece, rotate));
     }
 
-    private void setPuzzlePieceToMap(PuzzleElementDefinition piece, boolean rotate) {
+    private void setPuzzlePieceToIndexedMap(PuzzleElementDefinition piece, boolean rotate) {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {
-                setPuzzlePieceToMap(piece);
-            } else if (isParallelEdgesEquals(piece) && !isSquare(piece)) {
-                PuzzleElementDefinition newPiece = rotate(piece, 180);
-                setPuzzlePieceToMap(newPiece);
+                setPuzzlePieceToIndexedMap(piece);
+            } else if (isParallelEdgesEquals(piece) && !isAllEdgesEquals(piece)) {
+                setPuzzlePieceToIndexedMap(piece);
+                piece = getRotatedPuzzleElement(piece);
+                setPuzzlePieceToIndexedMap(piece);
             } else {
                 for (int i = 0; i < 4; i++) {
                     PuzzleElementDefinition newPiece = rotate90(piece);
-                    setPuzzlePieceToMap(newPiece);
+                    setPuzzlePieceToIndexedMap(newPiece);
                 }
             }
         } else {
-            setPuzzlePieceToMap(piece);
+            setPuzzlePieceToIndexedMap(piece);
         }
     }
 
@@ -592,7 +582,7 @@ public class Solver {
     }
 
     //add one piece to indexedPool
-    private void setPuzzlePieceToMap(PuzzleElementDefinition piece) {
+    private void setPuzzlePieceToIndexedMap(PuzzleElementDefinition piece) {
         String key = createPieceKey(piece);
         List<PuzzleElementDefinition> list = indexedPool.get(key);
         if (list == null) {
@@ -607,9 +597,10 @@ public class Solver {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {
                 removePieceFromIndexedMap(piece);
-            } else if (isParallelEdgesEquals(piece) && !isSquare(piece)) {
-                PuzzleElementDefinition newPiece = rotate90(piece);
-                removePieceFromIndexedMap(newPiece);
+            } else if (isParallelEdgesEquals(piece) && !isAllEdgesEquals(piece)) {
+                removePieceFromIndexedMap(piece);
+                piece = getRotatedPuzzleElement(piece);
+                removePieceFromIndexedMap(piece);
             } else {
                 for (int i = 0; i < 4; i++) {
                     PuzzleElementDefinition newPiece = rotate90(piece);
@@ -619,6 +610,17 @@ public class Solver {
         } else {
             removePieceFromIndexedMap(piece);
         }
+    }
+
+    private PuzzleElementDefinition getRotatedPuzzleElement(PuzzleElementDefinition piece) {
+        PuzzleElementDefinition newPiece = piece;
+        if (piece.getRotationAngle() == 0) {
+            newPiece = rotate90(piece);
+        }
+        if (piece.getRotationAngle() == 90) {
+            newPiece = rotate(piece, 270);
+        }
+        return newPiece;
     }
 
     //remove one piece from indexedPool
@@ -640,18 +642,5 @@ public class Solver {
                 (p.getBottom());
     }
 
-    public boolean validatePuzzleSolution() {
-        boolean isValid = false;
-
-
-        Set<Integer> setOfIds = new HashSet<>();
-        if (Orchestrator.isSolved.get()) {
-            int sumOfSides = 0;
-            // validate rows
-            for(int i=0; i< solutionMap.size(); i++){
-
-            }
-        }
-        return isValid;
-    }
 }
+
