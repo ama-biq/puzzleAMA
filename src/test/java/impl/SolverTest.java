@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,23 +24,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SolverTest {
 
+    private Solver puzzleSolver = new Solver(new AtomicBoolean(false));
+    private Orchestrator orchestrator = new Orchestrator();
+    private PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
+    private List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
+    private boolean rotate = false;
+    private File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
+    private CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
+
+
     @BeforeEach
     public void beforeEach() {
         EventHandler.emptyEventList();
         FileUtils.deleteFile(new File("src\\test\\resources\\OutPutFile.txt"));
-        Orchestrator.isSolved.set(false);
         cmdPuzzleParser.setFileOutputPath("src\\test\\resources\\OutPutFile.txt");
         cmdPuzzleParser.setRotate(rotate);
     }
-
-    Solver puzzleSolver = new Solver();
-    Orchestrator orchestrator = new Orchestrator();
-    PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
-    List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
-    boolean rotate = false;
-    File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
-    CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
-
 
     @Test
     public void testPositiveIsEnoughStraitEdges() {
@@ -438,6 +438,15 @@ public class SolverTest {
     @Test
     public void fourElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\2AmirFile.txt");
+        orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
+        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
+        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
+        assertEquals(expected, out);
+    }
+
+    @Test
+    public void _24ElementsPuzzleElementE2Etest() throws Exception {
+        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\test15.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
         String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
