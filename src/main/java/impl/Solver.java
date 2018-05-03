@@ -650,7 +650,7 @@ public class Solver {
             solutionMap = tempSolutionMap;
         }
         int numOfRows = solutionMap.size();
-        //int numOfColumns = solutionMap.get(1).size();
+        int numOfColumns = solutionMap.get(1).size();
 
         if (isTopEdgeIsStraight(solutionMap.get(1)) &&
                 isButtomEdgeIsStraight(solutionMap.get(numOfRows))) {
@@ -661,23 +661,29 @@ public class Solver {
             List<PuzzleElementDefinition> listSolution = entry.getValue();
             if (!isLeftEdgeStraight(listSolution)) {
                 isValid = false;
-                System.out.println("Left edge not straight.");
             }
             if (!isRightEdgeIsStraight(listSolution)) {
                 isValid = false;
-                System.out.println("Right edge not straight.");
             }
         }
 
-//        for (int row =0; row< numOfRows; row++){
-//            PuzzleElementDefinition prevPiece = null;
-//            for (int column = 0; column < numOfColumns; column++){
-//
-//            }
-//        }
+        for (int row =0; row < numOfRows; row++){
+            PuzzleElementDefinition prevPiece = null;
+            for (int column = 0; column < numOfColumns; column++){
+                PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
+                prevPiece=currentPiece;
+            }
+        }
 
 
         return isValid;
+    }
+
+    private PuzzleElementDefinition getPieceInSolutionMap(int row, int column) {
+
+        List<PuzzleElementDefinition> list = solutionMap.get(row+1);
+        return list.get(column);
+
     }
 
     public void setTempSolutionMap(Map<Integer, List<PuzzleElementDefinition>> tempSolutionMap) {
@@ -696,7 +702,6 @@ public class Solver {
     private boolean isButtomEdgeIsStraight(List<PuzzleElementDefinition> solutionList) {
         for (PuzzleElementDefinition element : solutionList) {
             if (element.getBottom() != 0) {
-                System.out.println("Buttom edge not straight.");
                 return false;
             }
         }
@@ -706,7 +711,6 @@ public class Solver {
     private boolean isTopEdgeIsStraight(List<PuzzleElementDefinition> solutionList) {
         for (PuzzleElementDefinition element : solutionList) {
             if (element.getUp() != 0) {
-                System.out.println("Top edge not straight.");
                 return false;
             }
         }
