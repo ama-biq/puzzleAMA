@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+//This Class validates the command line arguments and populate them as members for Orchestrator Class use.
 public class CmdPuzzleParser {
     private Map<String, Integer> argsIndexMap = new HashMap<>();
     private String inputArgumentKey = "-input";
@@ -50,7 +51,7 @@ public class CmdPuzzleParser {
             int indexOfRotateKey = argsIndexMap.get(rotateArgumentKey);
             indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
 
-            //Make sure that threadArgumentKey and rotateArgumentKey indexes are not sequential to other argument's indexes
+            //Make sure that threadArgumentKey and rotateArgumentKey indexes are not sitting next to inputArgumentKey and outputArgumentKey indexes and also that rotateArgumentKey's index is not sequential to threadArgumentKey's index.
             if ((((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) && indexOfRotateKey != indexOfThreadKey + 1) {
                 try {
                     threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
@@ -70,7 +71,7 @@ public class CmdPuzzleParser {
         } else {
             indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
 
-            //Make sure that threadArgumentKey index is not sequential to other argument's indexes
+            //Make sure that threadArgumentKey's index is not sitting next to inputArgumentKey and outputArgumentKey indexes.
             if (((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) {
                 try {
                     threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
@@ -94,6 +95,8 @@ public class CmdPuzzleParser {
 
             indexOfInputKey = argsIndexMap.get(inputArgumentKey);
             indexOfOutputKey = argsIndexMap.get(outputArgumentKey);
+
+            //Make sure that inputArgumentKey and outputArgumentKey indexes don't sit next to each other.
             if ((indexOfInputKey - indexOfOutputKey) > 1 || (indexOfInputKey - indexOfOutputKey) < -1) {
                 fileInputPath = args[indexOfInputKey + 1];
                 fileOutputPath = args[indexOfOutputKey + 1];
