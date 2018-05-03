@@ -336,6 +336,29 @@ public class SolverTest {
     }
 
     @Test
+    public void TwoRowPuzzleOnlyRotatePossible() {
+        rotate = true;
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(3, 0, -1, 0, 1));
+        idsList.add(new PuzzleElementDefinition(5, 1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(6, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(6);
+        expectedList.add(4);
+
+        expectedList.add(2);
+        expectedList.add(3);
+        expectedList.add(5);
+        puzzleSolver.solve(idsList, 2, rotate, outputFile);
+        assertEquals(expectedList, puzzleSolver.getSolutionList());
+    }
+
+    @Test
     public void OneRowPuzzle() {
         List<PuzzleElementDefinition> idsList = new ArrayList<>();
         idsList.add(new PuzzleElementDefinition(1, 0, 0, 1, 0));
