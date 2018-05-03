@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+//This Class validates the command line arguments and populate them as members for Orchestrator Class use.
 public class CmdPuzzleParser {
     private Map<String, Integer> argsIndexMap = new HashMap<>();
     private String inputArgumentKey = "-input";
@@ -28,89 +29,97 @@ public class CmdPuzzleParser {
 
     public void parse(String[] args) {
         if (args.length >= 4 && args.length <= 7) {
-            for (int i = 0; i < args.length; i++) {
-                String arg = args[i];
-                if (arg.equals(inputArgumentKey)) {
-                    if (!argsIndexMap.containsKey(arg)) {
-                        argsIndexMap.put(arg, i);
-                    } else {
-                        printUsage();
-                    }
-                }
-                if (arg.equals(outputArgumentKey)) {
-                    if (!argsIndexMap.containsKey(arg)) {
-                        argsIndexMap.put(arg, i);
-                    } else {
-                        printUsage();
-                    }
-                }
-                if (arg.equals(rotateArgumentKey)) {
-                    if (!argsIndexMap.containsKey(arg)) {
-                        argsIndexMap.put(arg, i);
-                    } else {
-                        printUsage();
-                    }
-                }
-                if (arg.equals(threadArgumentKey)) {
-                    if (!argsIndexMap.containsKey(arg)) {
-                        argsIndexMap.put(arg, i);
-                    } else {
-                        printUsage();
-                    }
-                }
+            populateArgsInMap(args);
+            validateAndPopulateMandatoryArgs(args);
+            if (args.length == 5) {
+                populateValueForisRotate(); //In this case argument rotateArgumentKey must exist
+            } else if (args.length == 6) {
+                populateValueForThreadAmount(args); //In this case argument threadArgumentKey must exist
+            } else if (args.length == 7) {
+                populateValuesForIsRotateAndThreadAmount(args); //In this case both arguments rotateArgumentKey and threadArgumentKey must exist
             }
         } else {
             printUsage();
         }
 
+    }
+
+    private void populateValuesForIsRotateAndThreadAmount(String[] args) {
+        if (!argsIndexMap.containsKey(rotateArgumentKey) || !argsIndexMap.containsKey(threadArgumentKey)) {
+            printUsage();
+        } else {
+            int indexOfRotateKey = argsIndexMap.get(rotateArgumentKey);
+            indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
+
+            //Make sure that threadArgumentKey and rotateArgumentKey indexes are not sitting next to inputArgumentKey and outputArgumentKey indexes and also that rotateArgumentKey's index is not sequential to threadArgumentKey's index.
+            if ((((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) && indexOfRotateKey != indexOfThreadKey + 1) {
+                try {
+                    threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
+                } catch (NumberFormatException e) {
+                    printUsage();
+                }
+                isRotate = true;
+            } else {
+                printUsage();
+            }
+        }
+    }
+
+    private void populateValueForThreadAmount(String[] args) {
+        if (!argsIndexMap.containsKey(threadArgumentKey)) {
+            printUsage();
+        } else {
+            indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
+
+            //Make sure that threadArgumentKey's index is not sitting next to inputArgumentKey and outputArgumentKey indexes.
+            if (((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) {
+                try {
+                    threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
+                } catch (NumberFormatException e) {
+                    printUsage();
+                }
+            } else {
+                printUsage();
+            }
+        }
+    }
+
+    private void populateValueForisRotate() {
+        if (!argsIndexMap.containsKey(rotateArgumentKey)) {
+            printUsage();
+        } else isRotate = true;
+    }
+
+    private void validateAndPopulateMandatoryArgs(String[] args) {
         if (argsIndexMap.containsKey(inputArgumentKey) && argsIndexMap.containsKey(outputArgumentKey)) {
 
             indexOfInputKey = argsIndexMap.get(inputArgumentKey);
             indexOfOutputKey = argsIndexMap.get(outputArgumentKey);
+
+            //Make sure that inputArgumentKey and outputArgumentKey indexes don't sit next to each other.
             if ((indexOfInputKey - indexOfOutputKey) > 1 || (indexOfInputKey - indexOfOutputKey) < -1) {
                 fileInputPath = args[indexOfInputKey + 1];
                 fileOutputPath = args[indexOfOutputKey + 1];
-
-                if (args.length == 5) {
-                    if (!argsIndexMap.containsKey(rotateArgumentKey)) {
-                        printUsage();
-                    } else isRotate = true;
-                } else if (args.length == 6) {
-                    if (!argsIndexMap.containsKey(threadArgumentKey)) {
-                        printUsage();
-                    } else {
-                        indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
-                        if (((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) {
-                            try {
-                                threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
-                            } catch (NumberFormatException e) {
-                                printUsage();
-                            }
-                        } else {
-                            printUsage();
-                        }
-                    }
-                } else if (args.length == 7) {
-                    if (!argsIndexMap.containsKey(rotateArgumentKey) || !argsIndexMap.containsKey(threadArgumentKey)) {
-                        printUsage();
-                    } else {
-                        int indexOfRotateKey = argsIndexMap.get(rotateArgumentKey);
-                        indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
-                        if ((((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) && indexOfRotateKey != indexOfThreadKey + 1) {
-                            try {
-                                threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
-                            } catch (NumberFormatException e) {
-                                printUsage();
-                            }
-                            isRotate = true;
-                        } else {
-                            printUsage();
-                        }
-                    }
-
-                }
             } else {
                 printUsage();
+            }
+        }
+    }
+
+    private void populateArgsInMap(String[] args) {
+        String[] argumrntKeys = {inputArgumentKey, outputArgumentKey, rotateArgumentKey, threadArgumentKey};
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            int j = 0;
+            for (; j < argumrntKeys.length; j++) {
+                String currentKey = argumrntKeys[j];
+                if (arg.equals(currentKey)) {
+                    if (!argsIndexMap.containsKey(arg)) {
+                        argsIndexMap.put(arg, i);
+                    } else {
+                        printUsage();
+                    }
+                }
             }
         }
     }
@@ -155,7 +164,6 @@ public class CmdPuzzleParser {
         System.out.println("-threads <num_threads>");
         System.out.println("Optional - indicating number of threads to use (including main)\n" +
                 "if not provided default should be 4 threads\n");
-
 
         System.exit(1);
 
