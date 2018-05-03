@@ -13,7 +13,7 @@ public class Orchestrator {
 
     public static void main(String[] args) throws Exception {
         CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
-        cmdPuzzleParser.parse(args);
+        cmdPuzzleParser.menu(args);
         new Orchestrator().orchestrateThePuzzle(cmdPuzzleParser);
     }
 

@@ -28,7 +28,7 @@ public class SolverTest {
     private Orchestrator orchestrator = new Orchestrator();
     private PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     private List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
-    private boolean rotate = false;
+    private boolean rotate = true;
     private File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
     private CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
 
