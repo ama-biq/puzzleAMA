@@ -245,7 +245,6 @@ public class SolverTest {
         return errorList;
     }
 
-    //todo code review with Andrey for validator
 
     //-------------------------puzzle solution tests------------------------------
     @Test
@@ -320,7 +319,7 @@ public class SolverTest {
         expectedList.add(3);
         expectedList.add(5);
         puzzleSolver.solve(idsList, 2, rotate, outputFile);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
+        assertEquals( puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
@@ -635,8 +634,16 @@ public class SolverTest {
         assertEquals(puzzleSolver.validatePuzzleSolution(),true);
     }
 
+///////////////////////////////////
     @Test
-    public void testPositiveValidatorTwoRowsSolution(){
+    public void testNegativeValidatorTwoRowsSolution(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
+
+    @Test
+    public void testNegativeValidatorOneRowsSolution(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleOneRowSolutionMap_topEdgeNotStraight();
         puzzleSolver.setTempSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),true);
@@ -785,6 +792,23 @@ public class SolverTest {
 
 
         testRowMap.put(1, firstRowList);
+        return testRowMap;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> testRowMap = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, 1, 0));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+
+
+        testRowMap.put(1, firstRowList);
+        testRowMap.put(2, secondRowList);
         return testRowMap;
     }
 

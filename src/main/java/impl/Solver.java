@@ -667,7 +667,7 @@ public class Solver {
     }
 
     public boolean validatePuzzleSolution() {
-        boolean isValid = false;
+        boolean isValid = true;
 
         Set<Integer> setOfIds = new HashSet<>();
         if (solutionMap.isEmpty()) {
@@ -695,12 +695,25 @@ public class Solver {
             PuzzleElementDefinition prevPiece = null;
             for (int column = 0; column < numOfColumns; column++){
                 PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
+                if(prevPiece != null) {
+                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(prevPiece, currentPiece)) {
+                        return false;
+                    }
+                }
                 prevPiece=currentPiece;
             }
         }
 
 
         return isValid;
+    }
+
+    private boolean sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(PuzzleElementDefinition prevPiece, PuzzleElementDefinition currentPiece) {
+         boolean flag = prevPiece.getRight() + currentPiece.getLeft()==0;
+         if(!flag) {
+             System.out.println("piece id " + prevPiece.getId() + " and piece id " + currentPiece.getId() + " not match ");
+         }
+        return flag;
     }
 
     private PuzzleElementDefinition getPieceInSolutionMap(int row, int column) {
