@@ -1,6 +1,7 @@
 package impl;
 
 
+import com.sun.org.apache.regexp.internal.RE;
 import file.FilePuzzleParser;
 import file.FileUtils;
 
@@ -699,6 +700,14 @@ public class Solver {
                     if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(prevPiece, currentPiece)) {
                         return false;
                     }
+
+                }
+
+                if(row +1 < numOfRows){
+                    PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row +1, column);
+                    if(!sumOfCurrentPieceBottomAndPieceBellowToSide(currentPiece, pieceOnTheNextRow)){
+                        return false;
+                    }
                 }
                 prevPiece=currentPiece;
             }
@@ -706,6 +715,14 @@ public class Solver {
 
 
         return isValid;
+    }
+
+    private boolean sumOfCurrentPieceBottomAndPieceBellowToSide(PuzzleElementDefinition currentPiece, PuzzleElementDefinition pieceOnTheNextRow) {
+        boolean flag = currentPiece.getBottom() + pieceOnTheNextRow.getUp()==0;
+        if(!flag) {
+            System.out.println("piece id " + currentPiece.getId() + " and piece id " + pieceOnTheNextRow.getId() + " not match ");
+        }
+        return flag;
     }
 
     private boolean sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(PuzzleElementDefinition prevPiece, PuzzleElementDefinition currentPiece) {

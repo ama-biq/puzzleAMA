@@ -635,6 +635,14 @@ public class SolverTest {
     }
 
 ///////////////////////////////////
+
+    @Test
+    public void testNegativeValidatorThreeRowsSolutionTopAndBottomSumIsNotZero(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
+
     @Test
     public void testNegativeValidatorTwoRowsSolution(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch();
@@ -743,6 +751,26 @@ public class SolverTest {
         secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
         thirdRowList.add(new PuzzleElementDefinition(7, 0, 0, 1, 0));
         thirdRowList.add(new PuzzleElementDefinition(8, -1, 1, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(9, -1, 0, 0, 0));
+        threeRow.put(1, firstRowList);
+        threeRow.put(2, secondRowList);
+        threeRow.put(3, thirdRowList);
+        return threeRow;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleThreeRowSolutionMap() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > thirdRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> threeRow = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, -1));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+        thirdRowList.add(new PuzzleElementDefinition(7, 0, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(8, -1, 0, 1, 0));
         thirdRowList.add(new PuzzleElementDefinition(9, -1, 0, 0, 0));
         threeRow.put(1, firstRowList);
         threeRow.put(2, secondRowList);
