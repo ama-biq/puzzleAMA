@@ -21,33 +21,44 @@ public class CmdPuzzleParser {
     }
 
     public void menu(String[] args) {
-        for (int i = 0; i < args.length; i++) {
-            String key = args[i];
-            switch (key) {
-                case "-input":
-                    setFileInputPath(args[++i]);
-                    break;
-                case "-output":
-                    setFileOutputPath((args[++i]));
-                    break;
-                case "-rotate":
-                    setRotate(true);
-                    break;
-                case "-threads":
-                    int maxNumOfThreads;
-                    try {
-                        maxNumOfThreads = Integer.parseInt((args[++i]));
-                        setThreadAmount(maxNumOfThreads);
+        if (args.length >= 4 && args.length <= 7) {
+            for (int i = 0; i < args.length; i++) {
+                String key = args[i];
+                switch (key) {
+                    case "-input":
+                        try {
+                            setFileInputPath(args[++i]);
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            printUsage();
+                        }
                         break;
-                    } catch (NumberFormatException e) {
+                    case "-output":
+                        try {
+                            setFileOutputPath((args[++i]));
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            printUsage();
+                        }
+                        break;
+                    case "-rotate":
+                        setRotate(true);
+                        break;
+                    case "-threads":
+                        int maxNumOfThreads;
+                        try {
+                            maxNumOfThreads = Integer.parseInt((args[++i]));
+                            setThreadAmount(maxNumOfThreads);
+                            break;
+                        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                            printUsage();
+                            break;
+                        }
+                    default:
                         printUsage();
-                        break;
-                    }
-                default:
-                    printUsage();
+                }
             }
+        } else{
+            printUsage();
         }
-
     }
 
     private void printUsage() {
