@@ -22,7 +22,7 @@ public class Task implements Runnable{
 
     @Override
     public void run() {
-//        System.out.println("going to solve puzzle: " + row + "X" + puzzleElements.size()/row);
+        System.out.println("going to solve puzzle: " + row + "X" + puzzleElements.size()/row);
         new Solver(solved).solve(puzzleElements, row, rotate, file);
     }
 }

@@ -8,17 +8,8 @@ public class CmdPuzzleParser {
     private String fileOutputPath;
     private int threadAmount = 4;
     private boolean isRotate = false;
-    /*private Map<String, Integer> argsIndexMap = new HashMap<>();
-    private String inputArgumentKey = "-input";
-    private String outputArgumentKey = "-output";
-    private String rotateArgumentKey = "-rotate";
-    private String threadArgumentKey = "-threads";
-    private int indexOfInputKey;
-    private int indexOfOutputKey;
-    private int indexOfThreadKey;*/
 
-    public CmdPuzzleParser(String[] args) {
-        //parse(args);
+    CmdPuzzleParser(String[] args) {
         menu(args);
         if (getFileInputPath() == null || getFileOutputPath() == null) {
             printUsage();
@@ -104,7 +95,7 @@ public class CmdPuzzleParser {
         isRotate = rotate;
     }
 
-    public void setThreadAmount(int threadAmount) {
+    void setThreadAmount(int threadAmount) {
         this.threadAmount = threadAmount;
     }
 
@@ -127,129 +118,5 @@ public class CmdPuzzleParser {
         result = 31 * result + (isRotate ? 1 : 0);
         return result;
     }
-    /*public void parse(String[] args) {
-        if (args.length >= 4 && args.length <= 7) {
-            populateArgsInMap(args);
-            validateAndPopulateMandatoryArgs(args);
-            if (args.length == 5) {
-                populateValueForisRotate(); //In this case argument rotateArgumentKey must exist
-            } else if (args.length == 6) {
-                populateValueForThreadAmount(args); //In this case argument threadArgumentKey must exist
-            } else if (args.length == 7) {
-                populateValuesForIsRotateAndThreadAmount(args); //In this case both arguments rotateArgumentKey and threadArgumentKey must exist
-            }
-        } else {
-            printUsage();
-        }
-
-    }
-
-    private void populateValuesForIsRotateAndThreadAmount(String[] args) {
-        if (!argsIndexMap.containsKey(rotateArgumentKey) || !argsIndexMap.containsKey(threadArgumentKey)) {
-            printUsage();
-        } else {
-            int indexOfRotateKey = argsIndexMap.get(rotateArgumentKey);
-            indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
-
-            //Make sure that threadArgumentKey and rotateArgumentKey indexes are not sitting next to inputArgumentKey and outputArgumentKey indexes and also that rotateArgumentKey's index is not sequential to threadArgumentKey's index.
-            if ((((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) && indexOfRotateKey != indexOfThreadKey + 1) {
-                try {
-                    threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
-                } catch (NumberFormatException e) {
-                    printUsage();
-                }
-                isRotate = true;
-            } else {
-                printUsage();
-            }
-        }
-    }
-
-    private void populateValueForThreadAmount(String[] args) {
-        if (!argsIndexMap.containsKey(threadArgumentKey)) {
-            printUsage();
-        } else {
-            indexOfThreadKey = argsIndexMap.get(threadArgumentKey);
-
-            //Make sure that threadArgumentKey's index is not sitting next to inputArgumentKey and outputArgumentKey indexes.
-            if (((indexOfThreadKey - indexOfInputKey) > 1 || (indexOfThreadKey - indexOfInputKey) < -1) && ((indexOfThreadKey - indexOfOutputKey) > 1 || (indexOfThreadKey - indexOfOutputKey) < -1)) {
-                try {
-                    threadAmount = Integer.parseInt(args[indexOfThreadKey + 1]);
-                } catch (NumberFormatException e) {
-                    printUsage();
-                }
-            } else {
-                printUsage();
-            }
-        }
-    }
-
-    private void populateValueForisRotate() {
-        if (!argsIndexMap.containsKey(rotateArgumentKey)) {
-            printUsage();
-        } else isRotate = true;
-    }
-
-    private void validateAndPopulateMandatoryArgs(String[] args) {
-        if (argsIndexMap.containsKey(inputArgumentKey) && argsIndexMap.containsKey(outputArgumentKey)) {
-
-            indexOfInputKey = argsIndexMap.get(inputArgumentKey);
-            indexOfOutputKey = argsIndexMap.get(outputArgumentKey);
-
-            //Make sure that inputArgumentKey and outputArgumentKey indexes don't sit next to each other.
-            if ((indexOfInputKey - indexOfOutputKey) > 1 || (indexOfInputKey - indexOfOutputKey) < -1) {
-                fileInputPath = args[indexOfInputKey + 1];
-                fileOutputPath = args[indexOfOutputKey + 1];
-            } else {
-                printUsage();
-            }
-        }
-    }
-
-    private void populateArgsInMap(String[] args) {
-        String[] argumrntKeys = {inputArgumentKey, outputArgumentKey, rotateArgumentKey, threadArgumentKey};
-        for (int i = 0; i < args.length; i++) {
-            String arg = args[i];
-            int j = 0;
-            for (; j < argumrntKeys.length; j++) {
-                String currentKey = argumrntKeys[j];
-                if (arg.equals(currentKey)) {
-                    if (!argsIndexMap.containsKey(arg)) {
-                        argsIndexMap.put(arg, i);
-                    } else {
-                        printUsage();
-                    }
-                }
-            }
-        }
-    }*/
-
-/*@Override
-    public int hashCode() {
-        int result = argsIndexMap.hashCode();
-        result = 31 * result + inputArgumentKey.hashCode();
-        result = 31 * result + fileInputPath.hashCode();
-        result = 31 * result + outputArgumentKey.hashCode();
-        result = 31 * result + fileOutputPath.hashCode();
-        result = 31 * result + rotateArgumentKey.hashCode();
-        result = 31 * result + (isRotate ? 1 : 0);
-        result = 31 * result + threadArgumentKey.hashCode();
-        result = 31 * result + threadAmount;
-        result = 31 * result + indexOfInputKey;
-        result = 31 * result + indexOfOutputKey;
-        result = 31 * result + indexOfThreadKey;
-        return result;
-    }*/
-
-    /*@Override
-    public String toString() {
-        return "CmdPuzzleParser{" +
-                "fileInputPath='" + fileInputPath + '\'' +
-                ", fileOutputPath='" + fileOutputPath + '\'' +
-                ", isRotate=" + isRotate +
-                ", threadAmount=" + threadAmount +
-                '}';
-    }
-*/
 
 }
