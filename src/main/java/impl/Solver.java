@@ -7,17 +7,26 @@ import file.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static impl.EventHandler.addEventToList;
 
+
+/**
+ * The class design to solve puzzle with/without rotation and supports multi thread
+ */
 public class Solver {
 
+    private AtomicBoolean solved;
     private int fakeNumber = Integer.MAX_VALUE;
     private static final String SEPARATOR = "_";
     private int maxRow;
     private int maxColumn;
-    //
     private Map<Position, List<PuzzleElementDefinition>> candidatePiecePool = new HashMap<>();
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
 
@@ -26,6 +35,10 @@ public class Solver {
     private List<Integer> solutionList = new ArrayList<>();
     private Map<String, List<PuzzleElementDefinition>> indexedPool = new HashMap<>();
     private List<Integer> usedIds = new ArrayList<>();
+
+    Solver(AtomicBoolean solved) {
+        this.solved = solved;
+    }
 
     List<Integer> getSolutionList() {
         return solutionList;
@@ -48,7 +61,6 @@ public class Solver {
         boolean isTRExists = false;
         boolean isBLExists = false;
         boolean isBRExists = false;
-
 
         for (PuzzleElementDefinition element : listOfPuzzleElementDefinitions) {
             if (!isTLExists && element.isTLExistsOnSeveralRowsPuzzle()) {
@@ -194,11 +206,10 @@ public class Solver {
         maxColumn = puzzlePieces.size() / solutionRowNumber;
         int startIndex = 0;
         candidatePiecePool.clear();
-        //  boolean rotate = true;
         indexPuzzlePieces(puzzlePieces, rotate);
         if (solvePuzzle(startIndex, solutionMap, rotate)) {
             solutionMapToSolutionList(solutionMap);
-            Orchestrator.isSolved.compareAndSet(false, true);
+            solved.compareAndSet(false, true);
             try {
                 writeSolutionToTheOutPutFile(file);
             } catch (IOException e) {
@@ -209,7 +220,7 @@ public class Solver {
         solutionMap.clear();
         EventHandler.addEventToList(EventHandler.NO_SOLUTION);
         try {
-            if (!Orchestrator.isSolved.get()) {
+            if (!solved.get()) {
                 writeErrorsToTheOutPutFile();
             }
         } catch (IOException e) {
@@ -219,7 +230,7 @@ public class Solver {
     }
 
     private boolean solvePuzzle(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate) {
-        while (!isPuzzleFull(solutionMap) && index >= 0 && !Orchestrator.isSolved.get()) {
+        while (!isPuzzleFull(solutionMap) && index >= 0 && !solved.get()) {
             Position position = new Position(getCurrentRowByIndex(index), getCurrentColumnByIndex(index));
             List<PuzzleElementDefinition> list = candidatePiecePool.get(position);
             if (list == null) {
@@ -230,19 +241,19 @@ public class Solver {
                 // no available elements for this position
                 --index;
                 if (!solutionMap.isEmpty()) {
-                    careNotMatchedPuzzlePiece(solutionMap, rotate, position);
+                    handleNotMatchedPuzzlePiece(solutionMap, rotate, position);
                 } else {
                     return false;
                 }
             } else {
-                careMatchedPuzzlePiece(index, solutionMap, rotate, position);
+                handleMatchedPuzzlePiece(index, solutionMap, rotate, position);
                 ++index;
             }
         }
         return isPuzzleSolved(solutionMap);
     }
 
-    private void careMatchedPuzzlePiece(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
+    private void handleMatchedPuzzlePiece(int index, Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
         PuzzleElementDefinition curElement;
         curElement = candidatePiecePool.get(position).get(0);
         usedIds.add(curElement.getId());
@@ -251,7 +262,7 @@ public class Solver {
         removeElementFromCandidatePool(position);
     }
 
-    private void careNotMatchedPuzzlePiece(Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
+    private void handleNotMatchedPuzzlePiece(Map<Integer, List<PuzzleElementDefinition>> solutionMap, boolean rotate, Position position) {
         PuzzleElementDefinition lastElement = getLastElementFromSolutionMap(solutionMap);
         deleteLastElementFromSolution(solutionMap);
         setPuzzlePieceToIndexedMap(lastElement, rotate);
@@ -331,7 +342,7 @@ public class Solver {
                 return new PuzzleElementDefinition(0, calcMiddleTop(curRow, 0, solverMap), fakeNumber, fakeNumber);
             }
         }
-        //if(curRow == maxRow){ last row more then 1 column
+        //last row more then 1 column
         return new PuzzleElementDefinition(0, calcMiddleTop(curRow, 0, solverMap), fakeNumber, 0);
     }
 
@@ -343,7 +354,7 @@ public class Solver {
         } else if (maxRow > 1 && maxColumn > 1) {
             return new PuzzleElementDefinition(0, 0, fakeNumber, fakeNumber);
         }
-        //if(maxRow > 1 && maxColumn == 1){
+        //maxRow > 1 && maxColumn == 1
         return new PuzzleElementDefinition(0, 0, 0, fakeNumber);
     }
 
@@ -366,38 +377,58 @@ public class Solver {
         solutionMap.put(curRow, elementList);
     }
 
-    private boolean checkEdgeMatch(int templateEdge, int currentElementEdge) {
-        return templateEdge == fakeNumber || currentElementEdge == templateEdge;
-    }
-
     private PuzzleElementDefinition templateBuilder(PuzzleElementDefinition curElement, Map<Integer, List<PuzzleElementDefinition>> solverMap, int curRow, int curColumn) {
-        if ((maxColumn - curColumn == 1)) { //last column
-            if (maxRow - curRow > 0 && curRow == 1) { //first row
+        if (isLastColumn(curColumn)) {
+            if (isFirstRow(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, fakeNumber);
-            } else if (maxRow - curRow > 0) { //middle row
+            } else if (isMiddleRow(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), calcMiddleTop(curRow, curColumn, solverMap), 0, fakeNumber);
-            } else if (maxRow - curRow == 0 && maxRow == 1) { //puzzle one row
+            } else if (isOneRowPuzzle(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, 0, 0);
-            } else if (maxRow - curRow == 0) { //last row
+            } else if (isLastRow(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), calcMiddleTop(curRow, curColumn, solverMap), 0, 0);
             }
         }
 
-        if ((maxColumn - curColumn > 1)) { //middle column
-            if (maxRow - curRow == 0 && maxRow == 1) { //puzzle one row
+        if (isMiddleColumn(curColumn)) {
+            if (isOneRowPuzzle(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, 0);
             }
-            if (maxRow - curRow == 0) { //last row
+            if (isLastRow(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), calcMiddleTop(curRow, curColumn, solverMap), fakeNumber, 0);
             }
-            if (maxRow - curRow > 0 && curRow == 1) { //first row
+            if (isFirstRow(curRow)) {
                 return new PuzzleElementDefinition(calcLeft(curElement), 0, fakeNumber, fakeNumber);
             }
-            if (maxRow - curRow > 0) { //middle row
+            if (isMiddleRow(curRow)) {
                 return new PuzzleElementDefinition(calcMiddleLeft(curRow, solverMap), calcMiddleTop(curRow, curColumn, solverMap), fakeNumber, fakeNumber);
             }
         }
         return new PuzzleElementDefinition(0, 0, 0, 0);// check return statement
+    }
+
+    private boolean isMiddleColumn(int curColumn) {
+        return maxColumn - curColumn > 1;
+    }
+
+    private boolean isLastColumn(int curColumn) {
+        return maxColumn - curColumn == 1;
+    }
+
+    private boolean isLastRow(int curRow) {
+        return maxRow - curRow == 0;
+    }
+
+    private boolean isMiddleRow(int curRow) {
+        return maxRow - curRow > 0;
+    }
+
+    private boolean isOneRowPuzzle(int curRow) {
+        return maxRow - curRow == 0 && maxRow == 1;
+    }
+
+    private boolean isFirstRow(int curRow) {
+        return maxRow - curRow > 0 && curRow == 1;
     }
 
     private int calcLeft(PuzzleElementDefinition element) {
@@ -468,13 +499,6 @@ public class Solver {
             EventHandler.addEventToList(EventHandler.SUM_ZERO);
         }
         return (sumHorizontalEdges == 0 && sumVerticalEdges == 0);
-    }
-
-    private boolean isSquare(PuzzleElementDefinition puzzleElement) {
-        return (puzzleElement.getLeft() == 0 &&
-                puzzleElement.getUp() == 0 &&
-                puzzleElement.getRight() == 0 &&
-                puzzleElement.getBottom() == 0);
     }
 
     List<PuzzleElementDefinition> checkTheInputFile(File inputFile) throws Exception {

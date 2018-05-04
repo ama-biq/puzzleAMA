@@ -11,16 +11,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Orchestrator {
 
-    static AtomicBoolean isSolved = new AtomicBoolean(false);
+    public static void main(String[] args) throws Exception {
+        CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
+        cmdPuzzleParser.menu(args);
+        new Orchestrator().orchestrateThePuzzle(cmdPuzzleParser);
+    }
 
     void orchestrateThePuzzle(CmdPuzzleParser cmdPuzzleParser) throws Exception {
+        AtomicBoolean solved = new AtomicBoolean(false);
+        Solver solver = new Solver(solved);
 
         File inputFile = new File(cmdPuzzleParser.getFileInputPath());
-        Solver solver = new Solver();
         List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
-        ThreadPoolExecutor threadPool;
         int maxPoolSize = cmdPuzzleParser.getThreadAmount();
         boolean rotate = cmdPuzzleParser.isRotate();
+
         File outputFile = new File(cmdPuzzleParser.getFileOutputPath());
         if (list.isEmpty()) {
             solver.writeErrorsToTheOutPutFile();
@@ -30,23 +35,28 @@ public class Orchestrator {
                 maxPoolSize = rowList.size();
             }
             int rowCount = rowList.size();
-            threadPool = new ThreadPoolExecutor(0, maxPoolSize, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(15));
-            while (!isSolved.get() && rowCount > 0) {
+            ThreadPoolExecutor threadPool = new ThreadPoolExecutor(maxPoolSize, maxPoolSize, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(15));
+            while (!solved.get() && rowCount > 0) {
                 for (Integer row : rowList) {
-                    threadPool.execute(new Task(list, row, rotate, outputFile));
+                    threadPool.execute(new Task(list, row, rotate, outputFile, solved));
                     --rowCount;
                 }
             }
-            while (threadPool.getActiveCount() != 0) {
-                Thread.sleep(100);
+            while (true) {
+                if(waitTillAllThreadsShutdown(solved, threadPool)){
+                    break;
+                }
             }
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
-        cmdPuzzleParser.parse(args);
-        new Orchestrator().orchestrateThePuzzle(cmdPuzzleParser);
+    private boolean waitTillAllThreadsShutdown(AtomicBoolean solved, ThreadPoolExecutor threadPool) throws InterruptedException {
+        while (solved.get()) {
+            threadPool.shutdown();
+            threadPool.awaitTermination(1000, TimeUnit.MILLISECONDS);
+            return true;
+        }
+        return false;
     }
 
 }

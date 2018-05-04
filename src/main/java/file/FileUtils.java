@@ -57,7 +57,11 @@ public class FileUtils {
                 List<PuzzleElementDefinition> list = entry.getValue();
                 StringBuilder sb = new StringBuilder();
                 for (PuzzleElementDefinition element : list){
-                    sb.append(element.getId()+ " ");
+                    if (element.getRotationAngle() > 0) {
+                        sb.append(element.getId() + " [" + element.getRotationAngle() + "] ");
+                    } else{
+                        sb.append(element.getId()+ " ");
+                    }
                 }
                 writer.write(sb.toString().trim() + '\n');
             }
