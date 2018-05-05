@@ -679,7 +679,7 @@ public class Solver {
         isValid = isLeftAndRightEdgesAreStraight(isValid);
 
         for (int row = 0; row < numOfRows; row++) {
-            PuzzleElementDefinition prevPiece = null;
+            PuzzleElementDefinition prevPiece = null ;
             for (int column = 0; column < numOfColumns; column++) {
                 PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
                 if(!setOfIds.add(currentPiece.getId())){
