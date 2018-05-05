@@ -724,6 +724,14 @@ public class SolverTest {
         assertFalse(puzzleSolver.isSumOfParallelEdgesZero(listOfPuzzleElements), "sum of edges is zero");
         assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
     }
+    /////////////////////////////////////////////////
+
+    @Test
+    public void positiveTestSameElementInsertedToTwiceToSolutionMap(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateMapContainedSameElementTwice();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
 
 //-----------------------------methods---------------------------------------
     private static String usingBufferedReader(String filePath) {
@@ -777,6 +785,27 @@ public class SolverTest {
         threeRow.put(3, thirdRowList);
         return threeRow;
     }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateMapContainedSameElementTwice() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > thirdRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> threeRow = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+        thirdRowList.add(new PuzzleElementDefinition(7, 0, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(2, -1, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(9, -1, 0, 0, 0));
+        threeRow.put(1, firstRowList);
+        threeRow.put(2, secondRowList);
+        threeRow.put(3, thirdRowList);
+        return threeRow;
+    }
+
 
     private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleTwoRowSolutionMap_leftEdgeNotStraight() {
         List<PuzzleElementDefinition > firstRowList = new ArrayList<>();

@@ -1,17 +1,12 @@
 package impl;
 
 
-import com.sun.org.apache.regexp.internal.RE;
 import file.FilePuzzleParser;
 import file.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -666,10 +661,13 @@ public class Solver {
                 (p.getRight()) + SEPARATOR +
                 (p.getBottom());
     }
-
+    // the  validatePuzzleSolution  check the next validation on solution map:
+    // 1. The same element exists only once.
+    // 2. All edges are straight.
+    // 3. The left and right sides of adjacent elements are fitting.
+    // 4. The top and bottom sides of elements are fitting.
     public boolean validatePuzzleSolution() {
         boolean isValid = true;
-
         Set<Integer> setOfIds = new HashSet<>();
         if (solutionMap.isEmpty()) {
             solutionMap = tempSolutionMap;
@@ -677,11 +675,43 @@ public class Solver {
         int numOfRows = solutionMap.size();
         int numOfColumns = solutionMap.get(1).size();
 
+        isValid = isTopAndButtomEdgesAreStraight(isValid, numOfRows);
+        isValid = isLeftAndRightEdgesAreStraight(isValid);
+
+        for (int row = 0; row < numOfRows; row++) {
+            PuzzleElementDefinition prevPiece = null;
+            for (int column = 0; column < numOfColumns; column++) {
+                PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
+                if(!setOfIds.add(currentPiece.getId())){
+                    System.out.println(currentPiece.getId()+" Already exists.");
+                    return false;
+                }
+                if (prevPiece != null) {
+                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(prevPiece, currentPiece)) {
+                        return false;
+                    }
+                }
+                if (row + 1 < numOfRows) {
+                    PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row + 1, column);
+                    if (!sumOfCurrentPieceBottomAndPieceBellowToSide(currentPiece, pieceOnTheNextRow)) {
+                        return false;
+                    }
+                }
+                prevPiece = currentPiece;
+            }
+        }
+        return isValid;
+    }
+
+    private boolean isTopAndButtomEdgesAreStraight(boolean isValid, int numOfRows) {
         if (isTopEdgeIsStraight(solutionMap.get(1)) &&
                 isButtomEdgeIsStraight(solutionMap.get(numOfRows))) {
             isValid = true;
         }
+        return isValid;
+    }
 
+    private boolean isLeftAndRightEdgesAreStraight(boolean isValid) {
         for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solutionMap.entrySet()) {
             List<PuzzleElementDefinition> listSolution = entry.getValue();
             if (!isLeftEdgeStraight(listSolution)) {
@@ -691,51 +721,28 @@ public class Solver {
                 isValid = false;
             }
         }
-
-        for (int row =0; row < numOfRows; row++){
-            PuzzleElementDefinition prevPiece = null;
-            for (int column = 0; column < numOfColumns; column++){
-                PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
-                if(prevPiece != null) {
-                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(prevPiece, currentPiece)) {
-                        return false;
-                    }
-
-                }
-
-                if(row +1 < numOfRows){
-                    PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row +1, column);
-                    if(!sumOfCurrentPieceBottomAndPieceBellowToSide(currentPiece, pieceOnTheNextRow)){
-                        return false;
-                    }
-                }
-                prevPiece=currentPiece;
-            }
-        }
-
-
         return isValid;
     }
 
     private boolean sumOfCurrentPieceBottomAndPieceBellowToSide(PuzzleElementDefinition currentPiece, PuzzleElementDefinition pieceOnTheNextRow) {
-        boolean flag = currentPiece.getBottom() + pieceOnTheNextRow.getUp()==0;
-        if(!flag) {
+        boolean flag = currentPiece.getBottom() + pieceOnTheNextRow.getUp() == 0;
+        if (!flag) {
             System.out.println("piece id " + currentPiece.getId() + " and piece id " + pieceOnTheNextRow.getId() + " not match ");
         }
         return flag;
     }
 
     private boolean sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(PuzzleElementDefinition prevPiece, PuzzleElementDefinition currentPiece) {
-         boolean flag = prevPiece.getRight() + currentPiece.getLeft()==0;
-         if(!flag) {
-             System.out.println("piece id " + prevPiece.getId() + " and piece id " + currentPiece.getId() + " not match ");
-         }
+        boolean flag = prevPiece.getRight() + currentPiece.getLeft() == 0;
+        if (!flag) {
+            System.out.println("piece id " + prevPiece.getId() + " and piece id " + currentPiece.getId() + " not match ");
+        }
         return flag;
     }
 
     private PuzzleElementDefinition getPieceInSolutionMap(int row, int column) {
 
-        List<PuzzleElementDefinition> list = solutionMap.get(row+1);
+        List<PuzzleElementDefinition> list = solutionMap.get(row + 1);
         return list.get(column);
 
     }
