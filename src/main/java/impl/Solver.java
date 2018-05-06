@@ -690,6 +690,7 @@ public class Solver {
 
     public boolean validatePuzzleSolution() {
         boolean isValid = true;
+        if(solutionMapTest.isEmpty()){return false;}
         Set<Integer> setOfIds = new HashSet<>();
 
 

@@ -519,43 +519,6 @@ public class SolverTest {
         assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
-    @Test
-    public void testLeftEdgeNotStraight_ValidatorTwoRowsSolution(){
-
-        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowSolutionMap_leftEdgeNotStraight();
-        puzzleSolver.setSolutionMap(tempMap);
-        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
-    }
-
-
-    @Test
-    public void testNegativeValidatorThreeRowsSolution(){
-        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap_RightEdgeNotStraight();
-        puzzleSolver.setSolutionMap(tempMap);
-        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
-    }
-
-    @Test
-    public void testPositiveValidatorThreeRowsSolution(){
-        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateSolvabaleThreeRowSolutionMap();
-        puzzleSolver.setSolutionMap(tempMap);
-        assertEquals(puzzleSolver.validatePuzzleSolution(),true);
-    }
-
-
-    @Test
-    public void testNegativeValidatorThreeRowsSolutionTopAndBottomSumIsNotZero(){
-        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap();
-        puzzleSolver.setSolutionMap(tempMap);
-        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
-    }
-
-    @Test
-    public void testNegativeValidatorTwoRowsSolution(){
-        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch();
-        puzzleSolver.setSolutionMap(tempMap);
-        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
-    }
 
     @Test
     public void testNegativeValidatorOneRowsSolution(){
@@ -609,14 +572,6 @@ public class SolverTest {
         listOfPuzzleElements.add(new PuzzleElementDefinition(1, -1, 1, -1, -1));
         assertFalse(puzzleSolver.isSumOfParallelEdgesZero(listOfPuzzleElements), "sum of edges is zero");
         assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
-    }
-    /////////////////////////////////////////////////
-
-    @Test
-    public void positiveTestSameElementInsertedToTwiceToSolutionMap(){
-        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateMapContainedSameElementTwice();
-        puzzleSolver.setSolutionMap(tempMap);
-        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
     }
 
 //-----------------------------methods---------------------------------------
