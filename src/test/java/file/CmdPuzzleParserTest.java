@@ -61,19 +61,4 @@ public class CmdPuzzleParserTest {
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
         assertEquals(referenceParser,testParser);
     }
-
-//    @Test
-//    public void failOnlyOneArgument() {
-//        String[] args = {"-output", "outputValue"};
-//        CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-//       // assertTrue(testParser.isParseFailed() == true);
-//    }
-//
-//    @Test
-//    public void failNoArguments() {
-//        String[] args = {""};
-//        CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-////        assertTrue(testParser.isParseFailed() == true);
-//    }
-
 }

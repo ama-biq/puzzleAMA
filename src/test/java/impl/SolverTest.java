@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -244,6 +245,7 @@ public class SolverTest {
         return errorList;
     }
 
+
     //-------------------------puzzle solution tests------------------------------
     @Test
     public void positive1ColumnElementsTestResolveThePuzzle() {
@@ -257,7 +259,7 @@ public class SolverTest {
         expectedList.add(3);
         expectedList.add(2);
         puzzleSolver.solve(idsList, 3, rotate, outputFile);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
@@ -274,6 +276,74 @@ public class SolverTest {
         assertTrue(EventHandler.getEventList().containsAll(expectedEvents));
     }
 
+    //todo code review with Andrey for validator
+    @Test
+    public void positive6ElementsTestResolveThePuzzle() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(3, 1, 0, 0, -1));
+        idsList.add(new PuzzleElementDefinition(2, 0, 1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(4, 0, -1, 0, 0));
+        idsList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
+        idsList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(3);
+        expectedList.add(4);
+        expectedList.add(2);
+        expectedList.add(5);
+        expectedList.add(6);
+        puzzleSolver.solve(idsList, 3, rotate, outputFile);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
+    }
+
+    //-------------------------------------------------------
+    //todo code review with Andrey for validator
+    @Test
+    public void TwoRowPuzzle() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(2, 0, 0, -1, 0));
+        idsList.add(new PuzzleElementDefinition(3, 1, 0, -1, 0));
+        idsList.add(new PuzzleElementDefinition(5, 1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(6, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(6);
+        expectedList.add(4);
+
+        expectedList.add(2);
+        expectedList.add(3);
+        expectedList.add(5);
+        puzzleSolver.solve(idsList, 2, rotate, outputFile);
+        assertEquals( puzzleSolver.validatePuzzleSolution(), true);
+    }
+
+    @Test
+    public void TwoRowPuzzleOnlyRotatePossible() {
+        rotate = true;
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(3, 0, -1, 0, 1));
+        idsList.add(new PuzzleElementDefinition(5, 1, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(6, 0, 0, 0, 0));
+        idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(6);
+        expectedList.add(4);
+
+        expectedList.add(2);
+        expectedList.add(3);
+        expectedList.add(5);
+        puzzleSolver.solve(idsList, 2, rotate, outputFile);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
+    }
 
     @Test
     public void OneRowPuzzle() {
@@ -332,6 +402,70 @@ public class SolverTest {
         puzzleSolver.solve(idsList, 4, rotate, outputFile);
         assertEquals(expectedList, puzzleSolver.getSolutionList());
     }
+
+    //todo code review with Andrey for validator
+    @Test
+    public void positive32ElementsTestResolveThePuzzle() {
+        List<PuzzleElementDefinition> idsList = new ArrayList<>();
+        idsList.add(new PuzzleElementDefinition(1, 0, 0, 1, 1));
+        idsList.add(new PuzzleElementDefinition(2, 0, -1, -1, -1));
+        idsList.add(new PuzzleElementDefinition(3, 0, 1, 1, 1));
+        idsList.add(new PuzzleElementDefinition(4, 0, -1, -1, 0));
+        idsList.add(new PuzzleElementDefinition(5, -1, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(6, 1, -1, 1, -1));
+        idsList.add(new PuzzleElementDefinition(7, -1, 1, -1, 1));
+        idsList.add(new PuzzleElementDefinition(8, 1, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(9, 1, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(10, -1, -1, 1, -1));
+        idsList.add(new PuzzleElementDefinition(11, 1, 1, -1, 1));
+        idsList.add(new PuzzleElementDefinition(12, -1, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(13, 1, 0, 0, 1));
+        idsList.add(new PuzzleElementDefinition(14, -1, -1, 0, -1));
+        idsList.add(new PuzzleElementDefinition(15, 1, 1, 0, 1));
+        idsList.add(new PuzzleElementDefinition(16, -1, -1, 0, 0));
+
+
+        idsList.add(new PuzzleElementDefinition(21, 0, 0, 1, 1));
+        idsList.add(new PuzzleElementDefinition(22, 0, -1, -1, -1));
+        idsList.add(new PuzzleElementDefinition(23, 0, 1, 1, 1));
+        idsList.add(new PuzzleElementDefinition(24, 0, -1, -1, 0));
+        idsList.add(new PuzzleElementDefinition(25, -1, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(26, 1, -1, 1, -1));
+        idsList.add(new PuzzleElementDefinition(27, -1, 1, -1, 1));
+        idsList.add(new PuzzleElementDefinition(28, 1, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(29, 1, 0, -1, 1));
+        idsList.add(new PuzzleElementDefinition(210, -1, -1, 1, -1));
+        idsList.add(new PuzzleElementDefinition(211, 1, 1, -1, 1));
+        idsList.add(new PuzzleElementDefinition(212, -1, -1, 1, 0));
+        idsList.add(new PuzzleElementDefinition(213, 1, 0, 0, 1));
+        idsList.add(new PuzzleElementDefinition(214, -1, -1, 0, -1));
+        idsList.add(new PuzzleElementDefinition(215, 1, 1, 0, 1));
+        idsList.add(new PuzzleElementDefinition(216, -1, -1, 0, 0));
+
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(5);
+        expectedList.add(9);
+        expectedList.add(13);
+
+        expectedList.add(2);
+        expectedList.add(6);
+        expectedList.add(10);
+        expectedList.add(14);
+
+        expectedList.add(3);
+        expectedList.add(7);
+        expectedList.add(11);
+        expectedList.add(15);
+
+        expectedList.add(4);
+        expectedList.add(8);
+        expectedList.add(12);
+        expectedList.add(16);
+        puzzleSolver.solve(idsList, 8, rotate, outputFile);
+        assertEquals( puzzleSolver.validatePuzzleSolution(), true);
+    }
+
 
     @Test
     public void positive24ElementsTestResolveThePuzzle() {
@@ -477,6 +611,52 @@ public class SolverTest {
         assertEquals(expected, out);
     }
 
+    @Test
+    public void testLeftEdgeNotStraight_ValidatorTwoRowsSolution(){
+
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowSolutionMap_leftEdgeNotStraight();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
+
+
+    @Test
+    public void testNegativeValidatorThreeRowsSolution(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap_RightEdgeNotStraight();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
+
+    @Test
+    public void testPositiveValidatorThreeRowsSolution(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateSolvabaleThreeRowSolutionMap();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),true);
+    }
+
+///////////////////////////////////
+
+    @Test
+    public void testNegativeValidatorThreeRowsSolutionTopAndBottomSumIsNotZero(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
+
+    @Test
+    public void testNegativeValidatorTwoRowsSolution(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),false);
+    }
+
+    @Test
+    public void testNegativeValidatorOneRowsSolution(){
+        Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleOneRowSolutionMap_topEdgeNotStraight();
+        puzzleSolver.setTempSolutionMap(tempMap);
+        assertEquals(puzzleSolver.validatePuzzleSolution(),true);
+    }
+
     @Disabled
     @Test
     public void _100_2ElementsPuzzleElementE2Etest() throws Exception {
@@ -558,4 +738,126 @@ public class SolverTest {
         }
         return contentBuilder.toString();
     }
+    private Map<Integer,List<PuzzleElementDefinition >> generateSolvabaleThreeRowSolutionMap() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > thirdRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> threeRow = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, -1));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+        thirdRowList.add(new PuzzleElementDefinition(7, 0, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(8, -1, 1, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(9, -1, 0, 0, 0));
+        threeRow.put(1, firstRowList);
+        threeRow.put(2, secondRowList);
+        threeRow.put(3, thirdRowList);
+        return threeRow;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleThreeRowSolutionMap() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > thirdRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> threeRow = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, -1));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+        thirdRowList.add(new PuzzleElementDefinition(7, 0, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(8, -1, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(9, -1, 0, 0, 0));
+        threeRow.put(1, firstRowList);
+        threeRow.put(2, secondRowList);
+        threeRow.put(3, thirdRowList);
+        return threeRow;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleTwoRowSolutionMap_leftEdgeNotStraight() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> twoRowMap = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 1, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+
+        twoRowMap.put(1, firstRowList);
+        twoRowMap.put(2, secondRowList);
+        return twoRowMap;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleTwoRowSolutionMap_topEdgeNotStraight() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> twoRowMap = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, -1, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+
+        twoRowMap.put(1, firstRowList);
+        twoRowMap.put(2, secondRowList);
+        return twoRowMap;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleOneRowSolutionMap_topEdgeNotStraight() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> testRowMap = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, 0));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, -1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, 1, 0, 0, 0));
+
+
+        testRowMap.put(1, firstRowList);
+        return testRowMap;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> testRowMap = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, 1, 0));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+
+
+        testRowMap.put(1, firstRowList);
+        testRowMap.put(2, secondRowList);
+        return testRowMap;
+    }
+
+    private Map<Integer,List<PuzzleElementDefinition >> generateNotSolvabaleThreeRowSolutionMap_RightEdgeNotStraight() {
+        List<PuzzleElementDefinition > firstRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > secondRowList = new ArrayList<>();
+        List<PuzzleElementDefinition > thirdRowList = new ArrayList<>();
+        Map<Integer,List<PuzzleElementDefinition >> threeRow = new HashMap<>();
+        firstRowList.add(new PuzzleElementDefinition(1, 0, 0, -1, -1));
+        firstRowList.add(new PuzzleElementDefinition(2, 1, 0, 1, 0));
+        firstRowList.add(new PuzzleElementDefinition(3, -1, 0, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(4, 0, 1, 0, 0));
+        secondRowList.add(new PuzzleElementDefinition(5, 0, 0, -1, -1));
+        secondRowList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
+        thirdRowList.add(new PuzzleElementDefinition(7, 0, 0, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(8, -1, 1, 1, 0));
+        thirdRowList.add(new PuzzleElementDefinition(9, -1, 0, 1, 0));
+        threeRow.put(1, firstRowList);
+        threeRow.put(2, secondRowList);
+        threeRow.put(3, thirdRowList);
+        return threeRow;
+    }
+
 }

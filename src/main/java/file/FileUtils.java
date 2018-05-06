@@ -2,7 +2,6 @@ package file;
 
 import impl.EventHandler;
 import impl.PuzzleElementDefinition;
-import impl.Solver;
 
 import java.io.*;
 import java.nio.charset.Charset;

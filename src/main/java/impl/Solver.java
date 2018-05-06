@@ -1,11 +1,13 @@
 package impl;
 
 
+import com.sun.org.apache.regexp.internal.RE;
 import file.FilePuzzleParser;
 import file.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +30,9 @@ public class Solver {
     private int maxColumn;
     private Map<Position, List<PuzzleElementDefinition>> candidatePiecePool = new HashMap<>();
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
+
+
+    public Map<Integer, List<PuzzleElementDefinition>> tempSolutionMap = new HashMap<>();
     private List<Integer> solutionList = new ArrayList<>();
     private Map<String, List<PuzzleElementDefinition>> indexedPool = new HashMap<>();
     private List<Integer> usedIds = new ArrayList<>();
@@ -662,5 +667,108 @@ public class Solver {
                 (p.getBottom());
     }
 
+    public boolean validatePuzzleSolution() {
+        boolean isValid = true;
+
+        Set<Integer> setOfIds = new HashSet<>();
+        if (solutionMap.isEmpty()) {
+            solutionMap = tempSolutionMap;
+        }
+        int numOfRows = solutionMap.size();
+        int numOfColumns = solutionMap.get(1).size();
+
+        if (isTopEdgeIsStraight(solutionMap.get(1)) &&
+                isButtomEdgeIsStraight(solutionMap.get(numOfRows))) {
+            isValid = true;
+        }
+
+        for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solutionMap.entrySet()) {
+            List<PuzzleElementDefinition> listSolution = entry.getValue();
+            if (!isLeftEdgeStraight(listSolution)) {
+                isValid = false;
+            }
+            if (!isRightEdgeIsStraight(listSolution)) {
+                isValid = false;
+            }
+        }
+
+        for (int row =0; row < numOfRows; row++){
+            PuzzleElementDefinition prevPiece = null;
+            for (int column = 0; column < numOfColumns; column++){
+                PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
+                if(prevPiece != null) {
+                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(prevPiece, currentPiece)) {
+                        return false;
+                    }
+
+                }
+
+                if(row +1 < numOfRows){
+                    PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row +1, column);
+                    if(!sumOfCurrentPieceBottomAndPieceBellowToSide(currentPiece, pieceOnTheNextRow)){
+                        return false;
+                    }
+                }
+                prevPiece=currentPiece;
+            }
+        }
+
+
+        return isValid;
+    }
+
+    private boolean sumOfCurrentPieceBottomAndPieceBellowToSide(PuzzleElementDefinition currentPiece, PuzzleElementDefinition pieceOnTheNextRow) {
+        boolean flag = currentPiece.getBottom() + pieceOnTheNextRow.getUp()==0;
+        if(!flag) {
+            System.out.println("piece id " + currentPiece.getId() + " and piece id " + pieceOnTheNextRow.getId() + " not match ");
+        }
+        return flag;
+    }
+
+    private boolean sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPiece(PuzzleElementDefinition prevPiece, PuzzleElementDefinition currentPiece) {
+         boolean flag = prevPiece.getRight() + currentPiece.getLeft()==0;
+         if(!flag) {
+             System.out.println("piece id " + prevPiece.getId() + " and piece id " + currentPiece.getId() + " not match ");
+         }
+        return flag;
+    }
+
+    private PuzzleElementDefinition getPieceInSolutionMap(int row, int column) {
+
+        List<PuzzleElementDefinition> list = solutionMap.get(row+1);
+        return list.get(column);
+
+    }
+
+    public void setTempSolutionMap(Map<Integer, List<PuzzleElementDefinition>> tempSolutionMap) {
+        this.tempSolutionMap = tempSolutionMap;
+    }
+
+    private boolean isRightEdgeIsStraight(List<PuzzleElementDefinition> listSolution) {
+        int sizeList = listSolution.size();
+        return listSolution.get(sizeList - 1).getRight() == 0;
+    }
+
+    private boolean isLeftEdgeStraight(List<PuzzleElementDefinition> listSolution) {
+        return listSolution.get(0).getLeft() == 0;
+    }
+
+    private boolean isButtomEdgeIsStraight(List<PuzzleElementDefinition> solutionList) {
+        for (PuzzleElementDefinition element : solutionList) {
+            if (element.getBottom() != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isTopEdgeIsStraight(List<PuzzleElementDefinition> solutionList) {
+        for (PuzzleElementDefinition element : solutionList) {
+            if (element.getUp() != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
