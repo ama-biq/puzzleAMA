@@ -3,6 +3,7 @@ package impl;
 import file.CmdPuzzleParser;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -19,6 +20,7 @@ public class Orchestrator {
 
     /**
      * This function
+     *
      * @param cmdPuzzleParser
      * @throws Exception
      */
@@ -36,7 +38,13 @@ public class Orchestrator {
         if (list.isEmpty()) {
             solver.writeErrorsToTheOutPutFile();
         } else if (solver.isSumOfParallelEdgesZero(list)) {
-            List<Integer> rowList = solver.getSolverRows(list);
+            List<Integer> availableRowList = solver.getSolverRows(list);
+            List<Integer> rowList = new ArrayList<>();
+            for (Integer row : availableRowList) {
+                if (solver.validateStraightEdges(list, row, rotate)) {
+                    rowList.add(row);
+                }
+            }
             // check and set the num of threads equals to amount of number of rows
             if (rowList.size() < maxPoolSize) {
                 maxPoolSize = rowList.size();
@@ -52,7 +60,7 @@ public class Orchestrator {
                 }
             }
             while (true) {
-                if(waitTillAllThreadsShutdown(solved, threadPool)){
+                if (waitTillAllThreadsShutdown(solved, threadPool)) {
                     break;
                 }
             }
@@ -61,6 +69,7 @@ public class Orchestrator {
 
     private boolean waitTillAllThreadsShutdown(AtomicBoolean solved, ThreadPoolExecutor threadPool) throws InterruptedException {
         while (solved.get()) {
+            new Solver().getSolution();
             threadPool.shutdown();
             threadPool.awaitTermination(1000, TimeUnit.MILLISECONDS);
             return true;
