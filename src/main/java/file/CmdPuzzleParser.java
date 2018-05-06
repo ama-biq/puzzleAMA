@@ -95,7 +95,7 @@ public class CmdPuzzleParser {
         isRotate = rotate;
     }
 
-    void setThreadAmount(int threadAmount) {
+    public void setThreadAmount(int threadAmount) {
         this.threadAmount = threadAmount;
     }
 
