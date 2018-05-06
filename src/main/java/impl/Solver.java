@@ -25,6 +25,8 @@ public class Solver {
     private int maxColumn;
     private Map<Position, List<PuzzleElementDefinition>> candidatePiecePool = new HashMap<>();
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
+    //static solutionMapTest for test use only
+    private static Map<Integer, List<PuzzleElementDefinition>> solutionMapTest = new HashMap<>();
 
 
     private List<Integer> solutionList = new ArrayList<>();
@@ -43,13 +45,13 @@ public class Solver {
         return solutionList;
     }
 
-    private void solutionMapToSolutionList(Map<Integer, List<PuzzleElementDefinition>> solverMap) {
-
-        solutionList = solverMap.values().stream()
-                .flatMap(List::stream)
-                .map(PuzzleElementDefinition::getId)
-                .collect(Collectors.toList());
-    }
+//    private void solutionMapToSolutionList(Map<Integer, List<PuzzleElementDefinition>> solverMap) {
+//
+//        solutionList = solverMap.values().stream()
+//                .flatMap(List::stream)
+//                .map(PuzzleElementDefinition::getId)
+//                .collect(Collectors.toList());
+//    }
 
     boolean isEnoughStraitEdges(PuzzleElementDefinition puzzleElementDefinition) {
         return (isAllElementDefinitionEqualsToZero(puzzleElementDefinition));
@@ -199,6 +201,16 @@ public class Solver {
 
     }
 
+    /**
+     * Perform index to the puzzle elements
+     * If there is solution for puzzle write solution from  solution map to solution list
+     * If there is no solution write the solution to output file
+     * @param puzzlePieces
+     * @param solutionRowNumber
+     * @param rotate
+     * @param file
+     * @return
+     */
     boolean solve(List<PuzzleElementDefinition> puzzlePieces, int solutionRowNumber, boolean rotate, File file) {
 
         maxRow = solutionRowNumber;
@@ -207,8 +219,9 @@ public class Solver {
         candidatePiecePool.clear();
         indexPuzzlePieces(puzzlePieces, rotate);
         if (solvePuzzle(startIndex, solutionMap, rotate)) {
-            solutionMapToSolutionList(solutionMap);
+           // solutionMapToSolutionList(solutionMap);
             solved.compareAndSet(false, true);
+            solutionMapTest = solutionMap;
             try {
                 writeSolutionToTheOutPutFile(file);
             } catch (IOException e) {
@@ -679,15 +692,14 @@ public class Solver {
         boolean isValid = true;
         Set<Integer> setOfIds = new HashSet<>();
 
-        int numOfRows = solutionMap.size();
-        int numOfColumns = solutionMap.get(1).size();
 
-        isValid = isTopAndButtomEdgesAreStraight(numOfRows);
+        isValid = isTopAndButtomEdgesAreStraight();
         isValid = isLeftAndRightEdgesAreStraight(isValid);
-
-        for (int row = 0; row < numOfRows; row++) {
+        int maxRow = solutionMapTest.size();
+        int maxColumn = solutionMapTest.get(1).size();
+        for (int row = 0; row < maxRow; row++) {
             PuzzleElementDefinition prevPiece = null;
-            for (int column = 0; column < numOfColumns; column++) {
+            for (int column = 0; column < maxColumn; column++) {
                 PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
                 if (!setOfIds.add(currentPiece.getId())) {
                     System.out.println(currentPiece.getId() + " Already exists.");
@@ -698,7 +710,7 @@ public class Solver {
                         return false;
                     }
                 }
-                if (row + 1 < numOfRows) {
+                if (row + 1 < maxRow) {
                     PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row + 1, column);
                     if (!sumOfCurrentPieceBottomAndPieceBellowToSideIsZero(currentPiece, pieceOnTheNextRow)) {
                         return false;
@@ -710,13 +722,14 @@ public class Solver {
         return isValid;
     }
 
-    private boolean isTopAndButtomEdgesAreStraight(int numOfRows) {
-        return  (isTopEdgeIsStraight(solutionMap.get(1)) &&
-                isButtomEdgeIsStraight(solutionMap.get(numOfRows))) ;
+    private boolean isTopAndButtomEdgesAreStraight() {
+        int maxRow = solutionMapTest.size();
+        return  (isTopEdgeIsStraight(solutionMapTest.get(1)) &&
+                isButtomEdgeIsStraight(solutionMapTest.get(maxRow))) ;
     }
 
     private boolean isLeftAndRightEdgesAreStraight(boolean isValid) {
-        for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solutionMap.entrySet()) {
+        for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solutionMapTest.entrySet()) {
             List<PuzzleElementDefinition> listSolution = entry.getValue();
             if (!isLeftEdgeStraight(listSolution)) {
                 isValid = false;
@@ -739,7 +752,7 @@ public class Solver {
 
     private PuzzleElementDefinition getPieceInSolutionMap(int row, int column) {
 
-        List<PuzzleElementDefinition> list = solutionMap.get(row + 1);
+        List<PuzzleElementDefinition> list = solutionMapTest.get(row + 1);
         return list.get(column);
 
     }

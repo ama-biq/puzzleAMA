@@ -46,7 +46,7 @@ public class Orchestrator {
             while (!solved.get() && rowCount > 0) {
                 for (Integer row : rowList) {
                     //execute the pool with Task object, this object get list of elements
-                    //number of row ??? is rotate availeble, thr path to outputfile and atomic boolean(solved)
+                    //number of row ??? is rotate available, the path to outputfile and atomic boolean(solved)
                     threadPool.execute(new Task(list, row, rotate, outputFile, solved));
                     --rowCount;
                 }

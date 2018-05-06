@@ -287,13 +287,6 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(5, 0, 0, -1, 0));
         idsList.add(new PuzzleElementDefinition(6, 1, 0, 0, 0));
 
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(3);
-        expectedList.add(4);
-        expectedList.add(2);
-        expectedList.add(5);
-        expectedList.add(6);
         puzzleSolver.solve(idsList, 3, rotate, outputFile);
         assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
@@ -310,14 +303,6 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(6, 0, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
 
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(6);
-        expectedList.add(4);
-
-        expectedList.add(2);
-        expectedList.add(3);
-        expectedList.add(5);
         puzzleSolver.solve(idsList, 2, rotate, outputFile);
         assertEquals( puzzleSolver.validatePuzzleSolution(), true);
     }
@@ -333,14 +318,6 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(6, 0, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
 
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(6);
-        expectedList.add(4);
-
-        expectedList.add(2);
-        expectedList.add(3);
-        expectedList.add(5);
         puzzleSolver.solve(idsList, 2, rotate, outputFile);
         assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
@@ -352,12 +329,8 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(2, -1, 0, 0, 0));
         idsList.add(new PuzzleElementDefinition(3, -1, 0, 1, 0));
 
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(3);
-        expectedList.add(2);
         puzzleSolver.solve(idsList, 1, rotate, outputFile);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
@@ -379,28 +352,9 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(5, -1, 0, -1, 1));
         idsList.add(new PuzzleElementDefinition(12, -1, -1, 1, 0));
         idsList.add(new PuzzleElementDefinition(11, 1, 1, -1, 1));
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(5);
-        expectedList.add(9);
-        expectedList.add(13);
 
-        expectedList.add(2);
-        expectedList.add(6);
-        expectedList.add(10);
-        expectedList.add(14);
-
-        expectedList.add(3);
-        expectedList.add(7);
-        expectedList.add(11);
-        expectedList.add(15);
-
-        expectedList.add(4);
-        expectedList.add(8);
-        expectedList.add(12);
-        expectedList.add(16);
         puzzleSolver.solve(idsList, 4, rotate, outputFile);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     //todo code review with Andrey for validator
@@ -442,26 +396,6 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(215, 1, 1, 0, 1));
         idsList.add(new PuzzleElementDefinition(216, -1, -1, 0, 0));
 
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(1);
-        expectedList.add(5);
-        expectedList.add(9);
-        expectedList.add(13);
-
-        expectedList.add(2);
-        expectedList.add(6);
-        expectedList.add(10);
-        expectedList.add(14);
-
-        expectedList.add(3);
-        expectedList.add(7);
-        expectedList.add(11);
-        expectedList.add(15);
-
-        expectedList.add(4);
-        expectedList.add(8);
-        expectedList.add(12);
-        expectedList.add(16);
         puzzleSolver.solve(idsList, 8, rotate, outputFile);
         assertEquals( puzzleSolver.validatePuzzleSolution(), true);
     }
@@ -494,35 +428,8 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(14, -1, -1, 1, 0));
         idsList.add(new PuzzleElementDefinition(22, -1, 1, -1, 0));
         idsList.add(new PuzzleElementDefinition(12, 1, -1, 0, 0));
-        Collections.shuffle(idsList);
-
-        List<Integer> expectedList = new ArrayList<>();
-        expectedList.add(16);
-        expectedList.add(21);
-        expectedList.add(2);
-        expectedList.add(17);
-        expectedList.add(13);
-        expectedList.add(1);
-        expectedList.add(18);
-        expectedList.add(9);
-        expectedList.add(19);
-        expectedList.add(7);
-        expectedList.add(6);
-        expectedList.add(10);
-        expectedList.add(15);
-        expectedList.add(3);
-        expectedList.add(5);
-        expectedList.add(24);
-        expectedList.add(8);
-        expectedList.add(23);
-        expectedList.add(4);
-        expectedList.add(11);
-        expectedList.add(20);
-        expectedList.add(14);
-        expectedList.add(22);
-        expectedList.add(12);
         puzzleSolver.solve(idsList, 6, rotate, outputFile);
-        assertEquals(expectedList, puzzleSolver.getSolutionList());
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     //---------------------------------------------------------
@@ -542,63 +449,50 @@ public class SolverTest {
     public void oneColumnSolutionE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\10AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\10AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
+
     }
 
     @Test
     public void firstE2EoneElement() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\1AmirFileIn.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\1AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
     public void fourElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\2AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _24ElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\test15.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _42ElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen42_1.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _64ElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen64_1.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _64_2ElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen64_2.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Disabled
@@ -606,9 +500,23 @@ public class SolverTest {
     public void _100_1ElementsPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_1.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
+    }
+
+    @Disabled
+    @Test
+    public void _100_2ElementsPuzzleElementE2Etest() throws Exception {
+        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_2.txt");
+        orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
+    }
+
+    @Disabled
+    @Test
+    public void _100_3ElementsPuzzleElementE2Etest() throws Exception {
+        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_3.txt");
+        orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
+        assertEquals(puzzleSolver.validatePuzzleSolution(), true);
     }
 
     @Test
@@ -634,7 +542,6 @@ public class SolverTest {
         assertEquals(puzzleSolver.validatePuzzleSolution(),true);
     }
 
-///////////////////////////////////
 
     @Test
     public void testNegativeValidatorThreeRowsSolutionTopAndBottomSumIsNotZero(){
@@ -656,27 +563,6 @@ public class SolverTest {
         puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),true);
     }
-
-    @Disabled
-    @Test
-    public void _100_2ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_2.txt");
-        orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
-    }
-
-    @Disabled
-    @Test
-    public void _100_3ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_3.txt");
-        orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\2AmirFileExpected.txt");
-        assertEquals(expected, out);
-    }
-
 
     @Test
     public void missingPuzzleElementE2Etest() throws Exception {
