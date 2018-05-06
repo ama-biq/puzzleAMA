@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * The class run the threads that solve the puzzle.
+ */
+
 public class Task implements Runnable{
 
     private List<PuzzleElementDefinition> puzzleElements;

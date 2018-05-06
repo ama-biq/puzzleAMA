@@ -615,7 +615,7 @@ public class SolverTest {
     public void testLeftEdgeNotStraight_ValidatorTwoRowsSolution(){
 
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowSolutionMap_leftEdgeNotStraight();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),false);
     }
 
@@ -623,14 +623,14 @@ public class SolverTest {
     @Test
     public void testNegativeValidatorThreeRowsSolution(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap_RightEdgeNotStraight();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),false);
     }
 
     @Test
     public void testPositiveValidatorThreeRowsSolution(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateSolvabaleThreeRowSolutionMap();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),true);
     }
 
@@ -639,21 +639,21 @@ public class SolverTest {
     @Test
     public void testNegativeValidatorThreeRowsSolutionTopAndBottomSumIsNotZero(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleThreeRowSolutionMap();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),false);
     }
 
     @Test
     public void testNegativeValidatorTwoRowsSolution(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleTwoRowLeftAndRightSidesNotMatch();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),false);
     }
 
     @Test
     public void testNegativeValidatorOneRowsSolution(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateNotSolvabaleOneRowSolutionMap_topEdgeNotStraight();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),true);
     }
 
@@ -729,7 +729,7 @@ public class SolverTest {
     @Test
     public void positiveTestSameElementInsertedToTwiceToSolutionMap(){
         Map <Integer,List<PuzzleElementDefinition >> tempMap = generateMapContainedSameElementTwice();
-        puzzleSolver.setTempSolutionMap(tempMap);
+        puzzleSolver.setSolutionMap(tempMap);
         assertEquals(puzzleSolver.validatePuzzleSolution(),false);
     }
 

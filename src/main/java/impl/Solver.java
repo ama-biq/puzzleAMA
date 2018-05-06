@@ -27,13 +27,16 @@ public class Solver {
     private Map<Integer, List<PuzzleElementDefinition>> solutionMap = new HashMap<>();
 
 
-    public Map<Integer, List<PuzzleElementDefinition>> tempSolutionMap = new HashMap<>();
     private List<Integer> solutionList = new ArrayList<>();
     private Map<String, List<PuzzleElementDefinition>> indexedPool = new HashMap<>();
     private List<Integer> usedIds = new ArrayList<>();
 
     Solver(AtomicBoolean solved) {
         this.solved = solved;
+    }
+
+    public void setSolutionMap(Map<Integer, List<PuzzleElementDefinition>> solutionMap) {
+        this.solutionMap = solutionMap;
     }
 
     List<Integer> getSolutionList() {
@@ -663,40 +666,43 @@ public class Solver {
     }
 
     /**
-     *  The  validatePuzzleSolution  checks the next validation on solution map:
-     1. The same element exists only once.
-     2. All edges are straight.
-     3. The left and right sides of adjacent elements are fitting.
-     4. The top and bottom sides of elements are fitting.
+     * The  validatePuzzleSolution  checks the next validation on solution map:
+     * 1. The same element exists only once.
+     * 2. All edges are straight.
+     * 3. The left and right sides of adjacent elements are fitting.
+     * 4. The top and bottom sides of elements are fitting.
+     *
      * @return true if all validations passed successfully.
      */
 
     public boolean validatePuzzleSolution() {
         boolean isValid = true;
         Set<Integer> setOfIds = new HashSet<>();
-        if (solutionMap.isEmpty()) {
-            solutionMap = tempSolutionMap;
-        }
+
         int numOfRows = solutionMap.size();
         int numOfColumns = solutionMap.get(1).size();
 
-        isValid = isTopAndButtomEdgesAreStraight(isValid, numOfRows);
+        isValid = isTopAndButtomEdgesAreStraight(numOfRows);
         isValid = isLeftAndRightEdgesAreStraight(isValid);
 
         for (int row = 0; row < numOfRows; row++) {
-            PuzzleElementDefinition prevPiece = null ;
+            PuzzleElementDefinition prevPiece = null;
             for (int column = 0; column < numOfColumns; column++) {
                 PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
-                if(!setOfIds.add(currentPiece.getId())){
-                    System.out.println(currentPiece.getId()+" Already exists.");
+                if (!setOfIds.add(currentPiece.getId())) {
+                    System.out.println(currentPiece.getId() + " Already exists.");
                     return false;
                 }
                 if (prevPiece != null) {
-                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPieceIsZero(prevPiece, currentPiece)) { return false; }
+                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPieceIsZero(prevPiece, currentPiece)) {
+                        return false;
+                    }
                 }
                 if (row + 1 < numOfRows) {
                     PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row + 1, column);
-                    if (!sumOfCurrentPieceBottomAndPieceBellowToSideIsZero(currentPiece, pieceOnTheNextRow)) { return false; }
+                    if (!sumOfCurrentPieceBottomAndPieceBellowToSideIsZero(currentPiece, pieceOnTheNextRow)) {
+                        return false;
+                    }
                 }
                 prevPiece = currentPiece;
             }
@@ -704,12 +710,9 @@ public class Solver {
         return isValid;
     }
 
-    private boolean isTopAndButtomEdgesAreStraight(boolean isValid, int numOfRows) {
-        if (isTopEdgeIsStraight(solutionMap.get(1)) &&
-                isButtomEdgeIsStraight(solutionMap.get(numOfRows))) {
-            isValid = true;
-        }
-        return isValid;
+    private boolean isTopAndButtomEdgesAreStraight(int numOfRows) {
+        return  (isTopEdgeIsStraight(solutionMap.get(1)) &&
+                isButtomEdgeIsStraight(solutionMap.get(numOfRows))) ;
     }
 
     private boolean isLeftAndRightEdgesAreStraight(boolean isValid) {
@@ -739,10 +742,6 @@ public class Solver {
         List<PuzzleElementDefinition> list = solutionMap.get(row + 1);
         return list.get(column);
 
-    }
-
-    public void setTempSolutionMap(Map<Integer, List<PuzzleElementDefinition>> tempSolutionMap) {
-        this.tempSolutionMap = tempSolutionMap;
     }
 
     private boolean isRightEdgeIsStraight(List<PuzzleElementDefinition> listSolution) {
