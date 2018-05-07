@@ -10,6 +10,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Orchestrating the whole procces.
+ * Using ThreadPoolExecutor to sync the threads that try to solve the puzzle.
+ */
+
 public class Orchestrator {
 
     public static void main(String[] args) throws Exception {

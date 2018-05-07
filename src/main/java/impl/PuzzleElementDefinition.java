@@ -37,15 +37,14 @@ public class PuzzleElementDefinition {
         this.rotationAngle = rotationAngle;
     }
 
-   //////////////
-   public PuzzleElementDefinition(PuzzleElementDefinition piece) {
-       this.id = piece.id;
-       this.left = piece.left;
-       this.up = piece.up;
-       this.right = piece.right;
-       this.bottom = piece.bottom;
-       this.rotationAngle = piece.rotationAngle;
-   }
+    public PuzzleElementDefinition(PuzzleElementDefinition piece) {
+        this.id = piece.id;
+        this.left = piece.left;
+        this.up = piece.up;
+        this.right = piece.right;
+        this.bottom = piece.bottom;
+        this.rotationAngle = piece.rotationAngle;
+    }
 
     public int getRotationAngle() {
         return rotationAngle;
@@ -57,10 +56,6 @@ public class PuzzleElementDefinition {
 
     public Integer getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getLeft() {
@@ -158,7 +153,7 @@ public class PuzzleElementDefinition {
         return (getLeft() == 0 &&
                 getRight() == 0 &&
                 getUp() == 0 &&
-                getBottom() !=0);
+                getBottom() != 0);
     }
 
     @Override

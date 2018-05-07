@@ -5,6 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The class perform validation that solved puzzle has been solved correctly.
+ */
+
 public class PuzzleValidator {
 
     /**

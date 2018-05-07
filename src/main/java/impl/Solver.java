@@ -492,7 +492,7 @@ public class Solver {
         if (row == 1) {
             return isStraightEdgesOneRow(puzzleElements);
         }
-        if (row == puzzleElements.size() ) {
+        if (row == puzzleElements.size()) {
             return isStraightEdgesOneColumn(puzzleElements);
         }
         //TODO no validation for other board
@@ -609,6 +609,12 @@ public class Solver {
         puzzle.forEach(piece -> setPuzzlePieceToIndexedMap(piece, rotate));
     }
 
+    /**
+     * If the rotate true all piece permutation inserted to the map after 90 degrees rotation.
+     *
+     * @param piece
+     * @param rotate
+     */
     private void setPuzzlePieceToIndexedMap(PuzzleElementDefinition piece, boolean rotate) {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {

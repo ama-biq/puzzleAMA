@@ -2,7 +2,9 @@ package file;
 
 import java.util.Objects;
 
-//This Class validates the command line arguments and populate them as members for Orchestrator Class use.
+/**
+ * This Class validates the command line arguments and populate them as members for Orchestrator Class use.
+ */
 public class CmdPuzzleParser {
     private String fileInputPath;
     private String fileOutputPath;
