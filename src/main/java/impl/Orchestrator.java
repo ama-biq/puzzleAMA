@@ -3,6 +3,7 @@ package impl;
 import file.CmdPuzzleParser;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -20,7 +21,6 @@ public class Orchestrator {
 
     /**
      * This function
-     *
      * @param cmdPuzzleParser
      * @throws Exception
      */
@@ -28,41 +28,58 @@ public class Orchestrator {
         // atomic boolean solved using to check if one of threads solve the puzzle.
         AtomicBoolean solved = new AtomicBoolean(false);
         Solver solver = new Solver(solved);
-
         File inputFile = new File(cmdPuzzleParser.getFileInputPath());
-        List<PuzzleElementDefinition> list = solver.checkTheInputFile(inputFile);
         int maxPoolSize = cmdPuzzleParser.getThreadAmount();
         boolean rotate = cmdPuzzleParser.isRotate();
 
+        List<PuzzleElementDefinition> puzzlePiecesList = solver.checkTheInputFile(inputFile);
         File outputFile = new File(cmdPuzzleParser.getFileOutputPath());
-        if (list.isEmpty()) {
+        if (puzzlePiecesList.isEmpty()) {
             solver.writeErrorsToTheOutPutFile();
-        } else if (solver.isSumOfParallelEdgesZero(list)) {
-            List<Integer> availableRowList = solver.getSolverRows(list);
-            List<Integer> rowList = new ArrayList<>();
-            for (Integer row : availableRowList) {
-                if (solver.validateStraightEdges(list, row, rotate)) {
-                    rowList.add(row);
+        } else {
+            List<Integer> boardsList = getSolutionBoardsList(solver, puzzlePiecesList, rotate);
+            if (!boardsList.isEmpty()) {
+                solvePuzzleInMultiThread(solved, puzzlePiecesList, maxPoolSize, rotate, outputFile, boardsList, boardsList.size());
+            }
+        }
+    }
+
+    private List<Integer> getSolutionBoardsList(Solver solver, List<PuzzleElementDefinition> puzzlePiecesList, boolean rotate) throws IOException {
+        List<Integer> boardsList = new ArrayList<>();
+        if (solver.isSumOfParallelEdgesZero(puzzlePiecesList)) {
+            List<Integer> availableBoardsList = solver.getSolverRows(puzzlePiecesList);
+            for (Integer row : availableBoardsList) {
+                if (solver.validateStraightEdges(puzzlePiecesList, row, rotate)) {
+                    boardsList.add(row);
                 }
             }
-            // check and set the num of threads equals to amount of number of rows
-            if (rowList.size() < maxPoolSize) {
-                maxPoolSize = rowList.size();
+            if (boardsList.isEmpty()) {
+                EventHandler.addEventToList(EventHandler.WRONG_STRAIGHT_EDGES);
+                solver.writeErrorsToTheOutPutFile();
             }
-            int rowCount = rowList.size();
-            ThreadPoolExecutor threadPool = new ThreadPoolExecutor(maxPoolSize, maxPoolSize, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(15));
-            while (!solved.get() && rowCount > 0) {
-                for (Integer row : rowList) {
-                    //execute the pool with Task object, this object get list of elements
-                    //number of row ??? is rotate available, the path to outputfile and atomic boolean(solved)
-                    threadPool.execute(new Task(list, row, rotate, outputFile, solved));
-                    --rowCount;
-                }
+        }else{
+            solver.writeErrorsToTheOutPutFile();
+        }
+        return boardsList;
+    }
+
+    private void solvePuzzleInMultiThread(AtomicBoolean solved, List<PuzzleElementDefinition> list, int maxPoolSize, boolean rotate, File outputFile, List<Integer> boardsList, int boardCount) throws InterruptedException {
+        // check and set the num of threads equals to amount of number of rows
+        if (boardsList.size() < maxPoolSize) {
+            maxPoolSize = boardsList.size();
+        }
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(maxPoolSize, maxPoolSize, 30, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(15));
+        while (!solved.get() && boardCount > 0) {
+            for (Integer board : boardsList) {
+                //execute the pool with Task object, this object get list of elements
+                //number of row ??? is rotate available, the path to outputfile and atomic boolean(solved)
+                threadPool.execute(new Task(list, board, rotate, outputFile, solved));
+                --boardCount;
             }
-            while (true) {
-                if (waitTillAllThreadsShutdown(solved, threadPool)) {
-                    break;
-                }
+        }
+        while (true) {
+            if (waitTillAllThreadsShutdown(solved, threadPool)) {
+                break;
             }
         }
     }

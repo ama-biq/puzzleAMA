@@ -6,11 +6,9 @@ import file.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static impl.EventHandler.addEventToList;
 
@@ -21,7 +19,7 @@ import static impl.EventHandler.addEventToList;
 public class Solver {
 
     private AtomicBoolean solved;
-    private int fakeNumber = Integer.MAX_VALUE;
+    static final int fakeNumber = Integer.MAX_VALUE;
     private static final String SEPARATOR = "_";
     private int maxRow;
     private int maxColumn;
@@ -33,6 +31,23 @@ public class Solver {
 
     private Map<String, List<PuzzleElementDefinition>> indexedPool = new HashMap<>();
     private List<Integer> usedIds = new ArrayList<>();
+
+    private String tltrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,0,0,fakeNumber));
+    private String blbrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber,0,0));
+    private String tlblCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,0,fakeNumber,0));
+    private String trbrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber, 0,0));
+
+    private String tlCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,0,fakeNumber,fakeNumber));
+    private String trCornerMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,0,0,fakeNumber));
+    private String brCornerMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,fakeNumber, 0,0));
+    private String blCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber,fakeNumber,0));
+
+    private String topEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,0,fakeNumber,fakeNumber));
+    private String leftEdgeMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber,fakeNumber,fakeNumber));
+    private String bottomEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,fakeNumber, fakeNumber,0));
+    private String rightEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,fakeNumber,0,fakeNumber));
+
+    private String squareMatcher = buildMatcher(new PuzzleElementDefinition(0,0,0,0));
 
     Solver(AtomicBoolean solved) {
         this.solved = solved;
@@ -489,14 +504,61 @@ public class Solver {
 
     boolean validateStraightEdges(List<PuzzleElementDefinition> puzzleElements, int row, boolean rotate) {
 //TODO rotate not supported yet
+        Set<Integer> idsSet = new HashSet<>();
+        indexPuzzlePieces(puzzleElements, rotate);
+        int column = puzzleElements.size()/row;
+
+        if(row == 1 && column == 1){
+            getElementsByMatcher(squareMatcher, idsSet);
+            return idsSet.size() == 1;
+        }
+
         if (row == 1) {
             return isStraightEdgesOneRow(puzzleElements);
         }
-        if (row == puzzleElements.size() ) {
+        if (column == 1) {
             return isStraightEdgesOneColumn(puzzleElements);
         }
-        //TODO no validation for other board
-        return true;
+
+        if(row == 2 && column == 2){
+            return isStraightEdgesFor2X2(idsSet);
+        }
+
+        else{
+            return isStraightEdges(row, idsSet, column);
+        }
+    }
+
+    private boolean isStraightEdges(int row, Set<Integer> idsSet, int column) {
+        if(isStraightEdgesFor2X2(idsSet)) {
+            getElementsByMatcher(topEdgeMatcher, idsSet);
+            getElementsByMatcher(leftEdgeMatcher, idsSet);
+            getElementsByMatcher(bottomEdgeMatcher, idsSet);
+            getElementsByMatcher(rightEdgeMatcher, idsSet);
+            return idsSet.size() >= 2*(row + column) - 4;
+        }else {
+            return false;
+        }
+    }
+
+    private boolean isStraightEdgesFor2X2(Set<Integer> idsSet) {
+        getElementsByMatcher(tlCornerMatcher, idsSet);
+        getElementsByMatcher(trCornerMatcher, idsSet);
+        getElementsByMatcher(brCornerMatcher, idsSet);
+        getElementsByMatcher(blCornerMatcher, idsSet);
+        return idsSet.size() >= 4;
+    }
+
+    private void getElementsByMatcher(String matcher, Set<Integer> idsSet) {
+
+        for (Map.Entry<String, List<PuzzleElementDefinition>> entry : indexedPool.entrySet()) {
+            if (entry.getKey().matches(matcher)) {
+                List<PuzzleElementDefinition> tempList = entry.getValue();
+                if (tempList != null) {
+                    idsSet.addAll(tempList.stream().map(e -> e.getId()).collect(Collectors.toSet()));
+                }
+            }
+        }
     }
 
     private boolean isStraightEdgesOneColumn(List<PuzzleElementDefinition> puzzleElements) {
@@ -593,7 +655,7 @@ public class Solver {
         candidatePiecePool.put(position, list);
     }
 
-    private String buildMatcher(PuzzleElementDefinition template) {
+    String buildMatcher(PuzzleElementDefinition template) {
         return getMatcher(template.getLeft()) + SEPARATOR +
                 getMatcher(template.getUp()) + SEPARATOR +
                 getMatcher(template.getRight()) + SEPARATOR +
