@@ -671,6 +671,12 @@ public class Solver {
         puzzle.forEach(piece -> setPuzzlePieceToIndexedMap(piece, rotate));
     }
 
+    /**
+     * If the rotate true all piece permutation inserted to the map after 90 degrees rotation.
+     *
+     * @param piece
+     * @param rotate
+     */
     private void setPuzzlePieceToIndexedMap(PuzzleElementDefinition piece, boolean rotate) {
         if (rotate) {
             if (isAllEdgesEquals(piece)) {
