@@ -25,12 +25,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SolverTest {
 
+    private static final String TEST_FOLDER = "src\\test\\resources\\";
     private Solver puzzleSolver = new Solver(new AtomicBoolean(false));
     private Orchestrator orchestrator = new Orchestrator();
     private PuzzleElementDefinition puzzleElementDefinition = new PuzzleElementDefinition();
     private List<PuzzleElementDefinition> listOfPuzzleElementDefinitionsWithoutId = new ArrayList<>();
-    private boolean rotate = false;
-    private File outputFile = new File("src\\test\\resources\\OutPutFile.txt");
+    private boolean rotate = true;
+    private File outputFile = new File(TEST_FOLDER + "OutPutFile.txt");
     private CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
     private PuzzleValidator puzzleValidator = new PuzzleValidator();
 
@@ -38,8 +39,8 @@ public class SolverTest {
     @BeforeEach
     public void beforeEach() {
         EventHandler.emptyEventList();
-        FileUtils.deleteFile(new File("src\\test\\resources\\OutPutFile.txt"));
-        cmdPuzzleParser.setFileOutputPath("src\\test\\resources\\OutPutFile.txt");
+        FileUtils.deleteFile(new File(TEST_FOLDER + "OutPutFile.txt"));
+        cmdPuzzleParser.setFileOutputPath(TEST_FOLDER + "OutPutFile.txt");
         cmdPuzzleParser.setRotate(rotate);
     }
 
@@ -446,7 +447,7 @@ public class SolverTest {
 
     @Test
     public void oneColumnSolutionE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\10AmirFile.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "10AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
 
@@ -454,94 +455,91 @@ public class SolverTest {
 
     @Test
     public void firstE2EoneElement() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\1AmirFileIn.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "1AmirFileIn.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
     public void fourElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\2AmirFile.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "2AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _24ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\test15.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "test15.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _42ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen42_1.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "gen42_1.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _64ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen64_1.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "gen64_1.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
     public void _64_2ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen64_2.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "gen64_2.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
-    @Disabled
     @Test
     public void _100_1ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_1.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "gen100_1.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
-    @Disabled
     @Test
     public void _100_2ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_2.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "gen100_2.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
-    @Disabled
     @Test
     public void _100_3ElementsPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\gen100_3.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "gen100_3.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
     public void missingPuzzleElementE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\3AmirFile.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "3AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\3AmirFileExpected.txt");
+        String out = usingBufferedReader(TEST_FOLDER + "OutPutFile.txt");
+        String expected = usingBufferedReader(TEST_FOLDER + "3AmirFileExpected.txt");
         assertEquals(expected, out);
     }
 
     @Test
     public void multipleErrorsE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\4AmirFile.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "4AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\4AmirFileExpected.txt");
+        String out = usingBufferedReader(TEST_FOLDER + "OutPutFile.txt");
+        String expected = usingBufferedReader(TEST_FOLDER + "4AmirFileExpected.txt");
         assertEquals(expected, out);
     }
 
     @Test
     public void severalIdMissingE2Etest() throws Exception {
-        cmdPuzzleParser.setFileInputPath("src\\test\\resources\\7AmirFile.txt");
+        cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "7AmirFile.txt");
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\7AmirFileExpected.txt");
+        String out = usingBufferedReader(TEST_FOLDER + "OutPutFile.txt");
+        String expected = usingBufferedReader(TEST_FOLDER + "7AmirFileExpected.txt");
         assertEquals(expected, out);
     }
 
