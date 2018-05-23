@@ -32,22 +32,22 @@ public class Solver {
     private Map<String, List<PuzzleElementDefinition>> indexedPool = new HashMap<>();
     private List<Integer> usedIds = new ArrayList<>();
 
-    private String tltrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,0,0,fakeNumber));
-    private String blbrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber,0,0));
-    private String tlblCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,0,fakeNumber,0));
-    private String trbrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber, 0,0));
+    private String tltrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0, 0, 0, fakeNumber));
+    private String blbrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0, fakeNumber, 0, 0));
+    private String tlblCornerMatcher = buildMatcher(new PuzzleElementDefinition(0, 0, fakeNumber, 0));
+    private String trbrCornerMatcher = buildMatcher(new PuzzleElementDefinition(0, fakeNumber, 0, 0));
 
-    private String tlCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,0,fakeNumber,fakeNumber));
-    private String trCornerMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,0,0,fakeNumber));
-    private String brCornerMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,fakeNumber, 0,0));
-    private String blCornerMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber,fakeNumber,0));
+    private String tlCornerMatcher = buildMatcher(new PuzzleElementDefinition(0, 0, fakeNumber, fakeNumber));
+    private String trCornerMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber, 0, 0, fakeNumber));
+    private String brCornerMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber, fakeNumber, 0, 0));
+    private String blCornerMatcher = buildMatcher(new PuzzleElementDefinition(0, fakeNumber, fakeNumber, 0));
 
-    private String topEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,0,fakeNumber,fakeNumber));
-    private String leftEdgeMatcher = buildMatcher(new PuzzleElementDefinition(0,fakeNumber,fakeNumber,fakeNumber));
-    private String bottomEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,fakeNumber, fakeNumber,0));
-    private String rightEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber,fakeNumber,0,fakeNumber));
+    private String topEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber, 0, fakeNumber, fakeNumber));
+    private String leftEdgeMatcher = buildMatcher(new PuzzleElementDefinition(0, fakeNumber, fakeNumber, fakeNumber));
+    private String bottomEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber, fakeNumber, fakeNumber, 0));
+    private String rightEdgeMatcher = buildMatcher(new PuzzleElementDefinition(fakeNumber, fakeNumber, 0, fakeNumber));
 
-    private String squareMatcher = buildMatcher(new PuzzleElementDefinition(0,0,0,0));
+    private String squareMatcher = buildMatcher(new PuzzleElementDefinition(0, 0, 0, 0));
 
     Solver(AtomicBoolean solved) {
         this.solved = solved;
@@ -503,12 +503,11 @@ public class Solver {
     }
 
     boolean validateStraightEdges(List<PuzzleElementDefinition> puzzleElements, int row, boolean rotate) {
-//TODO rotate not supported yet
         Set<Integer> idsSet = new HashSet<>();
         indexPuzzlePieces(puzzleElements, rotate);
-        int column = puzzleElements.size()/row;
+        int column = puzzleElements.size() / row;
 
-        if(row == 1 && column == 1){
+        if (row == 1 && column == 1) {
             getElementsByMatcher(squareMatcher, idsSet);
             return idsSet.size() == 1;
         }
@@ -520,23 +519,21 @@ public class Solver {
             return isStraightEdgesOneColumn(puzzleElements);
         }
 
-        if(row == 2 && column == 2){
+        if (row == 2 && column == 2) {
             return isStraightEdgesFor2X2(idsSet);
-        }
-
-        else{
+        } else {
             return isStraightEdges(row, idsSet, column);
         }
     }
 
     private boolean isStraightEdges(int row, Set<Integer> idsSet, int column) {
-        if(isStraightEdgesFor2X2(idsSet)) {
+        if (isStraightEdgesFor2X2(idsSet)) {
             getElementsByMatcher(topEdgeMatcher, idsSet);
             getElementsByMatcher(leftEdgeMatcher, idsSet);
             getElementsByMatcher(bottomEdgeMatcher, idsSet);
             getElementsByMatcher(rightEdgeMatcher, idsSet);
-            return idsSet.size() >= 2*(row + column) - 4;
-        }else {
+            return idsSet.size() >= 2 * (row + column) - 4;
+        } else {
             return false;
         }
     }
@@ -567,7 +564,6 @@ public class Solver {
                 return false;
             }
         }
-        //TODO missing validation for straight edges on sides(top and bottom)
         return true;
     }
 
@@ -577,7 +573,6 @@ public class Solver {
                 return false;
             }
         }
-        //TODO missing validation for straight edges on sides(left and right)
         return true;
     }
 
@@ -655,7 +650,7 @@ public class Solver {
         candidatePiecePool.put(position, list);
     }
 
-    String buildMatcher(PuzzleElementDefinition template) {
+    private String buildMatcher(PuzzleElementDefinition template) {
         return getMatcher(template.getLeft()) + SEPARATOR +
                 getMatcher(template.getUp()) + SEPARATOR +
                 getMatcher(template.getRight()) + SEPARATOR +
@@ -673,7 +668,6 @@ public class Solver {
 
     /**
      * If the rotate true all piece permutation inserted to the map after 90 degrees rotation.
-     *
      *
      * @param piece
      * @param rotate

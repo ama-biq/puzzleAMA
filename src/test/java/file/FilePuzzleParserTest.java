@@ -481,7 +481,6 @@ public class FilePuzzleParserTest {
         assertTrue(testList.isEmpty());
     }
 
-
 }
 
 

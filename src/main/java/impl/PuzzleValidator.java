@@ -23,12 +23,13 @@ public class PuzzleValidator {
     Solver solver = new Solver();
     private Map<Integer, List<PuzzleElementDefinition>> solutionMapTest;
 
-     boolean validatePuzzleSolution() {
-        boolean isValid = true;
+    boolean validatePuzzleSolution() {
+        boolean isValid;
         solutionMapTest = solver.getSolution();
-        if(solutionMapTest.isEmpty()){return false;}
+        if (solutionMapTest.isEmpty()) {
+            return false;
+        }
         Set<Integer> setOfIds = new HashSet<>();
-
 
         isValid = isTopAndButtomEdgesAreStraight();
         isValid = isLeftAndRightEdgesAreStraight(isValid);
@@ -39,13 +40,10 @@ public class PuzzleValidator {
             for (int column = 0; column < maxColumn; column++) {
                 PuzzleElementDefinition currentPiece = getPieceInSolutionMap(row, column);
                 if (!setOfIds.add(currentPiece.getId())) {
-                    System.out.println(currentPiece.getId() + " Already exists.");
                     return false;
                 }
-                if (prevPiece != null) {
-                    if (!sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPieceIsZero(prevPiece, currentPiece)) {
-                        return false;
-                    }
+                if (prevPiece != null && !sumOfRightSideOfPrevPieceAndLeftSideOfCurrentPieceIsZero(prevPiece, currentPiece)) {
+                    return false;
                 }
                 if (row + 1 < maxRow) {
                     PuzzleElementDefinition pieceOnTheNextRow = getPieceInSolutionMap(row + 1, column);
@@ -61,8 +59,8 @@ public class PuzzleValidator {
 
     private boolean isTopAndButtomEdgesAreStraight() {
         int maxRow = solutionMapTest.size();
-        return  (isTopEdgeIsStraight(solutionMapTest.get(1)) &&
-                isButtomEdgeIsStraight(solutionMapTest.get(maxRow))) ;
+        return (isTopEdgeIsStraight(solutionMapTest.get(1)) &&
+                isBottomEdgeIsStraight(solutionMapTest.get(maxRow)));
     }
 
     private boolean isLeftAndRightEdgesAreStraight(boolean isValid) {
@@ -103,7 +101,7 @@ public class PuzzleValidator {
         return listSolution.get(0).getLeft() == 0;
     }
 
-    private boolean isButtomEdgeIsStraight(List<PuzzleElementDefinition> solutionList) {
+    private boolean isBottomEdgeIsStraight(List<PuzzleElementDefinition> solutionList) {
         for (PuzzleElementDefinition element : solutionList) {
             if (element.getBottom() != 0) {
                 return false;

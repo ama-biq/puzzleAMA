@@ -5,7 +5,7 @@ public class Position {
     private int row;
     private int column;
 
-    public Position(int row, int column) {
+    Position(int row, int column) {
         this.row = row;
         this.column = column;
     }
@@ -17,8 +17,7 @@ public class Position {
 
         Position position = (Position) o;
 
-        if (row != position.row) return false;
-        return column == position.column;
+        return row == position.row && column == position.column;
     }
 
     @Override
@@ -30,6 +29,6 @@ public class Position {
 
     @Override
     public String toString() {
-        return row +"" + column;
+        return row + "" + column;
     }
 }

@@ -13,9 +13,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
@@ -263,6 +261,7 @@ public class SolverTest {
         puzzleSolver.solve(idsList, 3, rotate, outputFile);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
+
     @Disabled
     @Test
     public void negative3ElementsTestResolveThePuzzle() {
@@ -305,7 +304,7 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(4, 0, 0, 0, 0));
 
         puzzleSolver.solve(idsList, 2, rotate, outputFile);
-        assertEquals( puzzleValidator.validatePuzzleSolution(), true);
+        assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
     @Test
@@ -397,7 +396,7 @@ public class SolverTest {
         idsList.add(new PuzzleElementDefinition(216, -1, -1, 0, 0));
 
         puzzleSolver.solve(idsList, 8, rotate, outputFile);
-        assertEquals( puzzleValidator.validatePuzzleSolution(), true);
+        assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
 
@@ -432,17 +431,6 @@ public class SolverTest {
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
 
-    //---------------------------------------------------------
-
-    //not relevant for multi threading purpose
-    /*@Test
-    public void E2EnoCorners() throws Exception {
-        String inputFilePath = "src\\test\\resources\\NoCorners.txt";
-        orchestrator.orchestrateThePuzzle(inputFilePath);
-        String out = usingBufferedReader("src\\test\\resources\\OutPutFile.txt");
-        String expected = usingBufferedReader("src\\test\\resources\\ExpectedNoTRcorner.txt");
-        assertEquals(expected, out);
-    }*/
 //----------------------E2E + multi threading puzzle solution tests -------------------------------------
 
     @Test
@@ -515,6 +503,7 @@ public class SolverTest {
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
+
     @Disabled
     @Test
     public void missingPuzzleElementE2Etest() throws Exception {
@@ -524,6 +513,7 @@ public class SolverTest {
         String expected = usingBufferedReader(TEST_FOLDER + "3AmirFileExpected.txt");
         assertEquals(expected, out);
     }
+
     @Disabled
     @Test
     public void multipleErrorsE2Etest() throws Exception {
@@ -533,6 +523,7 @@ public class SolverTest {
         String expected = usingBufferedReader(TEST_FOLDER + "4AmirFileExpected.txt");
         assertEquals(expected, out);
     }
+
     @Disabled
     @Test
     public void severalIdMissingE2Etest() throws Exception {
@@ -563,7 +554,7 @@ public class SolverTest {
         assertTrue(EventHandler.getEventList().contains(EventHandler.SUM_ZERO), "expected error message [" + EventHandler.SUM_ZERO + "] not found");
     }
 
-//-----------------------------methods---------------------------------------
+    //-----------------------------methods---------------------------------------
     private static String usingBufferedReader(String filePath) {
         StringBuilder contentBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {

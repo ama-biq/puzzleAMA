@@ -27,6 +27,7 @@ public class Orchestrator {
 
     /**
      * This function
+     *
      * @param cmdPuzzleParser
      * @throws Exception
      */
@@ -63,7 +64,7 @@ public class Orchestrator {
                 EventHandler.addEventToList(EventHandler.WRONG_STRAIGHT_EDGES);
                 solver.writeErrorsToTheOutPutFile(outputFile);
             }
-        }else{
+        } else {
             solver.writeErrorsToTheOutPutFile(outputFile);
         }
         return boardsList;
@@ -78,7 +79,7 @@ public class Orchestrator {
         while (!solved.get() && boardCount > 0) {
             for (Integer board : boardsList) {
                 //execute the pool with Task object, this object get list of elements
-                //number of row is rotate available, the path to outputfile and atomic boolean(solved)
+                //number of row is rotate available, the path to output file and atomic boolean(solved)
                 threadPool.execute(new Task(list, board, rotate, outputFile, solved));
                 --boardCount;
             }

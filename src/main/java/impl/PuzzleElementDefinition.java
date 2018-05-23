@@ -10,10 +10,10 @@ public class PuzzleElementDefinition {
     private int rotationAngle = 0;
     private PuzzleElementDefinition piece;
 
-    public PuzzleElementDefinition() {
+    PuzzleElementDefinition() {
     }
 
-    public PuzzleElementDefinition(int left, int up, int right, int bottom) {
+    PuzzleElementDefinition(int left, int up, int right, int bottom) {
         this.left = left;
         this.up = up;
         this.right = right;
@@ -28,7 +28,7 @@ public class PuzzleElementDefinition {
         this.bottom = bottom;
     }
 
-    public PuzzleElementDefinition(int id, int left, int up, int right, int bottom, int rotationAngle) {
+    PuzzleElementDefinition(int id, int left, int up, int right, int bottom, int rotationAngle) {
         this.id = id;
         this.left = left;
         this.up = up;
@@ -37,7 +37,7 @@ public class PuzzleElementDefinition {
         this.rotationAngle = rotationAngle;
     }
 
-    public PuzzleElementDefinition(PuzzleElementDefinition piece) {
+    PuzzleElementDefinition(PuzzleElementDefinition piece) {
         this.id = piece.id;
         this.left = piece.left;
         this.up = piece.up;
@@ -50,7 +50,7 @@ public class PuzzleElementDefinition {
         return rotationAngle;
     }
 
-    public void setRotationAngle(int rotationAngle) {
+    void setRotationAngle(int rotationAngle) {
         this.rotationAngle = rotationAngle;
     }
 
@@ -58,15 +58,15 @@ public class PuzzleElementDefinition {
         return id;
     }
 
-    public int getLeft() {
+    int getLeft() {
         return left;
     }
 
-    public void setLeft(int left) {
+    void setLeft(int left) {
         this.left = left;
     }
 
-    public int getUp() {
+    int getUp() {
         return up;
     }
 
@@ -74,44 +74,34 @@ public class PuzzleElementDefinition {
         this.up = up;
     }
 
-    public int getRight() {
+    int getRight() {
         return right;
     }
 
-    public void setRight(int right) {
+    void setRight(int right) {
         this.right = right;
     }
 
-    public int getBottom() {
+    int getBottom() {
         return bottom;
     }
 
-    public void setBottom(int bottom) {
+    void setBottom(int bottom) {
         this.bottom = bottom;
     }
 
-    public boolean isLeftCornerExistsOnOneRowPuzzle() {
-        if (getBottom() == 0 &&
+    boolean isLeftCornerExistsOnOneRowPuzzle() {
+        return getBottom() == 0 &&
                 getLeft() == 0 &&
                 getUp() == 0 &&
-                getRight() != 0
-                ) {
-            return true;
-        } else {
-            return false;
-        }
+                getRight() != 0;
     }
 
-    public boolean isRightCornerExistsOnOneRowPuzzle() {
-        if (getBottom() == 0 &&
+    boolean isRightCornerExistsOnOneRowPuzzle() {
+        return getBottom() == 0 &&
                 getRight() == 0 &&
                 getUp() == 0 &&
-                getLeft() != 0
-                ) {
-            return true;
-        } else {
-            return false;
-        }
+                getLeft() != 0;
     }
 
     @Override
@@ -126,30 +116,30 @@ public class PuzzleElementDefinition {
                 '}';
     }
 
-    public boolean isTLExistsOnSeveralRowsPuzzle() {
+    boolean isTLExistsOnSeveralRowsPuzzle() {
         return (getRight() == 0 && getUp() == 0);
     }
 
-    public boolean isTRExistsOnSeveralRowsPuzzle() {
+    boolean isTRExistsOnSeveralRowsPuzzle() {
         return (getLeft() == 0 && getUp() == 0);
     }
 
-    public boolean isBLExistsOnSeveralRowsPuzzle() {
+    boolean isBLExistsOnSeveralRowsPuzzle() {
         return (getLeft() == 0 && getBottom() == 0);
     }
 
-    public boolean isBRExistsOnSeveralRowsPazzle() {
+    boolean isBRExistsOnSeveralRowsPazzle() {
         return (getRight() == 0 && getBottom() == 0);
     }
 
-    public boolean isBottomCornerExistsOnOneColumnPuzzle() {
+    boolean isBottomCornerExistsOnOneColumnPuzzle() {
         return (getBottom() == 0 &&
                 getRight() == 0 &&
                 getLeft() == 0 &&
                 getUp() != 0);
     }
 
-    public boolean isTopCornerExistsOnOneColumnPuzzle() {
+    boolean isTopCornerExistsOnOneColumnPuzzle() {
         return (getLeft() == 0 &&
                 getRight() == 0 &&
                 getUp() == 0 &&

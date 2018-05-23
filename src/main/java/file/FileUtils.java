@@ -44,7 +44,7 @@ public class FileUtils {
         Set<String> output = EventHandler.getEventList();
         FileOutputStream fos = new FileOutputStream(outputFile);
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
-            for(String str : output) {
+            for (String str : output) {
                 writer.write(str + '\n');
             }
         }
@@ -53,14 +53,14 @@ public class FileUtils {
     public static void writeSolutionToFile(Map<Integer, List<PuzzleElementDefinition>> solverMap, File file) throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
-            for(Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
+            for (Map.Entry<Integer, List<PuzzleElementDefinition>> entry : solverMap.entrySet()) {
                 List<PuzzleElementDefinition> list = entry.getValue();
                 StringBuilder sb = new StringBuilder();
-                for (PuzzleElementDefinition element : list){
+                for (PuzzleElementDefinition element : list) {
                     if (element.getRotationAngle() > 0) {
                         sb.append(element.getId() + " [" + element.getRotationAngle() + "] ");
-                    } else{
-                        sb.append(element.getId()+ " ");
+                    } else {
+                        sb.append(element.getId() + " ");
                     }
                 }
                 writer.write(sb.toString().trim() + '\n');
@@ -68,7 +68,7 @@ public class FileUtils {
         }
     }
 
-    public static void deleteFile(File fileToDelete){
+    public static void deleteFile(File fileToDelete) {
         fileToDelete.delete();
     }
 

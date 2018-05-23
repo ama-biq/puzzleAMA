@@ -71,7 +71,7 @@ public class FilePuzzleParser {
         return fake;
     }
 
-    PuzzleElementDefinition createPuzzleElementDefinition(String line){
+    PuzzleElementDefinition createPuzzleElementDefinition(String line) {
         boolean shouldCreatePED = true;
         int[] arr = new int[5];
         String[] split = line.trim().split("\\s+");
@@ -117,7 +117,7 @@ public class FilePuzzleParser {
 
     }
 
-    boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements){
+    boolean verifyPuzzleIDs(List<PuzzleElementDefinition> puzzleElementDefinition, int numOfElements) {
         boolean flag = true;
         Set<Integer> validSet = new HashSet<>();
         for (PuzzleElementDefinition element : puzzleElementDefinition) {

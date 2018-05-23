@@ -15,7 +15,7 @@ public class CmdPuzzleParserTest {
         referenceParser.setRotate(true);
         referenceParser.setThreadAmount(3);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-        assertEquals(referenceParser,testParser);
+        assertEquals(referenceParser, testParser);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class CmdPuzzleParserTest {
         referenceParser.setFileOutputPath("outputValue");
         referenceParser.setRotate(true);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-        assertEquals(referenceParser,testParser);
+        assertEquals(referenceParser, testParser);
     }
 
     @Test
@@ -37,7 +37,7 @@ public class CmdPuzzleParserTest {
         referenceParser.setFileOutputPath("outputValue");
         referenceParser.setThreadAmount(3);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-        assertEquals(referenceParser,testParser);
+        assertEquals(referenceParser, testParser);
     }
 
     @Test
@@ -47,18 +47,18 @@ public class CmdPuzzleParserTest {
         referenceParser.setFileInputPath("inputValue");
         referenceParser.setFileOutputPath("outputValue");
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-        assertEquals(referenceParser,testParser);
+        assertEquals(referenceParser, testParser);
     }
 
     @Test
     public void pass7ArgsNotInOrder() {
-        String[] args = {"-output", "outputValue","-input", "inputValue", "-threads", "3", "-rotate"};
+        String[] args = {"-output", "outputValue", "-input", "inputValue", "-threads", "3", "-rotate"};
         CmdPuzzleParser referenceParser = new CmdPuzzleParser();
         referenceParser.setFileInputPath("inputValue");
         referenceParser.setFileOutputPath("outputValue");
         referenceParser.setRotate(true);
         referenceParser.setThreadAmount(3);
         CmdPuzzleParser testParser = new CmdPuzzleParser(args);
-        assertEquals(referenceParser,testParser);
+        assertEquals(referenceParser, testParser);
     }
 }
