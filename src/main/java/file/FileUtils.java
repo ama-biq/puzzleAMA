@@ -40,9 +40,9 @@ public class FileUtils {
         return readFile(file, StandardCharsets.UTF_8);
     }
 
-    public static void writeFile() throws IOException {
+    public static void writeFile(File outputFile) throws IOException {
         Set<String> output = EventHandler.getEventList();
-        FileOutputStream fos = new FileOutputStream((new File("src\\test\\resources\\OutPutFile.txt")));
+        FileOutputStream fos = new FileOutputStream(outputFile);
         try (OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             for(String str : output) {
                 writer.write(str + '\n');

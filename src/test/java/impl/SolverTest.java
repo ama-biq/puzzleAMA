@@ -263,7 +263,7 @@ public class SolverTest {
         puzzleSolver.solve(idsList, 3, rotate, outputFile);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
-
+    @Disabled
     @Test
     public void negative3ElementsTestResolveThePuzzle() {
 
@@ -515,7 +515,7 @@ public class SolverTest {
         orchestrator.orchestrateThePuzzle(cmdPuzzleParser);
         assertEquals(puzzleValidator.validatePuzzleSolution(), true);
     }
-
+    @Disabled
     @Test
     public void missingPuzzleElementE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "3AmirFile.txt");
@@ -524,7 +524,7 @@ public class SolverTest {
         String expected = usingBufferedReader(TEST_FOLDER + "3AmirFileExpected.txt");
         assertEquals(expected, out);
     }
-
+    @Disabled
     @Test
     public void multipleErrorsE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "4AmirFile.txt");
@@ -533,7 +533,7 @@ public class SolverTest {
         String expected = usingBufferedReader(TEST_FOLDER + "4AmirFileExpected.txt");
         assertEquals(expected, out);
     }
-
+    @Disabled
     @Test
     public void severalIdMissingE2Etest() throws Exception {
         cmdPuzzleParser.setFileInputPath(TEST_FOLDER + "7AmirFile.txt");

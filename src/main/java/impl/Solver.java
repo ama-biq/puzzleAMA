@@ -236,7 +236,7 @@ public class Solver {
         EventHandler.addEventToList(EventHandler.NO_SOLUTION);
         try {
             if (!solved.get()) {
-                writeErrorsToTheOutPutFile();
+                writeErrorsToTheOutPutFile(file);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -600,8 +600,8 @@ public class Solver {
 
     }
 
-    void writeErrorsToTheOutPutFile() throws IOException {
-        FileUtils.writeFile();
+    void writeErrorsToTheOutPutFile(File outputFile) throws IOException {
+        FileUtils.writeFile(outputFile);
     }
 
     private void writeSolutionToTheOutPutFile(File file) throws IOException {
@@ -673,6 +673,7 @@ public class Solver {
 
     /**
      * If the rotate true all piece permutation inserted to the map after 90 degrees rotation.
+     *
      *
      * @param piece
      * @param rotate

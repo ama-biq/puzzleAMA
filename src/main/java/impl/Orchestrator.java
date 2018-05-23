@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 
 public class Orchestrator {
+    private File outputFile;
 
     public static void main(String[] args) throws Exception {
         CmdPuzzleParser cmdPuzzleParser = new CmdPuzzleParser();
@@ -38,9 +39,9 @@ public class Orchestrator {
         boolean rotate = cmdPuzzleParser.isRotate();
 
         List<PuzzleElementDefinition> puzzlePiecesList = solver.checkTheInputFile(inputFile);
-        File outputFile = new File(cmdPuzzleParser.getFileOutputPath());
+        outputFile = new File(cmdPuzzleParser.getFileOutputPath());
         if (puzzlePiecesList.isEmpty()) {
-            solver.writeErrorsToTheOutPutFile();
+            solver.writeErrorsToTheOutPutFile(outputFile);
         } else {
             List<Integer> boardsList = getSolutionBoardsList(solver, puzzlePiecesList, rotate);
             if (!boardsList.isEmpty()) {
@@ -60,10 +61,10 @@ public class Orchestrator {
             }
             if (boardsList.isEmpty()) {
                 EventHandler.addEventToList(EventHandler.WRONG_STRAIGHT_EDGES);
-                solver.writeErrorsToTheOutPutFile();
+                solver.writeErrorsToTheOutPutFile(outputFile);
             }
         }else{
-            solver.writeErrorsToTheOutPutFile();
+            solver.writeErrorsToTheOutPutFile(outputFile);
         }
         return boardsList;
     }
