@@ -22,6 +22,9 @@ public class FilePuzzleParser {
     public FilePuzzleParser() {
     }
 
+    public List<PuzzleElementDefinition> getPedArray() {
+        return pedArray;
+    }
 
     public List<PuzzleElementDefinition> fileToPEDArray(File file) throws Exception {
 
