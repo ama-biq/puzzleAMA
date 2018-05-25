@@ -1,13 +1,14 @@
 package client;
 
-import impl.PuzzleElementDefinition;
-
 public class Piece {
     private int Id;
-    private CommonPiece Piece;
+    private int [] Piece = new int[4];
 
-    public Piece(int id, CommonPiece piece) {
+    public Piece(int id, int left, int up, int right, int bottom) {
         Id = id;
-        Piece = piece;
+        Piece[0] = left;
+        Piece[1] = up;
+        Piece[2] = right;
+        Piece[3] = bottom;
     }
 }

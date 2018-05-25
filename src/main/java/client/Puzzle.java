@@ -16,10 +16,8 @@ public class Puzzle {
 
     public static void main(String[] args) {
         List<Piece> listElements = new ArrayList<>();
-        CommonPiece ped1 = new CommonPiece(1,1,0,1);
-        CommonPiece ped2 = new CommonPiece(-1,1,0,1);
-        listElements.add(new Piece(1,ped1));
-        listElements.add(new Piece(2,ped2));
+        listElements.add(new Piece(1,1,1,0,1));
+        listElements.add(new Piece(2,-1,1,0,1));
         Puzzle puzzleJson = new Puzzle(false, listElements);
 
         Gson gson = new Gson();
