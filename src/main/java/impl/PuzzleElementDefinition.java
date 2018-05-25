@@ -12,7 +12,7 @@ public class PuzzleElementDefinition {
     PuzzleElementDefinition() {
     }
 
-    PuzzleElementDefinition(int left, int up, int right, int bottom) {
+    public PuzzleElementDefinition(int left, int up, int right, int bottom) {
         this.left = left;
         this.up = up;
         this.right = right;
