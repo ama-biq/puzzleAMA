@@ -8,7 +8,6 @@ public class PuzzleElementDefinition {
     private int right;
     private int bottom;
     private int rotationAngle = 0;
-    private PuzzleElementDefinition piece;
 
     PuzzleElementDefinition() {
     }
