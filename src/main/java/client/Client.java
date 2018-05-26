@@ -20,12 +20,12 @@ public class Client {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         System.out.println("Print you message: ");
-        do {
+
             msg = jsonInput;
             outputStream = new PrintStream(socket.getOutputStream());
             outputStream.println(msg);
             System.out.println(bufferedReader.readLine());
-        } while (!msg.equals("!"));
+
 
     }
 }

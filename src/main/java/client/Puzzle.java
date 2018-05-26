@@ -38,13 +38,13 @@ public class Puzzle {
 
         Gson gson = new Gson();
         String jsonString = gson.toJson(puzzleJson);
-        System.out.println("Object -> String: " + jsonString);
+      //  System.out.println("Object -> String: " + jsonString);
 
         Puzzle puzzleFromJson = gson.fromJson(jsonString, Puzzle.class);
         // System.out.println("Original object to string: " + puzzleFromJson.toString());
 
         JsonElement jsonElement = gson.toJsonTree(puzzleJson);
-        System.out.println("json to string!!! "+jsonElement.toString());
+      //  System.out.println("json to string!!! "+jsonElement.toString());
         return jsonString;
     }
 }
