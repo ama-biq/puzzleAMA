@@ -16,7 +16,7 @@ public class Client {
         Puzzle puzzleJson = new Puzzle();
         String jsonInput = puzzleJson.createJson();
         String msg;
-        Socket socket = new Socket("localhost", 7000);
+        Socket socket = new Socket("localhost", 7095);
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
         System.out.println("Print you message: ");

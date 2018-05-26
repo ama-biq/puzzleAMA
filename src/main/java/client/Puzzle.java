@@ -27,9 +27,9 @@ public class Puzzle {
                 '}';
     }
 
-    public static void main(String[] args) {
-        new Puzzle().createJson();
-    }
+//    public static void main(String[] args) {
+//        new Puzzle().createJson();
+//    }
     public String createJson(){
         List<Piece> listElements = new ArrayList<>();
         listElements.add(new Piece(1,1,1,0,1));
