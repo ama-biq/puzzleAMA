@@ -11,6 +11,7 @@ public class ClientHandler extends Thread{
     private Socket socket;
     private Thread thread;
     PrintStream outputStream;
+    PuzzleSolution puzzleSolution;
 
 
     public ClientHandler(int id, ServerMain serverMain, Socket socket) {
@@ -21,21 +22,20 @@ public class ClientHandler extends Thread{
 
     public void run() {
         System.out.println("Server is up.");
-        String line = "";
-
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            puzzleSolution = new PuzzleSolution(false);
             outputStream = new PrintStream(
                     socket.getOutputStream());
             String msg = "";
             ;
-            while (!line.equals("!")) {
+           // while (!line.equals("!")) {
                 msg = bufferedReader.readLine();
                 System.out.println(msg);
-                msg=msg + " Json from server";
+                msg=puzzleSolution.getSolutionMessage();
                 outputStream.println(msg);
 
-            }
+         //   }
 
         } catch (Exception e) {
 

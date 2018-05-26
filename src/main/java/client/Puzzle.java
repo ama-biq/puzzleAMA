@@ -28,7 +28,7 @@ public class Puzzle {
     }
 
     public static void main(String[] args) {
-
+        new Puzzle().createJson();
     }
     public String createJson(){
         List<Piece> listElements = new ArrayList<>();
@@ -44,7 +44,7 @@ public class Puzzle {
         // System.out.println("Original object to string: " + puzzleFromJson.toString());
 
         JsonElement jsonElement = gson.toJsonTree(puzzleJson);
-      //  System.out.println("json to string!!! "+jsonElement.toString());
+      // System.out.println("json to string!!! "+jsonElement.toString());
         return jsonString;
     }
 }
