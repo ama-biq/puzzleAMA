@@ -1,4 +1,6 @@
-package impl;
+package server;
+
+import impl.PuzzleSolution;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
